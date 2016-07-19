@@ -1,0 +1,109 @@
+{
+  "layers": [
+    {
+      "type": "Layer",
+      "id": "dem",
+      "title": "elevation tile",
+      "url": "http://cyberjapandata.gsi.go.jp/xyz/dem/{z}/{x}/{y}.txt",
+      "minZoom": 0,
+      "maxZoom": 14
+    },
+    {
+      "type": "Layer",
+      "id": "experimental_dem5a",
+      "title": "fgd_DEM(5m)",
+      "url": "http://cyberjapandata.gsi.go.jp/xyz/experimental_dem5a/{z}/{x}/{y}.geojson",
+      "minZoom": 18,
+      "maxZoom": 18,
+      "html": "<a target='_blank' href='https://github.com/gsi-cyberjapan/vector-tile-experiment'>Vector tile experiment</a>"
+    },
+    {
+      "type": "Layer",
+      "id": "dem5a",
+      "title": "data for elevation 5a",
+      "url": "http://cyberjapandata.gsi.go.jp/xyz/dem5a/{z}/{x}/{y}.txt",
+      "minZoom": 15,
+      "maxZoom": 15
+    },
+    {
+      "type": "Layer",
+      "id": "dem5b",
+      "title": "data for elevation 5b",
+      "url": "http://cyberjapandata.gsi.go.jp/xyz/dem5b/{z}/{x}/{y}.txt",
+      "minZoom": 15,
+      "maxZoom": 15
+    },
+    {
+      "type": "Layer",
+      "id": "20131217dd5",
+      "title": "elevation tile in Nishinoshima Island（2013/12/17）",
+      "url": "http://cyberjapandata.gsi.go.jp/xyz/20131217dd5/{z}/{x}/{y}.txt",
+      "minZoom": 15,
+      "maxZoom": 15
+    },
+    {
+      "type": "Layer",
+      "id": "20140216dd5",
+      "title": "elevation tile in Nishinoshima Island（2014/2/16）",
+      "url": "http://cyberjapandata.gsi.go.jp/xyz/20140216dd5/{z}/{x}/{y}.txt",
+      "minZoom": 15,
+      "maxZoom": 15
+    },
+    {
+      "type": "Layer",
+      "id": "20140322dd5",
+      "title": "elevation tile in Nishinoshima Island（2014/3/22, made by UAV）",
+      "url": "http://cyberjapandata.gsi.go.jp/xyz/20140322dd5/{z}/{x}/{y}.txt",
+      "minZoom": 15,
+      "maxZoom": 15
+    },
+    {
+      "type": "Layer",
+      "id": "20140704dd5",
+      "title": "elevation tile in Nishinoshima Island（2014/7/4, made by UAV）",
+      "url": "http://cyberjapandata.gsi.go.jp/xyz/20140704dd5/{z}/{x}/{y}.txt",
+      "minZoom": 15,
+      "maxZoom": 15
+    },
+    {
+      "type": "Layer",
+      "id": "20141204dd5",
+      "title": "elevation tile in Nishinoshima Island（2014/12/4）",
+      "url": "http://cyberjapandata.gsi.go.jp/xyz/20141204dd5/{z}/{x}/{y}.txt",
+      "minZoom": 15,
+      "maxZoom": 15
+    },
+    {
+      "type": "Layer",
+      "id": "20150301dd5",
+      "title": "elevation tile in Nishinoshima Island（2015/3/1, made by UAV）",
+      "url": "http://cyberjapandata.gsi.go.jp/xyz/20150301dd5/{z}/{x}/{y}.txt",
+      "minZoom": 15,
+      "maxZoom": 15
+    },
+    {
+      "type": "Layer",
+      "id": "20150728dd5",
+      "title": "elevation tile in Nishinoshima Island（2015/7/28, made by UAV）",
+      "url": "http://cyberjapandata.gsi.go.jp/xyz/20150728dd5/{z}/{x}/{y}.txt",
+      "minZoom": 15,
+      "maxZoom": 15
+    },
+    {
+      "type": "Layer",
+      "id": "20151209dd5",
+      "title": "elevation tile in Nishinoshima Island（2015/12/9）",
+      "url": "http://cyberjapandata.gsi.go.jp/xyz/20151209dd5/{z}/{x}/{y}.txt",
+      "minZoom": 15,
+      "maxZoom": 15
+    },
+    {
+      "type": "Layer",
+      "id": "20160303dd5",
+      "title": "elevation tile in Nishinoshima Island（2015/3/3）",
+      "url": "http://cyberjapandata.gsi.go.jp/xyz/20160303dd5/{z}/{x}/{y}.txt",
+      "minZoom": 15,
+      "maxZoom": 15
+    }
+  ]
+}

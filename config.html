@@ -1,0 +1,228 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <title>GSI Maps Editing Tool for layers.txt</title>
+
+    <link rel="stylesheet" type="text/css" href="./js.lib/jquery/jquery-ui.min.css"/>
+    <script type="text/javascript" src="./js.lib/jquery/jquery-1.11.1.min.js"></script>
+    <script type="text/javascript" src="./js.lib/jquery/jquery-ui.min.js"></script>
+    <script type="text/javascript" src="./js.lib/jquery/jquery.mjs.nestedSortable.js"></script>
+
+    <link rel="stylesheet" type="text/css" href="./css/config.css"/>
+    <script type="text/javascript" src="./js/config.js"></script>
+</head>
+<body>
+    <div class="frame_1"></div>
+    <div class="frame_2"></div>
+
+    <div class="frame" style="display:none;">
+        <div class="menu">
+            <!--
+	        <span>GSI Maps Editing Tool for layers.txt</span>
+            -->
+	        <a menu_method="new"  class="new_btn"  href="javascript:void(0);">New file</a>
+	        <a menu_method="load" class="load_btn" href="javascript:void(0);">Open file</a>
+	        <a menu_method="save" class="save_btn" href="javascript:void(0);">Save file</a>
+        </div>
+
+        <div class="tree"></div>
+
+        <div class="edit">
+	        <div class="edit_folder tableframe">
+	        <form name="folder">
+		        <dl>
+			        <dt>Name<span>Required</span></dt>
+			        <dd><input type="text" title="Enter the name. e.g.：library" class="inputtext" name="title"></dd>
+			        <dt>Icon URL</dt>
+			        <dd><input type="text" title="Enter the URL of the icon to be displayed in the information button." class="inputtext" name="iconUrl"></dd>
+			        <dt>Show all button</dt>
+			        <dd><label><input type="checkbox"  title="Whether or not to display the show all button to display information in the selection." name="toggleall">Use</label></dd>
+			        <dt>layers.txt URL</dt>
+			        <dd><input type="text" title="Only if you want to split the layer definition file to another file, enter the URL of the file." class="inputtext" name="layersUrl"></dd>			
+		        </dl>
+	        </form>
+	        </div>
+
+	        <div class="edit_layer tableframe">
+	            <form name="layer">
+		            <dl>
+			            <dt>Category<span>Required</span></dt>
+			            <dd>
+				            <label><input type="radio" name="type" layer_mode="feature" value="kml">KML</label>
+				            <label><input type="radio" name="type" layer_mode=""        value="geojson">GeoJSON</label>
+				            <label><input type="radio" name="type" layer_mode=""        value="topojson">TopoJSON</label> <br>
+				            <label><input type="radio" name="type" layer_mode="tile"    value="tile">Image tile</label>
+				            <label><input type="radio" name="type" layer_mode="tile"    value="geojson_tile">GeoJSON tile</label>
+				            <label><input type="radio" name="type" layer_mode="tile"    value="topojson_tile">TopoJSON tile</label>
+				            <!--label><input type="radio" name="type" layer_mode="tile" value="tms">TMS</label-->
+			            </dd>
+			            <div class="layer_edit_frame">
+				            <dt>ID</dt>
+				            <dd><input type="text" title="This is used to identify the layer in the Share.<br>Set so as not the same as the other." class="inputtext" name="id"></dd>
+				            <dt>Name<span>Required</span></dt>
+				            <dd><input type="text" title="Enter the name to be displayed in the information button.<br>e.g.：library in Tsukuba" class="inputtext" name="title"></dd>
+				            <dt>URL<span>Required</span></dt>
+				            <dd><input type="text" title="Enter the URL of the data.<br>Examples of KML：http://cyberjapandata.gsi.go.jp/sample.kml<br>Examples of tile：http://cyberjapandata.gsi.go.jp/xyz/sample/{z}/{x}/{y}.png" class="inputtext" name="url"></dd>
+				            <dt layer_mode="tile">subdomains</dt>
+				            <dd layer_mode="tile"><input type="text" title="" class="inputtext" name="subdomains"></dd>
+				            <dt>attribution</dt>
+				            <dd><input type="text" title="" class="inputtext" name="attribution"></dd>
+				            <dt>Icon URL</dt>
+				            <dd><input type="text" title="Enter the URL of the icon to be displayed in the information button." class="inputtext" name="iconUrl"></dd>
+				            <dt layer_mode="tile">errorTileUrl</dt>
+				            <dd layer_mode="tile"><input type="text" title="" class="inputtext" name="errorTileUrl"></dd>
+				            <dt layer_mode="tile">cocotile</dt>
+				            <dd layer_mode="tile"><label><input type="checkbox"  title="Check for cocotile." name="cocotile">support</label></dd>
+				            <dt>minZoom</dt>
+				            <dd>
+					            <select name="minZoom" title="Set the minimum zoom level.">
+					            <option value="">No setting</option>
+					            <option value="2">2</option>
+					            <option value="3">3</option>
+					            <option value="4">4</option>
+					            <option value="5">5</option>
+					            <option value="6">6</option>
+					            <option value="7">7</option>
+					            <option value="8">8</option>
+					            <option value="9">9</option>
+					            <option value="10">10</option>
+					            <option value="11">11</option>
+					            <option value="12">12</option>
+					            <option value="13">13</option>
+					            <option value="14">14</option>
+					            <option value="15">15</option>
+					            <option value="16">16</option>
+					            <option value="17">17</option>
+					            <option value="18">18</option>
+					            </select>
+				            </dd>
+				            <dt>maxZoom</dt>
+				            <dd>
+					            <select name="maxZoom" title="Set the maximum zoom level.">
+					            <option value="">No setting</option>
+					            <option value="2">2</option>
+					            <option value="3">3</option>
+					            <option value="4">4</option>
+					            <option value="5">5</option>
+					            <option value="6">6</option>
+					            <option value="7">7</option>
+					            <option value="8">8</option>
+					            <option value="9">9</option>
+					            <option value="10">10</option>
+					            <option value="11">11</option>
+					            <option value="12">12</option>
+					            <option value="13">13</option>
+					            <option value="14">14</option>
+					            <option value="15">15</option>
+					            <option value="16">16</option>
+					            <option value="17">17</option>
+					            <option value="18">18</option>
+					            </select>
+				            </dd>
+				            <dt layer_mode="tile">maxNativeZoom</dt>
+				            <dd layer_mode="tile">
+					            <select name="maxNativeZoom" title="Over zooming at more than the set value.">
+					            <option value="">No setting</option>
+					            <option value="2">2</option>
+					            <option value="3">3</option>
+					            <option value="4">4</option>
+					            <option value="5">5</option>
+					            <option value="6">6</option>
+					            <option value="7">7</option>
+					            <option value="8">8</option>
+					            <option value="9">9</option>
+					            <option value="10">10</option>
+					            <option value="11">11</option>
+					            <option value="12">12</option>
+					            <option value="13">13</option>
+					            <option value="14">14</option>
+					            <option value="15">15</option>
+					            <option value="16">16</option>
+					            <option value="17">17</option>
+					            <option value="18">18</option>
+					            </select>
+				            </dd>
+				            <dt>Legend URL</dt>
+				            <dd><input type="text" class="inputtext" name="legendUrl" title="Enter the URL of the legend data.<br>e.g.：http://sample.com/sample.pdf"></dd>
+				            <dt>Description</dt>
+				            <dd><textarea class="inputtext" rows="8" name="html" title="Enter a description of this layer."></textarea></dd>
+			            </div>
+		            </dl>
+	            </form>
+            </div>
+        </div>
+
+        <div class="load dialog_frame">
+	        <h3 class="dialog_header">Select the layers.txt</h3>
+	        <form>
+		        <div><input type="file" name="layers_file"></div>
+		        <div class="control">
+			        <a href="javascript:void(0);" load_method="load"  >Load</a>
+			        &nbsp;
+			        <a href="javascript:void(0);" load_method="cancel">Cancel</a>
+		        </div>
+	        </form>
+        </div>
+
+        <div class="save dialog_frame">
+	        <h3 class="dialog_header">Save click the "Save" button.</h3>
+	        <form>
+		        <div>
+			        <div style="margin-bottom:4px;">File name：<input type="text" size="32" name="download_filename" placeholder="layers.txt"></div>
+			        <textarea rows="8" style="width:450px;" name="download_text" wrap="off"></textarea>
+			        <br>
+			        <label><input type="checkbox" name="download_text_indent">Put the indent.</label>
+		        </div>
+		        <div class="control">
+			        <a href="" target="_blank" download="a.html" save_method="load">Save</a>
+			        &nbsp;
+			        <a href="javascript:void(0);" save_method="cancel">Cancel</a>
+		        </div>
+	        </form>
+        </div>
+
+    </div>
+    
+    <div class="popupmenu folder_menu">
+	    <ul>
+		    <li><a href="javascript:void(0);" popup_method="createfolder_next">Add a new folder directly below.</a></li>
+		    <li><a href="javascript:void(0);" popup_method="createlayer_next" >Add a new layer directly below.</a></li>
+		    <li><hr></li>
+		    <li><a href="javascript:void(0);" popup_method="createfolder_in">Add a new folder in the folder.</a></li>
+		    <li><a href="javascript:void(0);" popup_method="createlayer_in" >Add a new layer in the folder.</a></li>
+		    <li><hr></li>
+		    <li><a href="javascript:void(0);" popup_method="remove">Delete this folder.</a></li>
+	    </ul>
+    </div>
+	
+    <div class="popupmenu layer_menu">
+	    <ul>
+		    <li><a href="javascript:void(0);" popup_method="createfolder_next">Add a new folder directly below.</a></li>
+		    <li><a href="javascript:void(0);" popup_method="createlayer_next" >Add a new layer directly below.</a></li>
+		    <li><hr></li>
+		    <li><a href="javascript:void(0);" popup_method="remove">Delete this layer.</a></li>
+	    </ul>
+    </div>
+
+    <div class="popupmenu top_menu">
+	    <ul>
+		    <li><a href="javascript:void(0);" popup_method="createfolder_top">Add a new folder in the root.</a></li>
+		    <li><a href="javascript:void(0);" popup_method="createlayer_top" >Add a new layer in the root.</a></li>
+	    </ul>
+    </div>
+
+    <div class="nosupport">
+	    <div>Sorry, it is a browser that can not be available.<br>
+	    Please use the following browsers.</div>
+	    <ul>
+	    <li>Internet Explorer 10 and later</li>
+	    <li>Chrome 38 and later</li>
+	    <li>Firefox 24 and later</li>
+	    </ul>
+    </div>
+</body>
+
+</html>
+
