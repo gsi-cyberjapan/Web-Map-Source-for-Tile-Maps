@@ -743,17 +743,17 @@ function InitFrameDownload(o){
 		    + "<tbody>"
             + "<tr>"
             + "<td style=\"font-weight: bold;\">STL File</td>"
-            + "<td>The data for the 3D printer that does tinted.</td>"
+            + "<td>Data for 3D printer (colorless).</td>"
             + "<td><input id=\"dl_stl\" onclick=\"Download('stl');\"     type=\"button\" value=\"Download\"></td>"
             + "</tr>"
             + "<tr>"
             + "<td style=\"font-weight: bold;\">VRML File</td>"
-            + "<td>The data for the 3D printer of full color.</td>"
+            + "<td>Data for 3D printer (Full color).</td>"
             + "<td><input id=\"dl_vrml\" onclick=\"Download('vrml');\"   type=\"button\" value=\"Download\"></td>"
             + "</tr>"
             + "<tr>"
             + "<td style=\"font-weight: bold;\">WebGL File</td>"
-            + "<td>The file for the turning round and round in the browser.（File on the screen）</td>"
+            + "<td>Data for browsing like above.</td>"
             + "<td><input id=\"dl_three\" onclick=\"Download('webgl');\" type=\"button\" value=\"Download\"></td>"
             + "</tr>"
             + "</tbody>"
@@ -1042,6 +1042,34 @@ function RequestLayersVector(){
                     .fail(
                         function(data, status, error){
                             vLayersData_VectorAjax.data = null;
+                            	$.ajax({
+					                  type     : "GET"
+			                    , url      : "./js/style.js"
+			                    , dataType : "text"
+			                    , cache    : true
+		                    }
+		                    )
+		                    .done(
+		                        function(data, status, jqXHR){
+		                            if(data == null){
+		                                vLayersData_VectorAjax.data = "";
+		                            }
+		                            else{
+		                                try{
+		                                    vLayersData_VectorAjax.data =  eval( "(" + data + ")" );
+		                                    RequestLayersVectorStyle(vLayersData_VectorAjax, vLayersData_VectorAjax.data);
+		                                }
+		                                catch(e){
+		                                    InitProgressMsgError("VectorStyle[" + vLayersData_VectorAjax.src + "]...[" + e + "]");
+		                                }
+		                            }
+		                        }
+		                    )
+		                    .fail(
+		                        function(data, status, error){
+		                            vLayersData_VectorAjax.data = null;
+		                        }
+		                    )
                         }
                     )
                     .always(
