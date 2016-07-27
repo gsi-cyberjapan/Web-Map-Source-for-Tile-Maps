@@ -295,11 +295,11 @@ CONFIG.SERVERAPI.CHIMEI_SEARCH="//msearch.gsi.go.jp/address-search/AddressSearch
  Setting: menu: Help
  ************************************************************************/
 CONFIG.HELPMENU = [
- {'Moji':'Help',                   'Img':'./image/help/help_icon.png',    'Link':'//maps.gsi.go.jp/help/'},
+ {'Moji':'Help',                   'Img':'./image/help/help_icon.png',    'Link':'http://maps.gsi.go.jp/help/'},
  {'Moji':'Twitter',                'Img':'./image/help/twitter.png',      'Link':'//twitter.com/gsi_cyberjapan'},
  {'Moji':'GitHub',                 'Img':'./image/help/github.png',       'Link':'//github.com/gsi-cyberjapan'},
  {'Moji':'Partner Network',        'Img':'./image/help/partner_icon.png', 'Link':'//maps.gsi.go.jp/pn/'},
- {'Moji':'GSI HOME',               'Img':'./image/help/gsi_top.png',      'Link':'//www.gsi.go.jp/'}
+ {'Moji':'GSI HOME',               'Img':'./image/help/gsi_top.png',      'Link':'http://www.gsi.go.jp/'}
 ];
 
 /************************************************************************
