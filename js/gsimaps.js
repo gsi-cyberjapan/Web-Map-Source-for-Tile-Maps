@@ -7749,6 +7749,19 @@ GSI.SearchResultDialog = GSI.Dialog.extend( {
 	},
 	setChimeisResult : function( result )
 	{
+		if (result)
+		{
+			for(var i = result.length - 1; i >= 0; i--)
+				{
+					if (result[i].geometry.coordinates[0] <= 0)
+					{
+						if (result[i].geometry.coordinates[1] <= 0)
+					{
+						result.splice(i, 1);
+					}
+				}
+			}
+		}
 		this.chimeiResult = result;
 		this.showResult();
 	},
@@ -13221,6 +13234,9 @@ GSI.PagePrinter = L.Class.extend( {
         this._baseLayer = null;
         if(fBase){
 		    this._baseLayer = new GSI.BaseLayer(CONFIG.BASETILES, this._originalBaseLayer.getActiveId());
+
+				this._baseLayer.isGrayScale = this._originalBaseLayer.isGrayScale
+				this._baseLayer.options.opacity = this._originalBaseLayer.options.opacity;
 
 		    this._baseLayer.setHighQuality( hq );
 		    this._baseLayer.addTo(this._map);
