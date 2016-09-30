@@ -10085,8 +10085,12 @@ GSI.GeoLocation = L.Class.extend( {
 					{
 						var lat = loc.coords.latitude;
 						var lng = loc.coords.longitude;
-
-						this.map.setView( [lat, lng], CONFIG.SEARCHRESULTCLICKZOOM );
+						var z = this.map.getZoom();
+						if ( z < 15 )
+						{
+							z = CONFIG.SEARCHRESULTCLICKZOOM;
+						}
+						this.map.setView( [lat, lng], z );
 						// clear
 						navigator.geolocation.clearWatch(this.watchId);
 						this.watchId = null;
