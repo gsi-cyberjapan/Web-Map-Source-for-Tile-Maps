@@ -95,7 +95,7 @@ CONFIG.LAYERTYPELIST = {
 };
 
 // Globe
-CONFIG.GLOBEURL = "http://maps.gsi.go.jp/globe/index_globe.html";
+CONFIG.GLOBEURL = "./globe/index_globe.html";
 
 
 // The default value of formula bl2stf ONOFF
