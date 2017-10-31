@@ -148,12 +148,14 @@ var toGeoJSON = (function() {
                             if (geotypes[i] === 'Point') {
                                 geoms.push({
                                     type: 'Point',
-                                    coordinates: coord1(nodeVal(get1(geomNode, 'coordinates')))
+                                    coordinates: coord1(nodeVal(get1(geomNode, 'coordinates'))),
+                                    altitudeMode: nodeVal(get1(geomNode, 'altitudeMode'))
                                 });
                             } else if (geotypes[i] === 'LineString') {
                                 geoms.push({
                                     type: 'LineString',
-                                    coordinates: coord(nodeVal(get1(geomNode, 'coordinates')))
+                                    coordinates: coord(nodeVal(get1(geomNode, 'coordinates'))),
+                                    altitudeMode: nodeVal(get1(geomNode, 'altitudeMode'))
                                 });
                             } else if (geotypes[i] === 'Polygon') {
                                 var rings = get(geomNode, 'LinearRing'),
@@ -163,14 +165,16 @@ var toGeoJSON = (function() {
                                 }
                                 geoms.push({
                                     type: 'Polygon',
-                                    coordinates: coords
+                                    coordinates: coords,
+                                    altitudeMode: nodeVal(get1(geomNode, 'altitudeMode'))
                                 });
                             } else if (geotypes[i] === 'Track' ||
                                 geotypes[i] === 'gx:Track') {
                                 var track = gxCoords(geomNode);
                                 geoms.push({
                                     type: 'LineString',
-                                    coordinates: track.coords
+                                    coordinates: track.coords,
+                                    altitudeMode: nodeVal(get1(geomNode, 'altitudeMode'))
                                 });
                                 if (track.times.length) coordTimes.push(track.times);
                             }
@@ -318,7 +322,8 @@ var toGeoJSON = (function() {
                     properties: properties,
                     geometry: {
                         type: track.length === 1 ? 'LineString' : 'MultiLineString',
-                        coordinates: track.length === 1 ? track[0] : track
+                        coordinates: track.length === 1 ? track[0] : track,
+                        altitudeMode : node.altitudeMode
                     }
                 };
             }
@@ -330,7 +335,8 @@ var toGeoJSON = (function() {
                     properties: getProperties(node),
                     geometry: {
                         type: 'LineString',
-                        coordinates: line.line
+                        coordinates: line.line,
+                        altitudeMode : node.altitudeMode
                     }
                 };
                 return routeObj;
@@ -343,7 +349,8 @@ var toGeoJSON = (function() {
                     properties: prop,
                     geometry: {
                         type: 'Point',
-                        coordinates: coordPair(node).coordinates
+                        coordinates: coordPair(node).coordinates,
+                        altitudeMode : node.altitudeMode
                     }
                 };
             }

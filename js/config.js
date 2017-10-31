@@ -552,6 +552,9 @@ $(function (){
 					_openFolder(this);
 				}
             );
+            
+        if ( item.id && $.trim(item.id) !="" ) title.addClass( "file" );
+        else  title.removeClass( "file" );
 		item._element = title;
 
 		if(item.children){
@@ -651,6 +654,9 @@ $(function (){
 				    onChange : function(target,data){
 					    var _data     = (data._editedData ? data._editedData : data);
 					    var titleText = (_data.title && _data.title != '' ? _data.title : '<span style="color:#999;">No name</span>');
+					    
+        				if ( _data.id && $.trim(_data.id) !="" ) $(target).addClass( "file" )
+        				else $(target).removeClass("file");
 					    $(target).html(titleText);
                         //??-DELETE
                         // + (_data.children ? '<span class="num">' + _data.children.length + '</span>' : '')
@@ -788,6 +794,9 @@ $(function (){
                         item = item._editedData;
                     }
 					var title = (item.title && item.title != '' ? item.title : '<span style="color:#999;">No name</span>');
+					
+    				if ( item.id && $.trim(item.id) !="" ) targetFolderElem.addClass( "file" )
+    				else targetFolderElem.removeClass("file");
 					targetFolderElem.html(title);
                     //??-DELETE
                     // + (item.children ? '<span class="num">' + item.children.length + '</span>' : '')
@@ -1030,7 +1039,12 @@ $(function (){
 					else{
 						editingData._editedData.toggleall = editingData.toggleall;
                     }
-
+					if(f.find("input[name='tolayer']").is(":checked") ){
+						editingData._editedData.id = f.find("input[name='id']").val();
+                    }
+					else{
+						editingData._editedData.id = "";
+                    }
 					if(onChange){
                         onChange(_onChangeParam,editingData);
                     }
@@ -1045,6 +1059,7 @@ $(function (){
 					editingData._editedData.id            = f.find("input[name=id]"          ).val();
 					editingData._editedData.title         = f.find("input[name=title]"       ).val();
 					editingData._editedData.icon          = f.find("input[name=iconUrl]"     ).val();
+					editingData._editedData.styleurl      = f.find("input[name=styleurl]"    ).val();
 					editingData._editedData.url           = f.find("input[name=url]"         ).val();
                     editingData._editedData.errorTileUrl  = f.find("input[name=errorTileUrl]").val();
 					if(f.find("input[name='cocotile']").length > 0){
@@ -1053,7 +1068,25 @@ $(function (){
 					else{
 						editingData._editedData.cocotile = editingData.cocotile;
                     }
-
+					
+					var textToLatLng = function(s) {
+						var ret = null;
+						var parts = s.split(",");
+						if ( parts.length == 2 )
+						{
+							return [
+								parseFloat(parts[0]),
+								parseFloat(parts[1])
+							];
+						}
+						else
+							return null;
+					};
+					var southWest = textToLatLng( f.find("input[name=bounds_southwest]").val() );
+					var northEast = textToLatLng( f.find("input[name=bounds_northeast]").val() );
+					if ( southWest && northEast ) editingData._editedData.bounds =[southWest,northEast];
+					else editingData._editedData.bounds = null;
+					
 					editingData._editedData.subdomains    = f.find("input[name=subdomains]"      ).val();
 					editingData._editedData.attribution   = f.find("input[name=attribution]"     ).val();
 					editingData._editedData.minZoom       = f.find("select[name=minZoom]"        ).val();
@@ -1130,16 +1163,40 @@ $(function (){
 
 					var layerMode    = fEditLayerForm.find("input[name='type']:checked").attr('layer_mode');
 					var layerModeArr = layerMode.split(',');
-
+					
+					var elems = fEditLayerForm.find("dt,dd");
+					for( var i=0; i<elems.length; i++ )
+					{
+						var layerMode = $(elems[i]).attr("layer_mode");
+						if( layerMode && layerMode != '' ) $(elems[i]).hide();
+						
+					}
+					/*
 					fEditLayerForm.find("dt[layer_mode=tile]").hide();
 					fEditLayerForm.find("dd[layer_mode=tile]").hide();
 					fEditLayerForm.find("dt[layer_mode=layer_style]" ).hide();
 					fEditLayerForm.find("dd[layer_mode=layer_style]" ).hide();
-
+					*/
 					for (var i = 0; i < layerModeArr.length; i++){
 						if ( layerModeArr[i] == '' ) continue;
-						fEditLayerForm.find("dt[layer_mode=" + layerModeArr[i] + "]").show();
-						fEditLayerForm.find("dd[layer_mode=" + layerModeArr[i] + "]").show();
+						for( var j=0; j<elems.length; j++ )
+						{
+							var layerMode = $(elems[j]).attr("layer_mode");
+							if( layerMode && layerMode != '' ) {
+								var arr = layerMode.split(',');
+								for( var k=0; k<arr.length; k++ )
+								{
+									if (arr[k]==layerModeArr[i])
+									{
+										$(elems[j]).show();
+										continue;
+									}
+								}
+							}
+						}
+					
+						//fEditLayerForm.find("dt[layer_mode=" + layerModeArr[i] + "]").show();
+						//fEditLayerForm.find("dd[layer_mode=" + layerModeArr[i] + "]").show();
 					}
 				}
 				else{
@@ -1162,6 +1219,34 @@ $(function (){
 				if(fEditLayerForm.find("input[name='toggleall']" ).length > 0){
 					fEditLayerForm.find("input[name='toggleall']").prop({"checked":_data.toggleall ? true : false } ).bind("click", this, onBlur);
                 }
+                
+				fEditLayerForm.find( "input[name=id]" ).val($.trim(_data.id )).bind("blur", this, onBlur);
+				fEditLayerForm.find( "input[name=tolayer]" ).off("click").bind("click", this, function(e){
+					methods.fixEdit.apply(e.data, [o]);
+					if( $(this).is(":checked") )
+					{
+						
+						fEditLayerForm.find( ".id_frame" ).show();
+					}
+					else
+					{
+						
+						fEditLayerForm.find( ".id_frame" ).hide();
+					}
+				});
+                if ( _data.id && $.trim(_data.id ) != "" )
+                {
+					fEditLayerForm.find( "input[name=tolayer]" ).prop({"checked":true} );
+					fEditLayerForm.find( ".id_frame" ).show();
+				}
+				else
+				{
+					fEditLayerForm.find( "input[name=tolayer]" ).prop({"checked":false} );
+					fEditLayerForm.find( ".id_frame" ).hide();
+				}
+                
+                
+                
 				fEditLayer.fadeIn('normal');
 			}
 			else{
@@ -1187,10 +1272,24 @@ $(function (){
 				fEditLayerForm.find("input[name=url]"             ).val(_data.url           ? _data.url           : "").bind("blur"  , this, onBlur);
 				fEditLayerForm.find("input[name=subdomains]"      ).val(_data.subdomains    ? _data.subdomains    : "").bind("blur"  , this, onBlur);
 				fEditLayerForm.find("input[name=attribution]"     ).val(_data.attribution   ? _data.attribution   : "").bind("blur"  , this, onBlur);
-                fEditLayerForm.find("input[name=errorTileUrl]"    ).val(_data.errorTileUrl  ? _data.errorTileUrl  : "").bind("blur"  , this, onBlur);                
+                fEditLayerForm.find("input[name=errorTileUrl]"    ).val(_data.errorTileUrl  ? _data.errorTileUrl  : "").bind("blur"  , this, onBlur); 
+                fEditLayerForm.find("input[name=styleurl]"    ).val(_data.styleurl  ? _data.styleurl  : "").bind("blur"  , this, onBlur);                 
 				if(fEditLayerForm.find("input[name='cocotile']"   ).length > 0){
 					fEditLayerForm.find("input[name='cocotile']"  ).prop({"checked" : _data.cocotile ? true : false }).bind("click"  , this, onBlur);
                 }
+                
+                var southWest = "";
+				var northEast = "";
+				
+                if ( _data.bounds )
+                {
+					southWest =  _data.bounds[0][0] + "," + _data.bounds[0][1];
+					northEast =  _data.bounds[1][0] + "," + _data.bounds[1][1];
+				}
+				
+				fEditLayerForm.find("input[name=bounds_southwest]"    ).val(southWest).bind("blur"  , this, onBlur );
+				fEditLayerForm.find("input[name=bounds_northeast]"    ).val(northEast).bind("blur"  , this, onBlur );
+					
 				fEditLayerForm.find("select[name='minZoom']"      ).val(_data.minZoom       ? _data.minZoom       : "").bind("change", this, onBlur);
 				fEditLayerForm.find("select[name='maxZoom']"      ).val(_data.maxZoom       ? _data.maxZoom       : "").bind("change", this, onBlur);
 				fEditLayerForm.find("select[name='maxNativeZoom']").val(_data.maxNativeZoom ? _data.maxNativeZoom : "").bind("change", this, onBlur);
@@ -1330,7 +1429,8 @@ $(function (){
 					newItem.title     = item.title;
 					newItem.iconUrl   = ( item.icon ? item.icon : '' );
 					newItem.toggleall = ( item.toggleall ? item.toggleall : false );
-
+					newItem.id = item.id;
+					
                     if(item.src && item.src != ""){
                         item.layersUrl = item.src;
                     }
@@ -1351,7 +1451,9 @@ $(function (){
 					newItem.id           = item.id;
 					newItem.title        = item.title;
 					newItem.iconUrl      = ( item.icon ? item.icon : '' );
+					if ( item.styleurl && item.styleurl != '' ) newItem.styleurl     = item.styleurl;
 					newItem.url          = item.url;
+					if( item.bounds ) newItem.bounds       = item.bounds;
 					newItem.subdomains   = ( item.subdomains  ? item.subdomains    : "" );
 					newItem.attribution  = ( item.attribution ? item.attribution   : "" );
                     newItem.errorTileUrl = ( item.errorTileUrl ? item.errorTileUrl : "" );

@@ -1,20 +1,20 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 
 <html lang="en">
 
 <head>
     <link rel="shortcut icon" href="./favicon.ico" />
-	<link rel="apple-touch-icon" href="apple-touch-icon.png" />
+    <link rel="apple-touch-icon" href="apple-touch-icon.png" />
 
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1.0, ,user-scalable=no" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="description" content="GSI provides a web map entitled GSI Maps, where many layers of national authoritative geospatial information are available.">
 
-    <title>GSI Maps(en)</title>
+    <title>GSI Maps (en)</title>
 
     <link rel="stylesheet" href="js.lib/leaflet-0.7.3/leaflet.css" />
-    <script src="js.lib/leaflet-0.7.3/leaflet-src.js"></script>
+    <script type="text/javascript" src="js.lib/leaflet-0.7.3/leaflet-src.js"></script>
 
     <link rel="stylesheet" type="text/css" href="./js.lib/jquery/jquery-ui.min.css"/>
     <script type="text/javascript" src="./js.lib/jquery/jquery-1.11.1.min.js"></script>
@@ -41,10 +41,13 @@
     <link rel="stylesheet" type="text/css" href="js.lib/leaflet-plugin/leaflet.draw/leaflet.draw-gsi.css"/>
     <script type="text/javascript" src="js.lib/leaflet-plugin/leaflet.draw/leaflet.draw-gsi.js"></script>
     <script type="text/javascript" src="js.lib/leaflet-plugin/leaflet-hash/leaflet-hash-gsi.js"></script>
+    <script type="text/javascript" src="js.lib/html2canvas.js"></script>
 
     <link rel="stylesheet" type="text/css" href="./css/gsimaps.css"/>
 
     <script type="text/javascript" src="js/gsimaps.js"></script>
+    <script type="text/javascript" src="js/muni.js"></script>
+    <script type="text/javascript" src="js/jiki.js"></script>
     <noscript>
         <div class="noscript">
         Please enable JavaScript.
@@ -55,20 +58,21 @@
 <body>
     <div id="header" class="logo_s">
         <div class="logoarea">
-	        <a style="text-decoration:none;" href="">
+            <a style="text-decoration:none;" href="">
 	        		<div id="title_logo_upper">GSI Maps</div>
 	        		<div id="title_logo_lower">(sample)</div>
-	        </a>
+            </a>
         </div>
-		<div class="magnifyingglass">
-	   		<img name = "magnifyimage" id="magnifyimage" src="./image/system/search.png"/>
-	   	</div>
+
+        <div class="magnifyingglass">
+               <img name = "magnifyimage" id="magnifyimage" src="./image/system/search.png"/>
+        </div>
         <form name="search_f" id="search_f" autocomplete="off">
-	        <input name="query" id="query" value="" type="search" placeholder="Search window [in Japanese] : e.g.：剱岳 / 金沢市木ノ新保町 / 35°0′0″ 135°0′0″ / 35.00 135.00 / 54SUE83694920" />
+            <input name="query" id="query" value="" type="search" placeholder="Search bar [in Japanese] : e.g.：剱岳 / 金沢市木ノ新保町 / 35°0′0″ 135°0′0″ / 35.00 135.00 / 54SUE83694920" />
         </form>
 
-		<div class="help">
-		    <div id="title_help" onclick="HelpButton()">？</div>
+        <div class="help">
+            <a id="title_help" onclick="HelpButton()">?</a>
         </div>
     </div>
 
@@ -78,13 +82,84 @@
     <a id="footerbtn" href="javascript:void(0);"><img src="image/system/footer_up.png" style="width:96px;height:12px;"></a>
 
     <div id="footer">
-	    <div class="item_frame item_start"><span class="heading">Address:</span><span id="address">----</span><span class="mini_comment">（Ballpark position. It's not necessarily accurate.）</span></div>
-	    <div class="item_frame"><span id="latlng_60">----</span></div>
-	    <div class="item_frame"><span id="latlng_10">----</span>&nbsp;&nbsp;<span class="heading">Zoom:</span><span id="current_zoom"></span></div>
-	    <div class="item_frame"><span class="heading">UTM Point：</span><span id="utm_point">----</span></div>
-	    <div class="item_frame"><span class="heading">Elevation：</span><span id="elevation">----</span><span id="elevationSrc" class="mini_comment_elev"></span></div>
-	    <a class="normalbutton footer_description_btn" target="_blank" href="http://maps.gsi.go.jp/help/howtouse.html#h2-3">details</a>
+        <div class="item_frame item_start"><span class="heading">Address:</span><span id="address">----</span><span class="mini_comment">（Not entirely accurate.）</span></div>
+        <div class="item_frame"><span id="latlng_60">----</span></div>
+        <div class="item_frame"><span id="latlng_10">----</span>&nbsp;&nbsp;<span class="heading">Zoom:</span><span id="current_zoom"></span></div>
+        <div class="item_frame"><span class="heading">MGRS：</span><span id="utm_point">----</span></div>
+        <div class="item_frame"><span class="heading">Elevation：</span><span id="elevation">----</span><span id="elevationSrc" class="mini_comment_elev"></span></div>
+        <a href="http://maps.gsi.go.jp/help/howtouse.html#h2-3" class="normalbutton footer_description_btn" target="_blank">details</a>
     </div>
+
+
+    <div id="help">
+
+        <div class="help_content"  style="text-align:center"  title="What is GSI Maps?">
+            <h1 style="font-size:120%;line-height: 130%;">"GSI Maps" is a web map operated by GSI. We publishes a lot of geospatial information of Japan via this web map.</h1>
+            <img src="./image/help/help_0.jpg" style="width:100%;max-width:700px">
+            <hr>
+            <div style="text-align:left;">
+                <p>Link</p>
+                <div title="Help" style="display:inline-block;border:2px solid #fff;padding:3px;margin:3px">
+                    <a href="http://maps.gsi.go.jp/help/" target="_blank" style="font-size:110%;text-decoration:none;color:#000"><img src="./image/help/help_icon.png" style="width:20px;vertical-align:middle;margin:3px">Help</a>
+                </div>
+                <div title="Use GSI Tiles" style="display:inline-block;border:2px solid #fff;padding:3px;margin:3px">
+                    <a href="http://maps.gsi.go.jp/help/use.html" target="_blank" style="font-size:110%;text-decoration:none;color:#000"><img src="./image/help/use_icon.png" style="width:20px;vertical-align:middle;margin:3px">Terms of Use</a>
+                </div>
+                <div title="Twitter" style="display:inline-block;border:2px solid #fff;padding:3px;margin:3px">
+                    <a href="https://twitter.com/gsi_cyberjapan" target="_blank" style="font-size:110%;text-decoration:none;color:#000"><img src="./image/help/twitter.png" style="width:20px;vertical-align:middle;margin:3px">Twitter</a>
+                </div>
+                <div title="GitHub" style="display:inline-block;border:2px solid #fff;padding:3px;margin:3px">
+                    <a href="https://github.com/gsi-cyberjapan" target="_blank" style="font-size:110%;text-decoration:none;color:#000"><img src="./image/help/github.png" style="width:20px;vertical-align:middle;margin:3px">GitHub</a>
+                </div>
+                <div title="Partner Network" style="display:inline-block;border:2px solid #fff;padding:3px;margin:3px">
+                    <a href="http://maps.gsi.go.jp/pn/" target="_blank" style="font-size:110%;text-decoration:none;color:#000"><img src="./image/help/partner_icon.png" style="width:20px;vertical-align:middle;margin:3px">Partner Network</a>
+                </div>
+                <div title="GSI HOME" style="display:inline-block;border:2px solid #fff;padding:3px;margin:3px">
+                    <a href="http://www.gsi.go.jp/" target="_blank" style="font-size:110%;text-decoration:none;color:#000"><img src="./image/help/gsi_top.png" style="width:20px;vertical-align:middle;margin:3px">GSI HOME</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="help_content" style="text-align:center"   title="You can see orthophotos of various times !">
+            <h1 style="font-size:120%;line-height: 130%;">You can see orthophotos of various times.</h1>
+            <img src="./image/help/help_photo.jpg" style="width:100%;max-width:700px">
+            <hr>
+            <div style="text-align:left">
+                <p>See orthophotos.</p>
+                <div title="See orthophotos." style="display:inline-block;border:2px solid #fff;padding:3px;margin:3px">
+                    <a href="./#7/35.371135/138.713379/&base=std&ls=std%7Cseamlessphoto&disp=11&lcd=seamlessphoto&vs=c1j0l0u0f0&d=vl" onclick="GSI.HelpDialog.hide();">Seamless Orthophoto</a>
+                </div>
+                <div title="See orthophotos." style="display:inline-block;border:2px solid #fff;padding:3px;margin:3px">
+                    <a href="./#7/35.371135/138.713379/&base=std&ls=std%7C_ort&disp=11&lcd=_ort&vs=c1j0l0u0f0&d=vl" onclick="GSI.HelpDialog.hide();">Latest（since 2007）</a>
+                </div>
+                <div title="See orthophotos." style="display:inline-block;border:2px solid #fff;padding:3px;margin:3px">
+                    <a href="./#10/35.703032/139.820251/&base=std&ls=std%7Cgazo4&disp=11&lcd=gazo4&vs=c1j0l0u0f0&d=vl" onclick="GSI.HelpDialog.hide();">From 1988 to 1990</a>
+                </div>
+                <div title="See orthophotos." style="display:inline-block;border:2px solid #fff;padding:3px;margin:3px">
+                    <a href="./#10/35.703032/139.820251/&base=std&ls=std%7Cgazo3&disp=11&lcd=gazo3&vs=c1j0l0u0f0&d=vl" onclick="GSI.HelpDialog.hide();">From 1984 to 1987</a>
+                </div>
+                <div title="See orthophotos." style="display:inline-block;border:2px solid #fff;padding:3px;margin:3px">
+                    <a href="./#10/35.703032/139.820251/&base=std&ls=std%7Cgazo2&disp=11&lcd=gazo2&vs=c1j0l0u0f0&d=vl" onclick="GSI.HelpDialog.hide();">From 1979 to 1983</a>
+                </div>
+                <div title="See orthophotos." style="display:inline-block;border:2px solid #fff;padding:3px;margin:3px">
+                    <a href="./#10/35.703032/139.820251/&base=std&ls=std%7Cgazo1&disp=11&lcd=gazo2&vs=c1j0l0u0f0&d=vl" onclick="GSI.HelpDialog.hide();">From 1974 to 1978</a>
+                </div>
+                <div title="See orthophotos." style="display:inline-block;border:2px solid #fff;padding:3px;margin:3px">
+                    <a href="./#7/35.703032/139.820251/&base=std&ls=std%7Cort_old10&disp=11&lcd=ort_old10&vs=c1j0l0u0f0&d=vl" onclick="GSI.HelpDialog.hide();">From 1961 to 1964</a>
+                </div>
+                <div title="See orthophotos." style="display:inline-block;border:2px solid #fff;padding:3px;margin:3px">
+                    <a href="./#7/35.703032/139.820251/&base=std&ls=std%7Cort_USA10&disp=11&lcd=ort_USA10&vs=c1j0l0u0f0&d=vl" onclick="GSI.HelpDialog.hide();">From 1945 to 1950</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="help_content"  style="text-align:center"   title="You can see 3D Models!">
+            <h1 style="font-size:120%;line-height: 130%;">You can see 3D Models.</h1>
+            <img src="./image/help/help_3d.jpg" style="width:100%;max-width:700px">
+        </div>
+
+    </div>
+
 </body>
 
 </html>

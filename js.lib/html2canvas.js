@@ -1512,6 +1512,7 @@ NodeContainer.prototype.cloneTo = function(stack) {
     stack.visible = this.visible;
     stack.borders = this.borders;
     stack.bounds = this.bounds;
+    stack.shadow = this.shadow;
     stack.clip = this.clip;
     stack.backgroundClip = this.backgroundClip;
     stack.computedStyles = this.computedStyles;
@@ -1701,6 +1702,7 @@ NodeContainer.prototype.parseTransform = function() {
             var origin = this.prefixedCss("transformOrigin").split(" ").map(removePx).map(asFloat);
             origin[0] += offset.left;
             origin[1] += offset.top;
+            
             this.transformData = {
                 origin: origin,
                 matrix: this.parseTransformMatrix()
@@ -1957,6 +1959,8 @@ NodeParser.prototype.calculateOverflowClips = function() {
                 container.appendToDOM();
             }
             container.borders = this.parseBorders(container);
+            var boxShadow = container.css( "box-shadow" );
+            container.shadow = ( boxShadow && boxShadow != 'none' );
             var clip = (container.css('overflow') === "hidden") ? [container.borders.clip] : [];
             var cssClip = container.parseClip();
             if (cssClip && ["absolute", "fixed"].indexOf(container.css('position')) !== -1) {
@@ -2171,6 +2175,7 @@ NodeParser.prototype.parse = function(stack) {
 NodeParser.prototype.paint = function(container) {
     try {
         if (container instanceof ClearTransform) {
+			
             this.renderer.ctx.restore();
         } else if (isTextNode(container)) {
             if (isPseudoElement(container.parent)) {
@@ -2193,6 +2198,7 @@ NodeParser.prototype.paint = function(container) {
 
 NodeParser.prototype.paintNode = function(container) {
     if (isStackingContext(container)) {
+		
         this.renderer.setOpacity(container.opacity);
         this.renderer.ctx.save();
         if (container.hasTransform()) {
@@ -2205,6 +2211,7 @@ NodeParser.prototype.paintNode = function(container) {
     } else if (container.node.nodeName === "INPUT" && container.node.type === "radio") {
         this.paintRadio(container);
     } else {
+		
         this.paintElement(container);
     }
 };
@@ -2218,7 +2225,7 @@ NodeParser.prototype.paintElement = function(container) {
     this.renderer.clip(container.clip, function() {
         this.renderer.renderBorders(container.borders.borders);
     }, this);
-
+	
     this.renderer.clip(container.backgroundClip, function() {
         switch (container.node.nodeName) {
         case "svg":
@@ -2321,7 +2328,6 @@ NodeParser.prototype.paintText = function(container) {
     var textList = (!this.options.letterRendering || noLetterSpacing(container)) && !hasUnicode(container.node.data) ? getWords(characters) : characters.map(function(character) {
         return window.html2canvas.punycode.ucs2.encode([character]);
     });
-
     var weight = container.parent.fontWeight();
     var size = container.parent.css('fontSize');
     var family = container.parent.css('fontFamily');
@@ -2895,14 +2901,17 @@ Renderer.prototype.renderImage = function(container, bounds, borderData, imageCo
 
 Renderer.prototype.renderBackground = function(container, bounds, borderData) {
     if (bounds.height > 0 && bounds.width > 0) {
+		
         this.renderBackgroundColor(container, bounds);
         this.renderBackgroundImage(container, bounds, borderData);
     }
 };
 
 Renderer.prototype.renderBackgroundColor = function(container, bounds) {
+	
     var color = container.color("backgroundColor");
     if (!color.isTransparent()) {
+		
         this.rectangle(bounds.left, bounds.top, bounds.width, bounds.height, color);
     }
 };
@@ -3218,6 +3227,7 @@ CanvasRenderer.prototype.setFillStyle = function(fillStyle) {
 };
 
 CanvasRenderer.prototype.rectangle = function(left, top, width, height, color) {
+	
     this.setFillStyle(color).fillRect(left, top, width, height);
 };
 
@@ -3271,7 +3281,9 @@ CanvasRenderer.prototype.clip = function(shapes, callback, context) {
 };
 
 CanvasRenderer.prototype.shape = function(shape) {
+	
     this.ctx.beginPath();
+    
     shape.forEach(function(point, index) {
         if (point[0] === "rect") {
             this.ctx.rect.apply(this.ctx, point.slice(1));
@@ -3279,6 +3291,9 @@ CanvasRenderer.prototype.shape = function(shape) {
             this.ctx[(index === 0) ? "moveTo" : point[0] + "To" ].apply(this.ctx, point.slice(1));
         }
     }, this);
+    
+    
+	
     this.ctx.closePath();
     return this.ctx;
 };
@@ -3317,7 +3332,7 @@ CanvasRenderer.prototype.setVariable = function(property, value) {
 };
 
 CanvasRenderer.prototype.text = function(text, left, bottom) {
-    this.ctx.fillText(text, left, bottom);
+	this.ctx.fillText(text, left, bottom);
 };
 
 CanvasRenderer.prototype.backgroundRepeatShape = function(imageContainer, backgroundPosition, size, bounds, left, top, width, height, borderData) {

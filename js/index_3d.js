@@ -33,15 +33,24 @@ var CONFIG = {};
 CONFIG.layerBase          = ['./layers_txt/layers0.txt'];
 CONFIG.layerBaseDefaultID = "std";
 CONFIG.layers             = [
-	 './layers_txt/layers1.txt'
-    ,'./layers_txt/layers_experimental.txt'
+	'./layers_txt/layers1.txt',
+	'./layers_txt/layers2.txt',
+	'./layers_txt/layers3.txt',
+	'./layers_txt/layers4.txt',
+	'./layers_txt/layers_skhb.txt',
+	'./layers_txt/layers5.txt',
+	'./layers_txt/layers_experimental.txt'
 ];
 /*-----------------------------------------------------------------------------------------------*/
 var vDemType                            = "TXT"; // TXT, PNG
-var vDemUrl                             = "//cyberjapandata.gsi.go.jp/xyz/dem/{z}/{x}/{y}.txt";
+var vDemUrl                             = "https://cyberjapandata.gsi.go.jp/xyz/dem/{z}/{x}/{y}.txt";
 //  vDemUrl                             = "./[@]/tile.gsi/{z}/{x}/{y}.png";
-var vDemUrl_Default                     = "//cyberjapandata.gsi.go.jp/xyz/dem/{z}/{x}/{y}.txt";
+var vDemUrl_Default                     = "https://cyberjapandata.gsi.go.jp/xyz/dem/{z}/{x}/{y}.txt";
 var vDemUrl_maxZoom                     =14;
+var vDemGMType                            = "TXT"; // TXT, PNG
+var vDemGMUrl                             = "https://cyberjapandata.gsi.go.jp/xyz/demgm/{z}/{x}/{y}.txt";
+var vDemGMUrl_Default                     = "https://cyberjapandata.gsi.go.jp/xyz/demgm/{z}/{x}/{y}.txt";
+var vDemGMUrl_maxZoom                     =8;
 /*-----------------------------------------------------------------------------------------------*/
 var _Load_StyleZoom                     = false;
 var _Load_Data                          = null;
@@ -97,14 +106,14 @@ var vLayersData                         = null;
                                                               type == vector only
                                              */
 var vLayersData_VectorStyle             = null;
-                                            /* [LayerID] Status. Data drawing
+                                            /* [LayerID] Hash data
                                                 id          : Layer ID
                                                 src         : Source
                                                 load        : Status. Data read
                                                 zoom_min    :
                                                 zoom_max    ;
                                                 zoom_native ;
-                                                data        : Data (JavaScript[Style.js])
+                                                data        : Data(JavaScript[Style.js])
                                              */
 var vLayersData_VectorAjax              = null;
 var vTilesDem                           = null;
@@ -120,6 +129,11 @@ var vVectorHTML                         = {
                                          };
 var vDem                                = null;
 var fDemTrimFromCenter                  = true;
+var nVertexNumX                         = 256;
+var nVertexNumY                         = 256;
+var nGeomSizeX = 100;
+var nGeomSizeY = 100;
+
 /*-----------------------------------------------------------------------------------------------*/
 var vLoadLayersProc_oTextureCanvas_2D   = null;
 var vLoadLayersProc_x                   = null;
@@ -141,10 +155,12 @@ var oFrame                              = null;
 var oFrame3D                            = null;
 var oFrame3D_CtrlZ                      = null;
 var oFrame3D_Download                   = null;
+var oGSIMapLink                         = null;
 var oRenderer                           = null;
 var oScene                              = null;
 var oSceneLight                         = null;
 var oSceneMesh                          = null;
+var oSceneGEODataMeshArr                = null;
 var oSceneMeshBase                      = null;
 var oCamera                             = null;
 var oCameraCtrl                         = null;
@@ -156,9 +172,16 @@ var vSceneMesh                          = null;
 var vSceneMesh_ZMin                     = null;
 var vSceneMeshDistanceRate              = 1;
 var vSceneMeshZRate                     = 1.0;
+var oGeo3DData                          = null;
+var oIconTextureCanvas                  = null;
+var oFaceMaterial                       = null;
+var bFaceTransparent                    = false;
+var oFaceTransparentCheck               = null;
+
 /*-----------------------------------------------------------------------------------------------*/
 var oWinDownload                        = null;
 /*-----------------------------------------------------------------------------------------------*/
+
 
 /*-----------------------------------------------------------------------------------------------*/
 // Initial processing
@@ -171,6 +194,14 @@ function Init(iFrame){
                 if(oWin.CONFIG.layerBase          && oWin.CONFIG.layerBase.length          > 0){ CONFIG.layerBase          = oWin.CONFIG.layerBase; }
                 if(oWin.CONFIG.layerBaseDefaultID && oWin.CONFIG.layerBaseDefaultID.length > 0){ CONFIG.layerBaseDefaultID = oWin.CONFIG.layerBaseDefaultID; }
                 if(oWin.CONFIG.layers             && oWin.CONFIG.layers.length             > 0){ CONFIG.layers             = oWin.CONFIG.layers;    }
+              if ( oWin.CONFIG.layersTab )
+              {
+				for( var i=0; i<oWin.CONFIG.layersTab.length; i++ )
+				{
+					for( var j=0; j<oWin.CONFIG.layersTab[i].layers.length; j++ )
+						CONFIG.layers.push( oWin.CONFIG.layersTab[i].layers[j]);
+				}
+			  }
             }
         }
         catch(e){
@@ -188,11 +219,33 @@ function Init(iFrame){
             if(oProgressBar != null){
 	            $( "#" + oProgressBar.id).show();
             }
-
+			$( "#gsimap_link" ).attr( {"href":getGSIMapUrl( args )} );
             InitLoadLayersTxt();
 	    }
     }
 };
+
+function getGSIMapUrl( args )
+{
+	var base = "base=";
+	if ( 0<args["ls"].length )
+	{
+		base += args["ls"][0].id;
+		
+		if ( args["ls"][0].grayscale )
+			base+= "&base_grayscale=1";
+	}
+	
+	var ls ="";
+	for( var i=0; i<args["ls"].length; i++ )
+	{
+		var dItem = args["ls"][i];
+		
+		ls += ( ls != '' ? '|' : '' ) + dItem.id
+			+ ( dItem.opacity && dItem.opacity < 1 ? "," + dItem.opacity  : "" );
+	}
+	return "./#" + args["z"] + "/" + args["lat"] + "/" + args["lon"] + "/&" + base + "&ls=" + encodeURIComponent(ls);
+}
 
 function InitGet(){
     var ret    = null;
@@ -234,7 +287,8 @@ function InitGet(){
 			var paramValue = decodeURIComponent(element[1]);
 			ret[paramName] = decodeURIComponent(paramValue);
 		}
-
+		bFaceTransparent = ( ret["b"] == 1 ? true : false );
+		if ( oFaceTransparentCheck ) oFaceTransparentCheck.prop({"checked":bFaceTransparent});
         // Argument：Layer
         if(ret["ls"]){
             var d = ret["ls"].split("|");
@@ -244,6 +298,7 @@ function InitGet(){
                 var nItem = d[n].split(",");
                 var nItemID      = "";
                 var nItemOpacity = 1;
+                var nMultiply = mpflag(ret["blend"], n, nItemID);
                 if(nItem.length >= 2){
                     nItemID      = nItem[0];
                     try{
@@ -259,6 +314,7 @@ function InitGet(){
                       id        : nItemID
                     , opacity   : nItemOpacity
                     , grayscale : false
+                    , multiplytile : nMultiply
                 };
                 if(n == 0){
                     if(ret["base_grayscale"] && ret["base_grayscale"] == "1"){
@@ -275,44 +331,102 @@ function InitGet(){
                     id        : CONFIG.layerBaseDefaultID
                 , opacity   : 1
                 , grayscale : false
+                , mutiplytile : 0
             };
 
             ret["ls"].push(dItem);
         }
-
-        // 引数：DEM
+		ret["planeopacity"] = 0.99;
+		
+		if ( !ret["frame"] ||( ret["frame"] != "normal"  && ret["frame"] != "none" ) )
+			ret["frame"] = "trans";
+        // Argument：DEM
         if(!(vDemType == "PNG" || vDemType == "TXT")){
             vDemType = "TXT";
             vDemUrl  = vDemUrl_Default;
         }
+		if(ret["z"]<=vDemGMUrl_maxZoom){
+            vDemType = vDemGMType;
+            vDemUrl = vDemGMUrl;
+            vDemUrl_Default = vDemGMUrl_Default;
+            vDemUrl_maxZoom = vDemGMUrl_maxZoom;
+        }
 
         ret["tile_n"]    = nTextureTileN;
         ret["tile_n_px"] = vTextureCanvas_W;
-        if(ret["pxsize"]){
-            ret["tile_n_px"] = parseInt(ret["pxsize"], 10);
-            if(isFinite(ret["tile_n_px"])){
-                if(ret["tile_n_px"] < 256){
-                    ret["tile_n_px"] = 256;
+        ret["tile_n_w"]    = nTextureTileN;
+        ret["tile_n_px_w"] = vTextureCanvas_W;
+        ret["tile_n_h"]    = nTextureTileN;
+        ret["tile_n_px_h"] = vTextureCanvas_W;
+        
+        
+        var setTileN = function (ret, size, key)
+        {
+            ret["tile_n_px"+key] = parseInt(size, 10);
+            if(isFinite(ret["tile_n_px"+key])){
+                if(ret["tile_n_px"+key] < 256){
+                    ret["tile_n_px"+key] = 256;
                 }
                 else{
-                    if(ret["tile_n_px"] % 2 != 0){
-                        ret["tile_n_px"]++;
+                    if(ret["tile_n_px"+key] % 2 != 0){
+                        ret["tile_n_px"+key]++;
                     }
                 }
-                ret["tile_n"] = Math.ceil(ret["tile_n_px"] / 256);
+                ret["tile_n"+key] = Math.ceil(ret["tile_n_px"+key] / 256);
             }
+        };
+        
+        
+        
+        if(ret["w"] && ret["h"] )
+        {
+			setTileN( ret, ret["w"], "_w" );
+			setTileN( ret, ret["h"], "_h" );
         }
-
-        // trimming
+        else if(ret["pxsize"]){
+			//setTileN( ret, ret["pxsize"], "" );
+			ret["w"] = ret["pxsize"];
+			ret["h"] = ret["pxsize"];
+			setTileN( ret, ret["pxsize"], "_w" );
+			setTileN( ret, ret["pxsize"], "_h" );
+        }
+		else
+		{
+			alert( "" );
+		}
+		
+		if ( ret["tile_n_px_w"] > ret["tile_n_px_h"] )
+		{
+			
+			nVertexNumX = 256;
+			nVertexNumY = Math.floor( ret["tile_n_px_h"] * ( 256 / ret["tile_n_px_w"]) );
+		}
+		else
+		{
+			
+			nVertexNumY = 256;
+			nVertexNumX = Math.floor( ret["tile_n_px_w"] * ( 256 / ret["tile_n_px_h"]) );
+		}
+		
+		if ( nVertexNumX < 256 || nVertexNumY < 256 )
+		{
+			nVertexNumX = parseInt( nVertexNumX * 1.5 );
+			nVertexNumY = parseInt( nVertexNumY * 1.5 );
+			
+		}
+		
+		
+        // Trimming
         if(fDemTrimFromCenter){
             var vCX         = GetTileX(ret["z"], ret["lon"]);        // Center tile information
             var vCY         = GetTileY(ret["z"], ret["lat"]);        // Center tile information
             var vC0         = 256 * 0.5;                             // Center tile midpoint
-            var nCT         = Math.floor(ret["tile_n"] * 0.5);       // Number of tiles from the center tile
-            var nCTXS       = nCT;                                   // The number of tiles in the X0 direction from the center tile
-            var nCTXE       = nCT + 1;                               // The number of tiles in the X1 direction from the center tile
-            var nCTYS       = nCT;                                   // The number of tiles in the Y0 direction from the center tile
-            var nCTYE       = nCT + 1;                               // The number of tiles in the Y1 direction from the center tile
+            var nCT_X       = Math.floor(ret["tile_n_w"] * 0.5);     // Number of tiles from the center tile
+            var nCT_Y       = Math.floor(ret["tile_n_h"] * 0.5);     // Number of tiles from the center tile
+            var nCTXS       = nCT_X;                                 // The number of tiles in the X0 direction from the center tile
+            var nCTXE       = nCT_X + 1;                             // The number of tiles in the X1 direction from the center tile
+            var nCTYS       = nCT_Y;                                 // The number of tiles in the Y0 direction from the center tile
+            var nCTYE       = nCT_Y + 1;                             // The number of tiles in the Y1 direction from the center tile
             var nCTXS_PXS_S = 0;                                     // X0 Trimming range.Start px
             var nCTXS_PXS_E = 256;                                   // X0 Trimming range.End px
             var nCTXS_PXE_S = 0;                                     // X1 Trimming range.Start px
@@ -321,6 +435,7 @@ function InitGet(){
             var nCTYS_PXS_E = 256;                                   // y0 Trimming range.End px
             var nCTYS_PXE_S = 0;                                     // y1 Trimming range.Start px
             var nCTYS_PXE_E = 256;                                   // y1 Trimming range.End px
+            
             if(vCX.px != vC0){
                 if(vCX.px < vC0){
                     nCTXS++;
@@ -351,54 +466,69 @@ function InitGet(){
             var nCY_RangeE = vCY.n + nCTYE;                             // Tile number Y1
             var nCX_RangeS_Lon = GetTile2Lng(nCX_RangeS    , ret["z"]); // Longitude of X0 Tile(upper left)
             var nCX_RangeE_Lon = GetTile2Lng(nCX_RangeE + 1, ret["z"]); // Longitude of X1 Tile(upper left)
-            var nCY_RangeS_Lat = GetTile2Lng(nCY_RangeS    , ret["z"]); // Latitude of Y0 Tile(lower right)
-            var nCY_RangeE_Lat = GetTile2Lng(nCY_RangeE + 1, ret["z"]); // Latitude of Y1 Tile(lower right)
-
-            ret["tile_n"]   = Math.max(nCX_RangeE - nCX_RangeS, nCY_RangeE - nCY_RangeS);
+            var nCY_RangeS_Lat = GetTile2Lat(nCY_RangeS    , ret["z"]); // Latitude of Y0 Tile(lower right)
+            var nCY_RangeE_Lat = GetTile2Lat(nCY_RangeE + 1, ret["z"]); // Latitude of Y1 Tile(lower right)
+            
+            
+            ret["tile_n_w"]   = nCX_RangeE - nCX_RangeS;
+            ret["tile_n_h"]   = nCY_RangeE - nCY_RangeS;
+            //Math.max(nCX_RangeE - nCX_RangeS, nCY_RangeE - nCY_RangeS);
             ret["lon_lt_x"] = nCX_RangeS;   ret["lon_lt"] = nCX_RangeS_Lon;
             ret["lon_rb_x"] = nCX_RangeE;   ret["lon_rb"] = nCX_RangeE_Lon;
             ret["lat_lt_y"] = nCY_RangeS;   ret["lat_lt"] = nCY_RangeS_Lat;
             ret["lat_rb_y"] = nCY_RangeE;   ret["lat_rb"] = nCY_RangeE_Lat;
-            ret["trim_n"]   = (ret["tile_n"] - 1);
+            ret["trim_n_x"]   = (ret["tile_n_w"] - 1);
+            ret["trim_n_y"]   = (ret["tile_n_h"] - 1);
             ret["trim_x_s"] = nCTXS_PXS_S;       // Left trim pixels
             ret["trim_x_e"] = 256 - nCTXS_PXE_E; // Right trim pixels
             ret["trim_y_s"] = nCTYS_PXS_S;       // Top trim pixels
             ret["trim_y_e"] = 256 - nCTYS_PXE_E; // Under trim pixels
-            ret["trim_y_w"] = ret["trim_n"] * 256; // Width trim pixels
-            ret["trim_y_h"] = ret["trim_n"] * 256; // High trim pixels
+            ret["trim_y_w"] = ret["trim_n_x"] * 256; // Width trim pixels
+            ret["trim_y_h"] = ret["trim_n_y"] * 256; // High trim pixels
             
-            var vWP = ret["trim_n"] * 256;
-            var vWC = ret["tile_n_px"];
-            var vT  = Math.ceil((vWP - vWC) * 0.5);
-            ret["trim_n"] = Math.floor(ret["tile_n_px"] / 256);
-            if(ret["tile_n_px"] % 256 != 0){
-                ret["trim_n_px"] = (ret["tile_n_px"] - (ret["trim_n"] * 256)) * 0.5;
+            var vWP_X = ret["trim_n_x"] * 256;
+            var vWP_Y = ret["trim_n_y"] * 256;
+            var vWC_X = ret["tile_n_px_w"];
+            var vWC_Y = ret["tile_n_px_h"];
+            var vT_X  = Math.ceil((vWP_X - vWC_X) * 0.5);
+            ret["trim_n_x"] = Math.floor(ret["tile_n_px_w"] / 256);
+            if(ret["tile_n_px_w"] % 256 != 0){
+                ret["trim_n_px_x"] = (ret["tile_n_px_w"] - (ret["trim_n_x"] * 256)) * 0.5;
             }
             else{
-                ret["trim_n_px"] = 0;
+                ret["trim_n_px_x"] = 0;
             }
-
-            ret["trim_x_s"] += vT;
-            ret["trim_x_e"] += vT;
-            ret["trim_y_s"] += vT;
-            ret["trim_y_e"] += vT;
-            ret["trim_y_w"] = Math.ceil(vWC * 0.5) * 2;
-            ret["trim_y_h"] = Math.ceil(vWC * 0.5) * 2;             
             
-            vTextureCanvas_W = 256 * ret["tile_n"];
-            vTextureCanvas_H = 256 * ret["tile_n"];
+            var vT_Y  = Math.ceil((vWP_Y - vWC_Y) * 0.5);
+            ret["trim_n_y"] = Math.floor(ret["tile_n_px_h"] / 256);
+            if(ret["tile_n_px_h"] % 256 != 0){
+                ret["trim_n_px_y"] = (ret["tile_n_px_h"] - (ret["trim_n_y"] * 256)) * 0.5;
+            }
+            else{
+                ret["trim_n_px_y"] = 0;
+            }
+            
+            ret["trim_x_s"] += vT_X;
+            ret["trim_x_e"] += vT_X;
+            ret["trim_y_s"] += vT_Y;
+            ret["trim_y_e"] += vT_Y;
+            ret["trim_y_w"] = Math.ceil(vWC_X * 0.5) * 2;
+            ret["trim_y_h"] = Math.ceil(vWC_Y * 0.5) * 2;             
+            
+            vTextureCanvas_W = 256 * ret["tile_n_w"];
+            vTextureCanvas_H = 256 * ret["tile_n_h"];
         }
         else{
 	        // Recalculate the tile number by ret["tile_n"]
-            if(fCalxX){ ret["lon_rb"] = GetTile2Lng(ret["lon_lt_x"] + ret["tile_n"] - 1, ret["z"]);   ret["lon_rb_x"] = GetTileX(ret["z"], ret["lon_rb"]).n; }
-            if(fCalxY){ ret["lat_rb"] = GetTile2Lat(ret["lat_lt_y"] + ret["tile_n"] - 1, ret["z"]);   ret["lat_rb_y"] = GetTileY(ret["z"], ret["lat_rb"]).n; }
+            if(fCalxX){ ret["lon_rb"] = GetTile2Lng(ret["lon_lt_x"] + ret["tile_n_w"] - 1, ret["z"]);   ret["lon_rb_x"] = GetTileX(ret["z"], ret["lon_rb"]).n; }
+            if(fCalxY){ ret["lat_rb"] = GetTile2Lat(ret["lat_lt_y"] + ret["tile_n_h"] - 1, ret["z"]);   ret["lat_rb_y"] = GetTileY(ret["z"], ret["lat_rb"]).n; }
         }
 
-        ret["tiles"]  = ret["tile_n"] * ret["tile_n"];
+        ret["tiles"]  = ret["tile_n_w"] * ret["tile_n_h"];
 
 	    // Because of the height direction of magnification calculations, determine the actual distance of the 3D models.
-	    ret["distance"] = CalcLatitudinallyDistance(ret["lat"] , ret["z"] , ret["pxsize"] );
-
+         ret["distance"] = CalcLatitudinallyDistance(ret["lat"] , ret["z"] , Math.max(parseInt(ret["w"]), parseInt(ret["h"])) );
+ 
         // Layer check
         if(!(ret["ls"] && ret["ls"] != null)){
             ret = null;
@@ -427,7 +557,6 @@ function InitLoadLayersTxt(){
         };
         _Load_Data.push(d);    
     }
-
     for(n = 0; n < CONFIG.layers.length; n++){
         var d = {
 	        fname  : CONFIG.layers[n]
@@ -470,6 +599,7 @@ var InitLoadLayersTxt_Proc_DataSrcSet = function(layer){
 
 var InitLoadLayersTxt_Proc_Success = function(data){
 	var json = JSON.parse(data);
+	
     if(_Load_DataIndex == 0){
         var json_base = JSON.parse("{ \"layers\": [ { \"type\": \"LayerGroup\", \"title\": \"\", \"title_sys\": \"\", \"iconUrl\": \"\", \"open\": false, \"toggleall\": false, \"entries\": [] } ] }");
             json_base.layers[0].entries = json.layers.concat();
@@ -490,7 +620,7 @@ var InitLoadLayersTxt_Proc_Success = function(data){
 var InitLoadLayersTxt_Proc_Success_SRC = function(layer, url){
     layer.src_url = url;
 
-    if(layer.type == "Layer"){
+    if(layer.type == "Layer" || (layer.type == "LayerGroup" && layer.id != "" )){
         _Load_DataHash[layer.id] = layer;
     }
 
@@ -523,82 +653,135 @@ var InitLoadLayersTxt_ProcSrc = function(){
                     vLayers = new Array();
                 }
                 var d = _Load_DataHash[args["ls"][n].id];
-                if(d){
-                    d.url = d.url.replace(/cyberjapandata.gsi.go.jp/, "maps.gsi.go.jp");
-                    var dUrlType  = InitLoadLayersTxt_ProcSrc_URL2LayerType(d.url);
-                    var dUrlStyle = false;
-                    var fTileUrl  = true;
-                    var vTileSize = 256;
-
-                    if(dUrlType.type == "tile"){
-                        if(dUrlType.ext != "img"){
-                            dUrlStyle = true;
-                        }
-                    }
-
-                    if(!dUrlStyle || !_Load_StyleZoom){
-                        if(d.minZoom){ if(args["z"] < d.minZoom){ fTileUrl = false; } }
-                        if(d.maxZoom){ if(args["z"] > d.maxZoom){ fTileUrl = false; } }
-                    }
-                    if(fTileUrl){
-                        var vTileZ     = args["z"];
-                        var vTileX     = args["lon_lt_x"];
-                        var vTileY     = args["lat_lt_y"];
-                        var vTileZoom  = 0;
-                        var vTileZoomX = 0;
-                        var vTileZoomY = 0;
-                        if(d.maxNativeZoom){
-                            if(args["z"] > d.maxNativeZoom){
-                                vTileZ     = d.maxNativeZoom;
-                                var vTileP = GetTileN(args["z"], vTileZ, vTileX, vTileY);
-                                vTileX     = vTileP.x;
-                                vTileY     = vTileP.y;
-                                vTileSize  = GetScaleTileSize(args["z"], vTileZ);
-                                vTileZoom  = args["z"] - vTileZ;
-
-                                var vTileRZ = vTileZ + vTileZoom;
-                                    vTileRP = GetTileN(vTileZ, vTileRZ, vTileX, vTileY);
-                                vTileZoomX = vTileRP.x;
-                                vTileZoomY = vTileRP.y;
-                            }
-                        }
-
-                        if(vLayers == null){
-                            vLayers = new Array();
-                        }
-                        var dUrlType = InitLoadLayersTxt_ProcSrc_URL2LayerType(d.url);
-                        if(dUrlType != null){
-                            dItem = {
-                                  id          : args["ls"][n].id
-                                , url         : d.url
-                                , url_type    : dUrlType.type
-                                , url_ext     : dUrlType.ext
-                                , url_style   : dUrlStyle
-                                , z           : vTileZ
-                                , x           : vTileX
-                                , y           : vTileY
-                                , size        : vTileSize
-                                , zoom        : vTileZoom
-                                , zoom_x      : vTileZoomX
-                                , zoom_y      : vTileZoomY
-                                , zoom_min    : d.minZoom       ? d.minZoom       : null
-                                , zoom_max    : d.maxZoom       ? d.maxZoom       : null
-                                , zoom_native : d.maxNativeZoom ? d.maxNativeZoom : null
-                                , opacity     : args["ls"][n].opacity
-                                , grayscale   : args["ls"][n].grayscale
-                            };
-                            vLayers.push(dItem);
-
-                            var nItem = 1;
-                            if(dUrlType.type == "tile"){
-                                nItem = args["tiles"];
-                            }
-                            nLayersData += nItem;
-
-                            f = true;
-                        }
-                    }
+                if (!d ) continue;
+                var isMulti = false;
+                var isMinNative = false;
+                var entries = [];
+                if ( d.entries ) 
+                {
+					isMulti = true;
+					entries = d.entries;
                 }
+                else entries.push(d);
+                
+                for( var childNo=0; childNo<entries.length; childNo++ )
+                {
+					d =entries[childNo];
+	                if(d){
+	                    d.url = d.url.replace(/cyberjapandata.gsi.go.jp/, "maps.gsi.go.jp");
+	                    if(d.url.indexOf('//maps.gsi.go.jp/') != -1){
+							d.url=d.url.replace('https://','//');
+							d.url=d.url.replace('http://','//');
+						}
+	                    var dUrlType  = InitLoadLayersTxt_ProcSrc_URL2LayerType(d.url);
+	                    var dUrlStyle = false;
+	                    var fTileUrl  = true;
+	                    var vTileSize = 256;
+						var itemCount = args["tiles"];
+                        var numTilesX = args["tile_n_w"];
+                        var numTilesY = args["tile_n_h"];
+	                    if(dUrlType.type == "tile"){
+	                        if(dUrlType.ext != "img"){
+	                            dUrlStyle = true;
+	                        }
+	                    }
+
+	                    if(!dUrlStyle || !_Load_StyleZoom){
+	                        if(d.minZoom){ if(args["z"] < d.minZoom){ fTileUrl = false; } }
+	                        if(d.maxZoom){ if(args["z"] > d.maxZoom){ fTileUrl = false; } }
+	                    }
+	                    if(fTileUrl){
+	                        var vTileZ     = args["z"];
+	                        var vTileX     = args["lon_lt_x"];
+	                        var vTileY     = args["lat_lt_y"];
+	                        var vTileZoom  = 0;
+	                        var vTileZoomX = 0;
+	                        var vTileZoomY = 0;
+	                        
+	                        if(d.maxNativeZoom){
+	                            if(args["z"] > d.maxNativeZoom){
+	                                vTileZ     = d.maxNativeZoom;
+	                                var vTileP = GetTileN(args["z"], vTileZ, vTileX, vTileY);
+	                                vTileX     = vTileP.x;
+	                                vTileY     = vTileP.y;
+	                                vTileSize  = GetScaleTileSize(args["z"], vTileZ);
+	                                vTileZoom  = args["z"] - vTileZ;
+
+	                                var vTileRZ = vTileZ + vTileZoom;
+	                                    vTileRP = GetTileN(vTileZ, vTileRZ, vTileX, vTileY);
+	                                vTileZoomX = vTileRP.x;
+	                                vTileZoomY = vTileRP.y;
+	                            }
+	                            else if(isMulti && args["z"] < d.maxNativeZoom && d.url.match( /\.geojson$/ )){
+									isMinNative = true;
+	                                vTileZ     = d.maxNativeZoom;
+	                                var startX = GetTileX( vTileZ, args["lon_lt"]  );
+	                                var startY = GetTileY( vTileZ, args["lat_lt"] );
+	                                var endX = GetTileX( vTileZ, args["lon_rb"] );
+	                                var endY = GetTileY( vTileZ, args["lat_rb"] );
+	                                var vTileP = GetTileN(args["z"], vTileZ, vTileX, vTileY);
+	                                vTileX     = vTileP.x;
+	                                vTileY     = vTileP.y;
+	                                vTileSize  = GetScaleTileSize(args["z"], vTileZ);
+	                                vTileZoom  = args["z"] - vTileZ;
+
+	                                var vTileRZ = vTileZ + vTileZoom;
+	                                    vTileRP = GetTileN(vTileZ, vTileRZ, vTileX, vTileY);
+	                                vTileZoomX = vTileRP.x;
+	                                vTileZoomY = vTileRP.y;
+	                                for( var z2 = args["z"]; z2<d.maxNativeZoom; z2++ )
+	                                {
+										numTilesX *= 2;
+										numTilesY *= 2;
+									}
+									
+			                        itemCount = numTilesX * numTilesY;
+	                            }
+	                        }
+
+	                        if(vLayers == null){
+	                            vLayers = new Array();
+	                        }
+	                        var dUrlType = InitLoadLayersTxt_ProcSrc_URL2LayerType(d.url);
+	                        if(dUrlType != null){
+	                            dItem = {
+	                                  id          : ( d.id && d.id != "" ? d.id :args["ls"][n].id )
+	                                , url         : d.url
+	                                , url_type    : dUrlType.type
+	                                , url_ext     : dUrlType.ext
+	                                , url_style   : dUrlStyle
+	                                , styleurl    : d.styleurl
+	                                , z           : vTileZ
+	                                , x           : vTileX
+	                                , y           : vTileY
+	                                , size        : vTileSize
+	                                , zoom        : vTileZoom
+	                                , zoom_x      : vTileZoomX
+	                                , zoom_y      : vTileZoomY
+	                                , isMinNative   : isMinNative
+	                                , isMulti     : isMulti
+	                                , numTilesX   : numTilesX
+	                                , numTilesY   : numTilesY
+	                                , zoom_min    : d.minZoom       ? d.minZoom       : null
+	                                , zoom_max    : d.maxZoom       ? d.maxZoom       : null
+	                                , zoom_native : d.maxNativeZoom ? d.maxNativeZoom : null
+	                                , opacity     : args["ls"][n].opacity
+	                                , grayscale   : args["ls"][n].grayscale
+                                	, multiplytile : args["ls"][n].multiplytile
+                                	, bouds : d.bounds
+	                            };
+	                            vLayers.push(dItem);
+	                            var nItem = 1;
+	                            if(dUrlType.type == "tile"){
+	                                nItem = itemCount;
+	                            }
+	                            nLayersData += nItem;
+
+	                            f = true;
+	                        }
+	                    }
+	                }
+	        	}
             }
         }
 
@@ -622,7 +805,7 @@ var InitLoadLayersTxt_ProcSrc = function(){
 		      type     : "GET"
 		    , url      : url
 		    , dataType : "text"
-		    , cache    : true
+		    , cache    : false
 		    , success  : InitLoadLayersTxt_ProcSrc_Success
 		    , error    : InitLoadLayersTxt_ProcSrc_Error
 	    });
@@ -702,6 +885,7 @@ function InitProgress(o){
     if(oProgressBar != null){
         $( "#" + oProgressBar.id).progressbar({value: 0});
         $( "#" + oProgressBar.id).hide();
+        
     }
 };
 
@@ -718,8 +902,12 @@ function InitFrame(o){
         oFrame   = document.createElement("div"); o     .appendChild(oFrame); oFrame.style.display = "none";
         oFrame3D = document.createElement("div"); oFrame.appendChild(oFrame3D);
         {
-            oFrame3D_CtrlZ    = document.createElement("div"); oFrame.appendChild(oFrame3D_CtrlZ);
-            oFrame3D_CtrlZ.innerHTML = ""
+            oFrame3D_CtrlZ    = document.createElement("div"); 
+            oFrame.appendChild(oFrame3D_CtrlZ);
+            oFrame3D_CtrlZ.innerHTML = 
+           		"<div style=\"vertical-align  :middle;font-size:10pt;\"><div style=\"float:left; font-size:10pt;margin-right:4px;margin-bottom:3px;\">Magnification of the height direction=<input type=\"text\" id=\"ratioZ\" value=\"1.0\" style=\"width:2em;\" onChange=\"SceneGeometryZ_Value();\"/></div>"
+           	+"<div style=\"font-size:12pt; float:left;vertical-align  :middle; padding-top:2px;\"><div id=\"slider_ratioZ\" style=\"font-size:12pt; width: 280px;\"></div></div>";
+           	/*
                 + "<table style=\"border:none;\">"
                 + "<tr>"
                 + "<td style=\"border:none;\">Magnification of the height direction=<input type=\"text\" id=\"ratioZ\" value=\"1.0\" style=\"width:2em;\" onChange=\"SceneGeometryZ_Value();\"/></td>"
@@ -727,6 +915,7 @@ function InitFrame(o){
                 + "</tr>"
                 + "</table>"
             ;
+            */
         }
     }
 };
@@ -734,41 +923,86 @@ function InitFrame(o){
 function InitFrameDownload(o){
     if(o != null){
         oFrame3D_Download = document.createElement("div"); oFrame.appendChild(oFrame3D_Download);
+        $(oFrame3D_Download).css({
+        	"position":"absolute",
+        	"bottom":"2px",
+        	"left" : "2px",
+        	"right": "2px"
+        } );
         oFrame3D_Download.innerHTML = ""
-            + "<div style=\"padding:3px;\">"
+            + "<div style=\"padding:1px;\">"
             + "<table>"
 		    + "<tbody>"
             + "<tr>"
-            + "<td style=\"font-weight: bold;\">STL File</td>"
+            + "<th style=\"font-weight: bold;\">STL File</th>"
             + "<td>Data for 3D printer (colorless).</td>"
-            + "<td><input id=\"dl_stl\" onclick=\"Download('stl');\"     type=\"button\" value=\"Download\"></td>"
+            + "<td><input id=\"dl_stl\" onclick=\"showDownloadWindow('stl');\"     type=\"button\" value=\"Download\"></td>"
             + "</tr>"
             + "<tr>"
-            + "<td style=\"font-weight: bold;\">VRML File</td>"
+            + "<th style=\"font-weight: bold;\">VRML File</th>"
             + "<td>Data for 3D printer (Full color).</td>"
-            + "<td><input id=\"dl_vrml\" onclick=\"Download('vrml');\"   type=\"button\" value=\"Download\"></td>"
+            + "<td><input id=\"dl_vrml\" onclick=\"showDownloadWindow('vrml');\"   type=\"button\" value=\"Download\"></td>"
             + "</tr>"
             + "<tr>"
-            + "<td style=\"font-weight: bold;\">WebGL File</td>"
+            + "<th style=\"font-weight: bold;\">WebGL File</th>"
             + "<td>Data for browsing like above.</td>"
-            + "<td><input id=\"dl_three\" onclick=\"Download('webgl');\" type=\"button\" value=\"Download\"></td>"
+            + "<td><input id=\"dl_three\" onclick=\"showDownloadWindow('webgl');\" type=\"button\" value=\"Download\"></td>"
             + "</tr>"
             + "</tbody>"
             + "</table>"
+            
             + "</div>"
         ;
-        vFrame3D_H_Ctrl += 120;
+        vFrame3D_H_Ctrl += 125;
+        //+ '<div style="position:absolute; right:0; top: 0;"><a id="gsimap_link" target="_blank" style="font-size:11pt;" href="./">View GSI Maps</a></div>'
+        oGSIMapLink = $( "<a>" ).attr( {
+			id : "gsimap_link",
+			"target" : "_blank"
+		}).html( "View GSI Maps" );
+		
+		var transFrame = $( "<div>" ).addClass("trans_frame");
+		oFaceTransparentCheck = $( "<input>" ).attr( {"type":"checkbox", "id":"facetrans_check"} )
+			.prop( {"checked":bFaceTransparent} )
+			.click(function(){
+				if ( !oFaceMaterial ) return;
+				if ( $(this).is(":checked") )
+				{
+					bFaceTransparent = true;
+					oFaceMaterial.transparent = true;
+					oFaceMaterial.depthTest =false;
+					oFaceMaterial.depthWrite =false;
+					oFaceMaterial.needsUpdate = false;
+					LocationHash();
+				}
+				else
+				{
+					
+					bFaceTransparent = false;
+					oFaceMaterial.transparent = false;
+					oFaceMaterial.depthTest =true;
+					oFaceMaterial.depthWrite =true;
+					oFaceMaterial.needsUpdate = true;
+					LocationHash();
+				}
+			} );
+		var transLabel = $( "<label>" ).attr({"for":"facetrans_check"}).html("Transparent surface");
+		transFrame.append(oFaceTransparentCheck);
+		transFrame.append(transLabel);
+		
+    	$( oFrame ).append( oGSIMapLink);
+    	$( oFrame ).append( transFrame);
     }
 };
 
 function InitLoad(){
-	oRenderer = new THREE.WebGLRenderer({ antialias: true });
+	oRenderer = new THREE.WebGLRenderer({ antialias: true, alpha:true,logarithmicDepthBuffer: true });
 	oRenderer.setSize(vFrame3D_W, vFrame3D_H);
     oRenderer.setClearColor(0xe6e6fa, 1.0)
 	//oRenderer.shadowMapEnabled = true;
 	oFrame3D.appendChild(oRenderer.domElement);   
-
-	RequestLayers(vLayers, args["z"], args["lon_lt_x"], args["lat_lt_y"], args["tile_n"]);
+	
+	
+	RequestLayers(vLayers, args["z"], args["lon_lt_x"], args["lat_lt_y"], args["tile_n_w"], args["tile_n_h"]);
 
 	// Read waiting
     vLayersTM_Cur = 0;
@@ -784,7 +1018,7 @@ function InitLoad(){
                 args["tiles"] <= vTilesDem.length
             ){
                 $( "#" + oProgressBar.id).progressbar("value", 98);
-
+				
 		        clearInterval(oLayersTM);
                 setTimeout("InitLoadLayers()", 10);
 	        }
@@ -793,27 +1027,25 @@ function InitLoad(){
 };
 
 function InitLoadLayers(){
-    LoadLayers(args["z"], args["lon_lt_x"], args["lat_lt_y"], args["tile_n"]);
+    LoadLayers(args["z"], args["lon_lt_x"], args["lat_lt_y"], args["tile_n_w"], args["tile_n_h"]);
 
     vLayersTM_Cur = 0;
 	oLayersTM = setInterval(function(){
         if(vLayersTM_Cur >= vLayersTM_Max){
 		    clearInterval(oLayersTM);
-            InitProgressMsgInfo("Timed out([" + (vLayersTM_Max / 1000) + "]sec)");
+            InitProgressMsgInfo("Timed out([" + (vLayersTM_Max / 1000) + "]秒)");
         }
         else{
             vLayersTM_Cur += vLayersTM;
 
             if(vVectors == 0 || vVectors == vVectorsN){
-
-                // trimming
-                if(args["trim_x_s"] && args["trim_x_e"] && args["trim_y_s"] && args["trim_y_e"]){
+                // Trimming
+                if(args["trim_x_s"] || args["trim_x_e"] || args["trim_y_s"] || args["trim_y_e"]){
                     if(oTextureCanvas != null){
                         vTextureCanvas_W = args["trim_y_w"];
                         vTextureCanvas_H = args["trim_y_h"];
                         var oTextureCanvas_2D = oTextureCanvas.getContext("2d");
                         var imageData = oTextureCanvas_2D.getImageData(args["trim_x_s"], args["trim_y_s"], vTextureCanvas_W, vTextureCanvas_H);
-                        
                         oTextureCanvas.width  = vTextureCanvas_W;
                         oTextureCanvas.height = vTextureCanvas_H;
                         oTextureCanvas_2D = oTextureCanvas.getContext("2d");
@@ -841,7 +1073,7 @@ function LocationHash(){
                 var hash = LocationHashCreate();
                 if(vHash != hash){
                     vHash = hash;
-                    location.hash = vHash;
+                    location.replace("#" + vHash );
                 }
             }
         , vTM);
@@ -874,7 +1106,8 @@ function LocationHashCreate(){
 	         + "&ctx="    + vCameraTgtX
              + "&cty="    + vCameraTgtY
              + "&ctz="    + vCameraTgtZ
-	         + "&a="      + vCameraZ;
+	         + "&a="      + vCameraZ
+	         + "&b="      + ( bFaceTransparent ? "1" : "0" );
         }
     }
     return ret;
@@ -905,7 +1138,7 @@ function ConverUnit(lat, z, radius, unit_src, unit_to){
 /*-----------------------------------------------------------------------------------------------*/
 // Request: Tile
 /*-----------------------------------------------------------------------------------------------*/
-function RequestLayers(url, z, x, y, nTilesOTS){
+function RequestLayers(url, z, x, y, nTilesOTS_X, nTilesOTS_Y){
     vLayersData             = {};
     vLayersData_VectorStyle = {};
     vTilesDem               = [];
@@ -914,8 +1147,8 @@ function RequestLayers(url, z, x, y, nTilesOTS){
     var oTilesDem = [];
     var n_y = 0; var xx = 0;
     var n_x = 0; var yy = 0;
-	for(n_y = 0; n_y < nTilesOTS; n_y++){
-		for(n_x = 0; n_x < nTilesOTS; n_x++){
+	for(n_y = 0; n_y < nTilesOTS_Y; n_y++){
+		for(n_x = 0; n_x < nTilesOTS_X; n_x++){
             xx = x + n_x;
             yy = y + n_y;
 
@@ -928,10 +1161,12 @@ function RequestLayers(url, z, x, y, nTilesOTS){
                 dem_z = vDemUrl_maxZoom;
                 dem_x = dem_n.x; dem_d.x14 = dem_x;
                 dem_y = dem_n.y; dem_d.y14 = dem_y;
+                
             }
 
             var dem = vDemUrl.replace("{z}", dem_z).replace("{x}", dem_x).replace("{y}", dem_y);
             if(     vDemType == "TXT"){
+				
                 dem_d.data = $.ajax({ url : dem });
             }
             else if(vDemType == "PNG"){
@@ -956,30 +1191,48 @@ function RequestLayers(url, z, x, y, nTilesOTS){
         var vURLI     = vURL.replace("\{z\}\/\{x\}\/\{y\}", "*").split("*");
         var vURLType  = vLayers[nLayers].url_type;
         var vURLExt   = vLayers[nLayers].url_ext;
-        var vURLStyle = "";
+        var vURLStyle = vLayers[nLayers].styleurl;
         if(vURLType == "tile"){
             if(vURLI.length == 2){
-                vURLStyle = vURLI[0] + "style.js";
-
+				if ( !vURLStyle )
+                	vURLStyle = vURLI[0] + "style.js";
                 z = vLayers[nLayers].z;
                 x = vLayers[nLayers].x;
                 y = vLayers[nLayers].y;
-
+                var bounds = vLayers[nLayers].bouds;
+                
+				var maxX = nTilesOTS_X;
+				var maxY = nTilesOTS_Y;
+				if ( vLayers[nLayers].isMinNative )
+				{
+					maxX = vLayers[nLayers].numTilesX;
+					maxY = vLayers[nLayers].numTilesY;
+				}
                 var n_y = 0; var xx = 0;
                 var n_x = 0; var yy = 0;
-	            for(n_y = 0; n_y < nTilesOTS; n_y++){
-		            for(n_x = 0; n_x < nTilesOTS; n_x++){
+	            for(n_y = 0; n_y < maxY; n_y++){
+		            for(n_x = 0; n_x < maxX; n_x++){
                         xx = x + n_x;
                         yy = y + n_y;
 
                         var src = vURLI[0] + z + "/" + xx + "/" + yy + vURLI[1];
                         if(vURLExt == "img"){
-			                var img         = new Image();
-			                img.crossOrigin = "anonymous";
-			                img.src         = src;
-                            img.id          = vID;
-			                img.onload      = function(){ RequestLayersData_Img(this); }
-			                img.onerror     = function(){ RequestLayersData_Img(this); }
+							var isDraw = checkBounds( xx, yy, z, bounds );
+							if ( isDraw )
+							{
+				                var img         = new Image();
+				                img.crossOrigin = "anonymous";
+				                img.src         = src;
+	                            img.id          = vID;
+				                img.onload      = function(){ RequestLayersData_Img(this); }
+				                img.onerror     = function(){ RequestLayersData_Img(this); }
+                        	}
+                        	else
+                        	{
+								var img         = new Image();
+	                            img.id          = vID;
+	                            RequestLayersData_Img(img);
+							}
                         }
                         else{
                             fLayersVecoter = true;
@@ -1001,6 +1254,71 @@ function RequestLayers(url, z, x, y, nTilesOTS){
     }
 };
 
+function checkBounds(x,y,z,bounds)
+{
+	if ( !bounds ) return true;
+	
+	if (typeof(bounds) == "string" || bounds instanceof String) 
+	{
+		try {
+			bounds = eval( "(" + bounds + ")" );
+		}
+		catch(e)
+		{
+			
+		}
+	}
+	
+	var latLng1 = null;
+	var latLng2 = null;
+	if ( bounds instanceof Array && bounds.length == 2) 
+	{
+		try {
+			latLng1 = {
+				lat : parseFloat(bounds[0][0]),
+				lng : parseFloat(bounds[0][1])
+			};
+			latLng2 = {
+				lat : parseFloat(bounds[1][0]),
+				lng : parseFloat(bounds[1][1])
+			};
+		}
+		catch(e)
+		{
+			
+		}
+	}
+	
+	if ( !latLng1 || !latLng2 ) return true;
+	
+	var minLat = latLng1.lat;
+	var minLng = latLng1.lng;
+	var maxLat = latLng1.lat;
+	var maxLng = latLng1.lng;
+	if ( minLat > latLng2.lat ) minLat = latLng2.lat;
+	if ( minLng > latLng2.lng ) minLng = latLng2.lng;
+	if ( maxLat < latLng2.lat ) maxLat = latLng2.lat;
+	if ( maxLng < latLng2.lng ) maxLng = latLng2.lng;
+	
+	
+	var tileMinLng = GetTile2Lng(x, z);
+	var tileMaxLat = GetTile2Lat(y, z);
+	
+	var tileMaxLng = GetTile2Lng(x+1, z);
+	var tileMinLat = GetTile2Lat(y+1, z);
+	
+	
+	return (
+		tileMinLat <= maxLat &&
+		tileMaxLat >= minLat &&
+		tileMinLng <= maxLng &&
+		tileMaxLng >= minLng
+	);
+	
+	
+	//return false;
+}
+
 function RequestLayersVector(){
     vLayersData_VectorAjax = null;
 
@@ -1017,7 +1335,7 @@ function RequestLayersVector(){
 		                  type     : "GET"
 	                    , url      : dLayersStyle.src
 	                    , dataType : "text"
-	                    , cache    : true
+	                    , cache    : false
                     }
                     )
                     .done(
@@ -1039,11 +1357,11 @@ function RequestLayersVector(){
                     .fail(
                         function(data, status, error){
                             vLayersData_VectorAjax.data = null;
-                            	$.ajax({
-					                  type     : "GET"
+		                    $.ajax({
+				                  type     : "GET"
 			                    , url      : "./js/style.js"
 			                    , dataType : "text"
-			                    , cache    : true
+			                    , cache    : false
 		                    }
 		                    )
 		                    .done(
@@ -1107,7 +1425,7 @@ function RequestLayersVector(){
 		                          type     : "GET"
 	                            , url      : dLayers[nLayers].src
 	                            , dataType : "text"
-	                            , cache    : true
+	                            , cache    : false
                             }
                             )
                             .done(
@@ -1200,7 +1518,7 @@ function RequestLayersVectorStyleSet(vLayersData_Vector){
                                                         if(vOptions.color       != null){ data.features[n].properties._color       = RequestLayersVectorStyleSetColorToHex(vOptions.color);     }
                                                         if(vOptions.weight      != null){ data.features[n].properties._weight      = vOptions.weight;      }
                                                         if(vOptions.opacity     != null){ data.features[n].properties._opacity     = vOptions.opacity;     }
-
+														if(vOptions.dashArray     != null){ data.features[n].properties._dashArray     = vOptions.dashArray;     }
                                                         // LineString, MultiLineString, Polygon, MultiPolygon, Point(Circle, CircleMarker), MultiPoint(Circle, CircleMarker)
                                                         if(vOptions.fillColor   != null){ data.features[n].properties._fillColor   = RequestLayersVectorStyleSetColorToHex(vOptions.fillColor); }
                                                         if(vOptions.fillOpacity != null){ data.features[n].properties._fillOpacity = vOptions.fillOpacity; }
@@ -1725,7 +2043,6 @@ function RequestLayersData_Vector(vLayer, src, src_style){
             }
         }
     }
-
     RequestLayersData(id, o);
 };
 
@@ -1897,7 +2214,6 @@ function RequestTileDemResultMake(data, z, x, y, x14, y14){
             data = vDem_N;
         }
     }
-
     return data;
 };
 
@@ -1925,74 +2241,75 @@ function RequestTileDemResult_Progress(){
 /*-----------------------------------------------------------------------------------------------*/
 // LoadLayers
 /*-----------------------------------------------------------------------------------------------*/
-function LoadLayers(z, x, y, nTilesOTS){
+function LoadLayers(z, x, y, nTilesOTS_X, nTilesOTS_Y){
 
     oTextureCanvas = document.createElement("canvas");
     oTextureCanvas.style.display = "none";
     oTextureCanvas.width         = vTextureCanvas_W;
     oTextureCanvas.height        = vTextureCanvas_H;
     oFrame.appendChild(oTextureCanvas);
-
 	var oTextureCanvas_2D = oTextureCanvas.getContext("2d");
 	oTextureCanvas_2D.fillStyle = "rgb(255, 255, 255)";
 	oTextureCanvas_2D.fillRect(0, 0, vTextureCanvas_W, vTextureCanvas_H);
-	var wTileImg = vTextureCanvas_W / nTilesOTS;
-	var hTileImg = vTextureCanvas_H / nTilesOTS;
+	var wTileImg = vTextureCanvas_W / nTilesOTS_X;
+	var hTileImg = vTextureCanvas_H / nTilesOTS_Y;
 
     // DEM
-    vDem = new Array(256 * nTilesOTS * 256 * nTilesOTS);
+    var sizeW = 256 * nTilesOTS_X;
+    var sizeH = 256 * nTilesOTS_Y;
+    vDem = new Array(256 * nTilesOTS_X * 256 * nTilesOTS_Y);
     var nx_tile = 0;
     var ny_tile = 0;
-	for(var i = 0; i < vTilesDem.length; i++, ny_tile++){
-		var vTilesDemAry = null;
-        if(vTilesDem[i] != ""){
-            vTilesDemAry = vTilesDem[i].replace(/\n/g,",").split(",");
-        }
-
-        if(ny_tile == nTilesOTS){
-            nx_tile++;
-            ny_tile = 0;
-        }
-		for(nx_dem = 0; nx_dem < 256; nx_dem++){
-			for(ny_dem = 0; ny_dem < 256; ny_dem++){
-                var vTilesDemAryV = 0;
-                if(vTilesDemAry != null){
-				    vTilesDemAryV = vTilesDemAry[256 * nx_dem + ny_dem];
-    				if(vTilesDemAryV == "e"){
-	    				vTilesDemAryV = 0;
-                    }
+    
+    
+    for( ny_tile=0; ny_tile<nTilesOTS_Y; ny_tile++ )
+    {
+		for( nx_tile=0; nx_tile<nTilesOTS_X; nx_tile++ )
+	    {
+			var i= ny_tile * nTilesOTS_X + nx_tile;
+			
+			var vTilesDemAry = null;
+	        if(vTilesDem[i] != ""){
+	            vTilesDemAry = vTilesDem[i].replace(/\n/g,",").split(",");
+	        }
+	        
+	        for(ny_dem = 0; ny_dem < 256; ny_dem++){
+				for(nx_dem = 0; nx_dem < 256; nx_dem++){
+	                var vTilesDemAryV = 0;
+	                if(vTilesDemAry != null){
+					    vTilesDemAryV = vTilesDemAry[256 * ny_dem + nx_dem];
+	    				if(vTilesDemAryV == "e"){
+		    				vTilesDemAryV = 0;
+	                    }
+					}
+					//if ( vTilesDemAryV <= 0 ) vTilesDemAryV= 1000;
+					var xx = ( nx_tile * 256 ) +nx_dem;
+					var yy = ( ny_tile * 256 ) +ny_dem;
+					
+					vDem[sizeW * yy + xx] = vTilesDemAryV;
+					
 				}
-				vDem[256 * nTilesOTS * (256 * nx_tile + nx_dem) + (256 * ny_tile + ny_dem)] = vTilesDemAryV;
-			}
-    	}
-    }
-
-    // trimming
-    if(args["trim_x_s"] && args["trim_x_e"] && args["trim_y_s"] && args["trim_y_e"]){
-        var vDemN  = nTilesOTS * 256;
-        var vDemXS = args["trim_x_s"];
-        var vDemXE = args["trim_x_e"];
-        var vDemYS = args["trim_y_s"];
-        var vDemYE = args["trim_y_e"];
-
-        if(args["trim_n_px"] > 0){
-            var vT = args["trim_n_px"];
-            vDemXS += vT;
-            vDemXE += vT;
-            vDemYS += vT;
-            vDemYE += vT;
+	    	}
+		}
+	}
+    // Triming
+    {
+        if(args["trim_x_s"] || args["trim_x_e"] || args["trim_y_s"] || args["trim_y_e"]){
+            //var vDemN  = nTilesOTS_Y * 256;
+            
+            var vDemXS = args["trim_x_s"];
+            var vDemXE = args["trim_x_e"];
+            var vDemYS = args["trim_y_s"];
+            var vDemYE = args["trim_y_e"];
+            vDem = LoadLayers_Dem_Trim(vDem, nTilesOTS_X * 256, nTilesOTS_Y * 256, vDemXS, vDemXE, vDemYS, vDemYE);
+            
+            nTilesOTS_X = args["trim_n_x"];
+            nTilesOTS_Y = args["trim_n_y"];
         }
-
-        vDem = LoadLayers_Dem_Trim(vDem, vDemN, vDemXS, vDemXE, vDemYS, vDemYE);
-
-        nTilesOTS = args["trim_n"];
+        vSceneMesh = LoadLayers_DemNormarize(vDem, args["w"], args["h"], 1);
     }
-
-    var tn    = nTilesOTS;
-    var tsize = 256;
-    vSceneMesh = LoadLayers_DemNormarize(vDem, tn, tn, tsize);
-
     LoadLayersProc(oTextureCanvas_2D, x, y, wTileImg, hTileImg);
+    
 };
 
 function LoadLayersProc(oTextureCanvas_2D, x, y, wTileImg, hTileImg){
@@ -2003,7 +2320,6 @@ function LoadLayersProc(oTextureCanvas_2D, x, y, wTileImg, hTileImg){
     vLoadLayersProc_hTileImg          = hTileImg;
 
     var fProc = true;
-
     // Layer
     for(var nLayers = 0; nLayers < vLayers.length; nLayers++){
         if(!fProc){
@@ -2020,7 +2336,6 @@ function LoadLayersProc(oTextureCanvas_2D, x, y, wTileImg, hTileImg){
         var vZoom_x  = vLayers[nLayers].zoom_x;
         var vZoom_y  = vLayers[nLayers].zoom_y;
         var vLayer   = vLayersData[vID];
-
         if(vURLType == "tile"){
             var strRgx = null;
  	        strRgx = vURL.replace("{z}", "(\\d\+)").replace("{x}", "\\d\+"  ).replace("{y}", "\\d\+"  ); var rgxZfromURL = new RegExp(strRgx); 
@@ -2102,7 +2417,6 @@ function LoadLayersProc(oTextureCanvas_2D, x, y, wTileImg, hTileImg){
 
                             if(     vURLExt == "geojson"){ data = LoadLayersProcVectorData   (vLayer[0]     ); }
                             else if(vURLExt == "kml"    ){ data = LoadLayersProcVectorDataKML(vLayer[0].data); }
-
                             if(data && data != null){
                                 if(LoadLayers_Vectors(oTextureCanvas_2D, data.features, vLayers[nLayers])){
                                     fProc = false;
@@ -2145,6 +2459,7 @@ function LoadLayersProcVectorDataKML(data){
         data = toGeoJSON.kml(kml);
         if(data.features){
             for(var n = 0; n < data.features.length; n++){
+                initializeZData( data.features[n]);
                 if(data.features[0].geometry && data.features[0].properties){
                     var data_type = data.features[n].geometry.type;
                     if(data_type){
@@ -2184,12 +2499,117 @@ function LoadLayersProcVectorDataKML(data){
     return data;
 };
 
+function initializeZData(data) {
+	
+				
+	if(data.properties._markerType == "Icon" || data.geometry.type == "Marker"){
+		data.properties._markerType = "Icon";
+		if ( data.geometry.coordinates.length >= 3 && 
+			( data.geometry.coordinates[2] != "" && data.geometry.coordinates[2] != 0 ) )
+		{
+			data._bounds = {
+				lt :{
+					lat : data.geometry.coordinates[1],
+					lng :data.geometry.coordinates[0]
+				},
+				rb :{
+					lat : data.geometry.coordinates[1],
+					lng :data.geometry.coordinates[0]
+				}
+			};
+			data._hasZdata = true;
+		}
+    }
+	else if(data.properties._markerType == "LineString" ||
+	        data.properties._markerType == "Polygon" ||
+	        data.geometry.type == "LineString" || 
+	        data.geometry.type == "Polygon"
+	){
+		if(data.properties._markerType == "Polygon" || data.geometry.type == "Polygon"){
+			data.properties._markerType = "Polygon";
+			var bounds = null;
+			for( var i=0; i<data.geometry.coordinates[0].length; i ++ )
+			{
+				var p = data.geometry.coordinates[0][i];
+				if ( p.length >= 3 && 
+					( p[2] != "" && p[2] != 0 ) )
+				{
+					data._hasZdata = true;
+					if ( !bounds )
+					{
+						bounds = {
+							lt :{
+								lat : p[1],
+								lng :p[0]
+							},
+							rb :{
+								lat : p[1],
+								lng :p[0]
+							}
+						};
+					}
+					else
+					{
+						if ( bounds.lt.lat < p[1] ) bounds.lt.lat = p[1];
+						if ( bounds.lt.lng > p[0] ) bounds.lt.lng = p[0];
+						if ( bounds.rb.lat > p[1] ) bounds.rb.lat = p[1];
+						if ( bounds.rb.lng < p[0] ) bounds.rb.lng = p[0];
+					}
+				}
+			}
+			
+			data._bounds = bounds;
+		}
+		else
+		{
+			
+			data.properties._markerType = "LineString";
+			var bounds = null;
+			for( var i=0; i<data.geometry.coordinates.length; i ++ )
+			{
+				var p = data.geometry.coordinates[i];
+				if ( p.length >= 3 && 
+					( p[2] != "" && p[2] != 0 ) )
+				{
+					data._hasZdata = true;
+					if ( !bounds )
+					{
+						bounds = {
+							lt :{
+								lat : p[1],
+								lng :p[0]
+							},
+							rb :{
+								lat : p[1],
+								lng :p[0]
+							}
+						};
+					}
+					else
+					{
+						if ( bounds.lt.lat < p[1] ) bounds.lt.lat = p[1];
+						if ( bounds.lt.lng > p[0] ) bounds.lt.lng = p[0];
+						if ( bounds.rb.lat > p[1] ) bounds.rb.lat = p[1];
+						if ( bounds.rb.lng < p[0] ) bounds.rb.lng = p[0];
+					}
+				}
+			}
+			data._bounds = bounds;
+		}
+
+	}
+	
+	
+}
 function LoadLayersProcVectorDataKML_properties(data, data_style){
+	data.properties._altitudeMode = data.geometry.altitudeMode;
+	
     if(data.properties._markerType == "Icon"){
         var _icon = data_style.find("IconStyle").find("Icon").find("href").text();
         if(_icon){
             data.properties._iconUrl = _icon;
-
+            data.properties._iconScale      = data_style.find("IconStyle").find("scale").text();
+            if ( !data.properties._iconScale ) data.properties._iconScale  =1;
             data.properties._iconSize      = new Array(2);
             data.properties._iconSize[0]   = 20;
             data.properties._iconSize[1]   = 20;
@@ -2198,7 +2618,22 @@ function LoadLayersProcVectorDataKML_properties(data, data_style){
             data.properties._iconAnchor[0] = 10;
             data.properties._iconAnchor[1] = 10;
         }
-
+		
+		if ( data.geometry.coordinates.length >= 3 && 
+			( data.geometry.coordinates[2] != "" || data.geometry.coordinates[2] == 0 ) )
+		{
+			data._bounds = {
+				lt :{
+					lat : data.geometry.coordinates[1],
+					lng :data.geometry.coordinates[0]
+				},
+				rb :{
+					lat : data.geometry.coordinates[1],
+					lng :data.geometry.coordinates[0]
+				}
+			};
+			data._hasZdata = true;
+		}
     }
     else if(data.properties._markerType == "LineString" ||
             data.properties._markerType == "Polygon"
@@ -2206,6 +2641,7 @@ function LoadLayersProcVectorDataKML_properties(data, data_style){
         var vKey = "";
         var _color = data_style.find("LineStyle").find("color").text();
         var _width = data_style.find("LineStyle").find("width").text();
+        //var _dashArray = data_style.find("LineStyle").find("dashArray").text();
         if(_color){ 
             _color = LoadLayersProcVectorDataKML_properties_color(_color);
             if(_color != null){
@@ -2221,29 +2657,116 @@ function LoadLayersProcVectorDataKML_properties(data, data_style){
             _color = data_style.find("PolyStyle").find("color").text();
             if(_color){
                 _color = LoadLayersProcVectorDataKML_properties_color(_color);
+                
                 if(_color != null){
                     data.properties._fillColor   = _color.color;
                     data.properties._fillOpacity = _color.opacity;
                 }
             }
+            
+            var bounds = null;
+			for( var i=0; i<data.geometry.coordinates[0].length; i ++ )
+			{
+				var p = data.geometry.coordinates[0][i];
+				if ( p.length >= 3 && 
+					( p[2] != "" || p[2] == 0   ) )
+				{
+					data._hasZdata = true;
+					if ( !bounds )
+					{
+						bounds = {
+							lt :{
+								lat : p[1],
+								lng :p[0]
+							},
+							rb :{
+								lat : p[1],
+								lng :p[0]
+							}
+						};
+					}
+					else
+					{
+						if ( bounds.lt.lat < p[1] ) bounds.lt.lat = p[1];
+						if ( bounds.lt.lng > p[0] ) bounds.lt.lng = p[0];
+						if ( bounds.rb.lat > p[1] ) bounds.rb.lat = p[1];
+						if ( bounds.rb.lng < p[0] ) bounds.rb.lng = p[0];
+					}
+				}
+			}
+			
+			data._bounds = bounds;
         }
+        else
+        {
+			
+            var bounds = null;
+			for( var i=0; i<data.geometry.coordinates.length; i ++ )
+			{
+				var p = data.geometry.coordinates[i];
+				if ( p.length >= 3 && (p[2] != "" || p[2] == 0 ) )
+				{
+					data._hasZdata = true;
+					if ( !bounds )
+					{
+						bounds = {
+							lt :{
+								lat : p[1],
+								lng :p[0]
+							},
+							rb :{
+								lat : p[1],
+								lng :p[0]
+							}
+						};
+					}
+					else
+					{
+						if ( bounds.lt.lat < p[1] ) bounds.lt.lat = p[1];
+						if ( bounds.lt.lng > p[0] ) bounds.lt.lng = p[0];
+						if ( bounds.rb.lat > p[1] ) bounds.rb.lat = p[1];
+						if ( bounds.rb.lng < p[0] ) bounds.rb.lng = p[0];
+					}
+				}
+			}
+			data._bounds = bounds;
+		}
+        
     }
+    
 };
 
 function LoadLayersProcVectorDataKML_properties_color(color){
     var ret = null;
+    
+    if (color && color.length > 0 && color.charAt(0) == "#" )
+    {
+		
+		return { color : color, opacity : 1 };
+	}
     if(color && color.length == 8){
         var a   = color.substr(0, 2);
         var b   = color.substr(2, 2);
         var g   = color.substr(4, 2);
         var r   = color.substr(6, 2);
-
         a = parseInt(a, 16);
         if(a > 0){
             a = Math.round(a / 255 * 100) / 100;
         }
 
-        ret = { color : "#" + r + g + b, opacity : a }
+        ret = { color : "#" + r + g + b, opacity : a };
+    }
+    else if(color && color.length == 6){
+        var b   = color.substr(0, 2);
+        var g   = color.substr(2, 2);
+        var r   = color.substr(4, 2);
+
+        var a = parseInt("ff", 16);
+        if(a > 0){
+            a = Math.round(a / 255 * 100) / 100;
+        }
+
+        ret = { color : "#" + r + g + b, opacity : a };
     }
 
     return ret;
@@ -2283,13 +2806,6 @@ function LoadLayersCanvas(oTextureCanvas_2D, vUrl, vTile, nx, ny, wTileImg, hTil
                 ctx.putImageData(imageData, 0, 0, 0, 0, imageData.width, imageData.height);
                 oFrame.appendChild(canvas);
 
-                /*
-                var alphaCh = Math.round(255 * vUrl.opacity); // Convert the transparency of the value of the alpha channel
-                for(var i = 0; i < data.length; i += 4){  / /Run only a few of the alpha channel of each pixel
-	                data[i + 3] = alphaCh;
-                } 
-                */
-
                 oCanvasGrayScale = imageData;
             }
         }
@@ -2299,7 +2815,17 @@ function LoadLayersCanvas(oTextureCanvas_2D, vUrl, vTile, nx, ny, wTileImg, hTil
             oTextureCanvas_2D.putImageData(oCanvasGrayScale, nx * wTileImg, ny * hTileImg, 0, 0, wTileImg, hTileImg);
         }
         else{
-            oTextureCanvas_2D.drawImage(vTile, 0, 0, 256 ,256, nx * wTileImg, ny * hTileImg, wTileImg, hTileImg);
+        	if (vUrl.multiplytile == 0)
+        	{
+              oTextureCanvas_2D.drawImage(vTile, 0, 0, 256 ,256, nx * wTileImg, ny * hTileImg, wTileImg, hTileImg);
+            }
+            else
+            {
+              oTextureCanvas_2D.globalCompositeOperation = "multiply";
+              oTextureCanvas_2D.drawImage(vTile, 0, 0, 256 ,256, nx * wTileImg, ny * hTileImg, wTileImg, hTileImg);
+              oTextureCanvas_2D.globalCompositeOperation = "source-over";
+            }
+            //oTextureCanvas_2D.drawImage(vTile, 0, 0, 256 ,256, nx * wTileImg, ny * hTileImg, wTileImg, hTileImg);
         }
         oTextureCanvas_2D.globalAlpha = 1.0;
 
@@ -2313,10 +2839,27 @@ function LoadLayers_VectorsOpener(oCanvas){
     if(o != null){
         try{
             var v = o.Vectors();
+            var v2 = [];
             if(v != null){
-                v.DataOpenner = true;
+                v2.DataOpenner = true;
+				for( var i=0; i<v.length; i++ )
+				{
+					if ( v[i].kmltext && v[i].kmltext != "" )
+					{
+						var kmlData = LoadLayersProcVectorDataKML( v[i].kmltext );
 
-                LoadLayers_Vectors(oCanvas, v, null);
+            			if ( kmlData )
+            			{
+							for( var j=0; j<kmlData.features.length; j++ )
+							{
+								v2.push( kmlData.features[j] );
+							}
+						}
+					}
+					else
+						v2.push( v[i] );
+				}
+                LoadLayers_Vectors(oCanvas, v2, null);
             }
         }
         catch(e){
@@ -2340,20 +2883,36 @@ function LoadLayers_Vectors(oCanvas, oData, vUrl){
         var vRange_Lat_T = args["lat_lt"]; var vRange_Y_T = args["lat_lt_y"];
         var vRange_Lat_B = args["lat_rb"]; var vRange_Y_B = args["lat_rb_y"];
 
-        var nX = args["tile_n"] - (vRange_X_R - vRange_X_L);
-        var nY = args["tile_n"] - (vRange_Y_B - vRange_Y_T);
+        var nX = args["tile_n_w"] - (vRange_X_R - vRange_X_L);
+        var nY = args["tile_n_h"] - (vRange_Y_B - vRange_Y_T);
 
         vRange_Lon_L = GetTile2Lng(vRange_X_L     , vZ);
         vRange_Lon_R = GetTile2Lng(vRange_X_R + nX, vZ);
         vRange_Lat_T = GetTile2Lat(vRange_Y_T     , vZ);
         vRange_Lat_B = GetTile2Lat(vRange_Y_B + nY, vZ);
-
         var vDeg2PxX = vTextureCanvas_W / (                          vRange_Lon_R      -                           vRange_Lon_L     );
         var vDeg2PxY = vTextureCanvas_H / (LoadLayers_Vectors_MercaY(vRange_Lat_T, vZ) - LoadLayers_Vectors_MercaY(vRange_Lat_B, vZ));
-        var vRPX     = vTextureCanvas_W / (args["tile_n"] * 256);
-
+        var vRPX     = vTextureCanvas_W / (args["tile_n_w"] * 256);
+		var vLatLngBounds = getBoxLatLngBounds( { 
+			lat: args["lat"], 
+			lng:args["lon"]}, 
+			parseInt(args["z"]), 
+			args["w"], 
+			args["h"] );
         for(var n = 0; n < oData.length; n++){
             var vData = oData[n];
+            if ( vData.kmltext && vData.kmltext != "" )continue;
+            if ( vData._hasZdata )
+            {
+				if ( !oGeo3DData ) oGeo3DData = [];
+				if ( vLatLngBounds.lt.lng <= vData._bounds.rb.lng 
+					&& vData._bounds.lt.lng <= vLatLngBounds.rb.lng
+					&& vLatLngBounds.lt.lat >= vData._bounds.rb.lat 
+					&& vData._bounds.lt.lat >= vLatLngBounds.rb.lat
+				)
+					oGeo3DData.push( vData );
+				continue;
+			}
             try{
                 if(vUrl != null){
                     oCanvas.globalAlpha = vUrl.opacity;
@@ -2505,7 +3064,9 @@ function LoadLayers_Vectors(oCanvas, oData, vUrl){
                                 var vH   = 10; if(vData["properties"]["_iconSize"]   != null){ vH  = Math.floor(vRPX * parseInt(vData["properties"]["_iconSize"][1])); }
                                 var vXA  =  0; if(vData["properties"]["_iconAnchor"] != null){ vXA = parseInt(vData["properties"]["_iconAnchor"][0], 10); }
                                 var vYA  =  0; if(vData["properties"]["_iconAnchor"] != null){ vYA = parseInt(vData["properties"]["_iconAnchor"][1], 10); }
-       
+       						    var vScale = 1; if(vData["properties"]["_iconScale"]   != null){ vScale  = parseFloat(vData["properties"]["_iconScale"]); }
+       						    vXA = Math.floor(vXA *vScale);
+       						    vYA = Math.floor(vYA *vScale);
                                 var vImgOpacity = 1.0;
                                 if(vUrl != null){
                                     vImgOpacity = vUrl.opacity;
@@ -2513,8 +3074,8 @@ function LoadLayers_Vectors(oCanvas, oData, vUrl){
                                 var oImg              = new Image();
                     			    oImg.crossOrigin  = "anonymous";
                                     oImg.alt          = (vX - vXA) + "," + (vY - vYA) + "," + vImgOpacity;
-                                    oImg.style.width  = vW + "px";
-                                    oImg.style.height = vH + "px";
+                                    oImg.style.width  = Math.floor(vW * vScale) + "px";
+                                    oImg.style.height = Math.floor(vH * vScale) + "px";
                                     oImg.onload = function(){
                                         var vPos = this.alt.split(",");
                                         if(vPos.length == 3){
@@ -2534,7 +3095,11 @@ function LoadLayers_Vectors(oCanvas, oData, vUrl){
                                     oImg.onerror = function(){
                                         vVectorsN++;
                                     };
-                                    oImg.src = vURL;
+                                    oImg.src = vURL.replace( "cyberjapandata.gsi.go.jp", "maps.gsi.go.jp" );
+                                    if(oImg.src.indexOf('//maps.gsi.go.jp/') != -1){
+                                     oImg.src=oImg.src.replace('https://','//');
+                                     oImg.src=oImg.src.replace('http://','//');
+                                    }
                                     vVectors++;
                             }
                             /*-------------------------------------------------------------------------------------------------------*/
@@ -2604,10 +3169,45 @@ function LoadLayers_Vectors(oCanvas, oData, vUrl){
                                     var vStyleColor   = LoadLayers_Vevtors_PropertiesColor(vData["properties"]["_color"]);
                                     var vStyleOpacity = parseFloat(vData["properties"]["_opacity"]);
                                     var vStyleWeight  = parseInt(vData["properties"]["_weight"]);
-
                                     oCanvas.lineWidth = vStyleWeight;
                                     oCanvas.strokeStyle = "rgba(" + vStyleColor.r + "," + vStyleColor.g + "," + vStyleColor.b + "," + vStyleOpacity + ")";
                                 }
+                                if(vData["properties"]["_dashArray"] != null){
+									var dashArr = vData["properties"]["_dashArray"];
+									if ( !(dashArr instanceof Array) )
+									{
+										var dashParts = dashArr.split( ',' );
+										dashArr = [];
+										for( var i=0; i<dashParts.length; i++ )
+										{
+											dashArr.push(parseInt( dashParts[i] ));
+										}
+									}
+									if ( dashArr.length == 2 )
+									{
+										if ( oCanvas.setLineDash !== undefined )
+											oCanvas.setLineDash(dashArr);
+										else if ( oCanvas.mozDash !== undefined )
+											oCanvas.mozDash = dashArr;
+										
+									}
+									else
+									{
+										if ( oCanvas.setLineDash !== undefined )
+											oCanvas.setLineDash([]);
+										else if ( oCanvas.mozDash !== undefined )
+											oCanvas.mozDash = [];
+									}
+								}
+								else
+								{
+										if ( oCanvas.setLineDash !== undefined )
+											oCanvas.setLineDash([]);
+										else if ( oCanvas.mozDash !== undefined )
+											oCanvas.mozDash = [];
+								}
+								//this._ctx.setLineDash([]);
+							
                             }
 
 
@@ -2649,6 +3249,7 @@ function LoadLayers_Vectors(oCanvas, oData, vUrl){
                                             var vDataGeometryLat = parseFloat(vDataGeometryArray[nDataGeometry][1]);
                                             var vX = LoadLayers_Vectors_2PX(vDataGeometryLon, vRange_Lon_L, vDeg2PxX, "lon");
                                             var vY = LoadLayers_Vectors_2PX(vDataGeometryLat, vRange_Lat_T, vDeg2PxY, "lat");
+                                            
                                             if(fMove){
                                                 oCanvas.moveTo(vX, vY);
                                                 fMove = false;
@@ -2658,7 +3259,6 @@ function LoadLayers_Vectors(oCanvas, oData, vUrl){
                                             }
                                         }
                                     }
-
                                     if(vDataType == "LineString" || vDataType == "MultiLineString"){
                                         oCanvas.stroke();
                                     }
@@ -2839,51 +3439,59 @@ function LoadLayers_Vevtors_PropertiesColor(v){
     };
 };
 
-function LoadLayers_Dem_Trim(v, n, nXS, nXE, nYS, nYE){
+function LoadLayers_Dem_Trim(v, n_x, n_y, nXS, nXE, nYS, nYE){
     var ret = new Array();
-
     var nY_S = nYS;
-    var nY_E = n - nYE;
+    var nY_E = n_y - nYE;
     var vY = new Array();
     for(var nY = nY_S; nY < nY_E; nY++){
-        var nTrim_S = (nY * n) + (nXS);
-        var nTrim_E = (nY * n) + (n - nXE);
+        var nTrim_S = (nY * n_x) + (nXS);
+        var nTrim_E = (nY * n_x) + (n_x - nXE);
         var vX = v.slice(nTrim_S, nTrim_E);
 
         vY.push(vX);
     }
-
     ret = Array.prototype.concat.apply([], vY);
 
     return ret;
 };
 
 /* Normalize the elevation tile(It decimates the constant mesh)
- * ・Fixing the vertex array in 257x257
- * ・257 column vertically and horizontally copy a 256-row
+ * ・Copy before and after the last row
  */
 function LoadLayers_DemNormarize(v, nTilesX, nTilesY, pxTile){
     vSceneMesh_ZMin = null;
-
-	var nTilesOTS = nTilesX;
-	var ret = new Array(257*257);
-
+    
+	var nTilesOTS_X = nTilesX;
+	var nTilesOTS_Y = nTilesY;
+	
+	var ret = new Array((nVertexNumY+1)*(nVertexNumX+1));
     var ny = 0;
     var nx = 0;
     var nz = 0;
-	for(ny = 0; ny <= 256; ny++){
-		for(nx = 0; nx <= 256; nx++){
-            nz = ny * 257 + nx;
-			if     (nx == 256){ ret[nz] = ret[ ny      * 257 + nx - 1]; }
-			else if(ny == 256){	ret[nz] = ret[(ny - 1) * 257 + nx    ]; }
+	for(ny = 0; ny <= nVertexNumY; ny++){
+		for(nx = 0; nx <= nVertexNumX; nx++){
+            nz = ny * (nVertexNumX+1) + nx;
+			if     (nx == nVertexNumX){ ret[nz] = ret[ ny      * (nVertexNumX+1) + nx - 1]; }
+			else if(ny == nVertexNumY){	ret[nz] = ret[(ny - 1) * (nVertexNumX+1) + nx    ]; }
 			else              {
-                ret[nz] = v[ny * nTilesOTS * pxTile * nTilesOTS + nx * nTilesOTS];
+                if (false )// nVertexNumX == nVertexNumY )
+                {
+					ret[nz] = v[ny * nTilesX * pxTile * nTilesX + nx * nTilesX];
+				}
+				else
+				{
+	                var xx = Math.round( nx * ( (nTilesX) / nVertexNumX ) );
+	                var yy = Math.round( ny * ( (nTilesY) / nVertexNumY ) );
+	                ret[nz] = v[ yy * (nTilesX*1) +xx];
+	            }
+                
 			}
 
             if(isNaN(ret[nz])){
                 ret[nz] = "0";
             }
-
+		
             if(vSceneMesh_ZMin == null){
                 vSceneMesh_ZMin = ret[nz];
             }
@@ -2934,8 +3542,22 @@ function LoadScene(){
 	    document.getElementById("ratioZ").value = vSceneMeshZRate;
 	}
 
+	nGeomSizeX = 100;
+	nGeomSizeY = 100;
+	if ( args["tile_n_px_w"] > args["tile_n_px_h"] )
+	{
+		
+		nGeomSizeX = 100;
+		nGeomSizeY = Math.floor( args["tile_n_px_h"] * ( 100 / args["tile_n_px_w"]) );
+	}
+	else
+	{
+		
+		nGeomSizeY = 100;
+		nGeomSizeX = Math.floor( args["tile_n_px_w"] * ( 100 / args["tile_n_px_h"]) );
+	}
 	// To create a mesh-like geometry.
-	var geometry = new THREE.PlaneGeometry(100, 100, 256, 256);
+	var geometry = new THREE.PlaneGeometry(nGeomSizeX, nGeomSizeY, nVertexNumX, nVertexNumY);
 
     var material = null;
     if(oTextureCanvas != null){
@@ -2945,20 +3567,38 @@ function LoadScene(){
         texture.magFilter = THREE.LinearFilter;
         
 	    material = new THREE.MeshBasicMaterial({map: texture});
+	    material.side = THREE.DoubleSide;
     }
     else{
         material = new THREE.MeshPhongMaterial( {  color: 0x00FF7F, ambient:0x990000 } );
+	    material.side = THREE.DoubleSide;
     }
-
+	oFaceMaterial = material;
+	material.opacity = 1;
+	if ( bFaceTransparent )
+	{
+		material.transparent = true;
+		material.depthTest = false;
+		material.depthWrite = false;
+	}
+	else
+	{
+		material.transparent = false;
+		material.depthTest = true;
+		material.depthWrite = true;
+	}
 	// Create a mesh of terrain surface, to register.
 	oSceneMesh = new THREE.Mesh(geometry, material);
 	oScene.add(oSceneMesh);
 	
 	LoadSceneMeshBase();
+	// Display 3D GeoData
+	Draw3DGEOData();
 
 	// To match the elevation values to change the mesh shape.
 	SceneGeometryZ();
-
+	
+	
 	// Plug-in for mouse operation
 	oCameraCtrl = new THREE.TrackballControls(oCamera, oFrame3D);
 	if( args && args["ctx"] ){
@@ -2988,60 +3628,591 @@ function LoadScene(){
 	SceneRender();
 };
 
+
+function getBoxLatLngBounds(center, zoom, w, h)
+{
+	// latLngToPoint
+	center.lat = parseFloat( center.lat );
+	center.lng = parseFloat( center.lng );
+	w = parseInt(w);
+	h = parseInt(h);
+	zoom = parseInt(zoom );
+	var DEG_TO_RAD = Math.PI / 180;
+	var RAD_TO_DEG = 180 / Math.PI;
+	var MAX_LATITUDE = 85.0511287798;
+	var _a = 0.5 / Math.PI;
+	var _b = 0.5;
+	var _c = -0.5 / Math.PI;
+	var _d = 0.5;
+	
+	var latLngToPoint = function( latlng, zoom )
+	{
+	
+		var d = DEG_TO_RAD;
+		var max = MAX_LATITUDE;
+		var lat = Math.max(Math.min(max, latlng.lat), -max);
+		var x = latlng.lng * d;
+		var y = lat * d;
+		y = Math.log(Math.tan((Math.PI / 4) + (y / 2)));
+
+		var projectedPoint = {x:x,y:y};
+		var scale = 256 * Math.pow(2, zoom);
+		
+		scale = scale || 1;
+		var point = {x:0, y:0 };
+		point.x = scale * (_a * projectedPoint.x + _b);
+		point.y = scale * (_c * projectedPoint.y + _d);
+		return point;
+	};
+	
+	
+	
+	var pointToLatLng = function( point,zoom )
+	{
+		var scale = 256 * Math.pow(2, zoom);
+		scale = scale || 1;
+		var untransformedPoint =  {
+			x: (point.x / scale - _b) / _a,
+			y: (point.y / scale - _d) / _c
+		};
+		        
+		//var untransformedPoint = this.transformation.untransform(point, scale);
+		var d = RAD_TO_DEG;
+		var lng = untransformedPoint.x * d;
+		var lat = (2 * Math.atan(Math.exp(untransformedPoint.y)) - (Math.PI / 2)) * d;
+
+
+		return { lat : lat, lng : lng };
+	};
+	
+	var centerPoint = latLngToPoint( center, zoom );
+	
+	var ltLatLng = pointToLatLng( {
+		x : centerPoint.x - (w/2),
+		y : centerPoint.y - (h/2),
+	}, zoom );
+	var rbLatLng = pointToLatLng( {
+		x : centerPoint.x + (w/2),
+		y : centerPoint.y + (h/2),
+	}, zoom );
+	
+	
+	
+		
+	return { lt : ltLatLng, rb : rbLatLng, w:w, h:h };
+}
+
+var oGEODataTriangles = [];
+function _latLngToPointData(viewBox,lat, lng, h)
+{
+	var x=( ( lng - viewBox.lt.lng ) / ( viewBox.rb.lng - viewBox.lt.lng ) )  * viewBox.w;
+	var y=( ( lat - viewBox.rb.lat ) / Math.abs( viewBox.rb.lat - viewBox.lt.lat ) )  * viewBox.h;
+	
+	//var y=(viewBox.lt.lat - lat ) * (( ( viewBox.lt.lng - viewBox.rb.lng ) / viewBox.h ));
+	
+	var z=(h - parseFloat(vSceneMesh_ZMin)) * vSceneMeshDistanceRate * vSceneMeshZRate;
+	
+	x = ( x / viewBox.w ) * nGeomSizeX - (nGeomSizeX/2);
+	y = ( y / viewBox.h ) * nGeomSizeY - (nGeomSizeY/2);
+	
+	return {x:x, y:y,z:z};
+}
+
+
+
+function polyToriangles(pointArr)
+{
+	var ret = [];
+	var p0 = {lng:0,lat:0};
+	var counter = 0;
+	var points = $.extend( [], pointArr );
+	if ( points.length >= 3 && points[0].lng == points[points.length-1].lng && points[0].lat == points[points.length-1].lat )
+		points.splice(points.length-1,1);
+	
+	var idx = _getFarPoint(p0,points);
+	while( points.length > 3 )
+	{
+		counter++;
+		var l = points.length;
+		var triangle = [
+			{lng:points[idx-1>=0?idx-1:l-1].lng,lat:points[idx-1>=0?idx-1:l-1].lat,h:points[idx-1>=0?idx-1:l-1].h},
+			{lng:points[idx].lng,lat:points[idx].lat,h:points[idx].h},
+			{lng:points[idx+1<l?idx+1:0].lng,lat:points[idx+1<l?idx+1:0].lat,h:points[idx+1<l?idx+1:0].h}
+		];
+		
+		if ( _isTriangleInPoint(triangle,points ) )
+		{
+			idx --;
+			if ( idx < 0 ) idx =points.length - 1;
+		}
+		else
+		{
+			ret.push( triangle );
+			points.splice(idx,1);
+			idx = _getFarPoint(p0,points);
+		}
+		
+		if ( counter > 10000 ) break;
+	}
+	
+	if ( points.length == 3 )
+	{
+		ret.push( [
+			{lng:points[0].lng,lat:points[0].lat,h:points[0].h},
+			{lng:points[1].lng,lat:points[1].lat,h:points[1].h},
+			{lng:points[2].lng,lat:points[2].lat,h:points[2].h}
+		] );
+		return ret;
+	}
+	
+	return null;
+}
+
+
+function _isTriangleInPoint( tri, points )
+{
+	var subVector = function( a, b )
+	{
+		var ret = {};
+		ret.lng = a.lng - b.lng;
+		ret.lat = a.lat - b.lat;
+		return ret;
+	};
+	
+	for( var i=0; i<points.length; i++ )
+	{
+		var p = points[i];
+		var AB = subVector(tri[1], tri[0]);
+		var BP = subVector(p, tri[1]);
+
+		var BC = subVector(tri[2], tri[1]);
+		var CP = subVector(p, tri[2]);
+
+		var CA = subVector(tri[0], tri[2]);
+		var AP = subVector(p, tri[0]);
+
+		var c1 = AB.x * BP.y - AB.y * BP.x;
+		var c2 = BC.x * CP.y - BC.y * CP.x;
+		var c3 = CA.x * AP.y - CA.y * AP.x;
+
+		if( ( c1 > 0 && c2 > 0 && c3 > 0 ) || ( c1 < 0 && c2 < 0 && c3 < 0 ) ) {
+		    return true;
+		}
+	}
+	return false;
+}
+
+function _getFarPoint(p0,points)
+{
+	var maxDistance = null;
+	var idx =0;
+	
+	for( var i=0; i<points.length; i++ )
+	{
+		var p = points[i];
+		var distance = Math.sqrt(Math.pow(p0.lng-p.lng,2) + Math.pow(p0.lat-p.lat,2));
+		if ( maxDistance == null || maxDistance<distance )
+		{
+			maxDistance = distance;
+			idx=i;
+		}
+	}
+	
+	return idx;
+}
+
+
+
+function Draw3DGEOData()
+{
+	if (!oGeo3DData || oGeo3DData.length <= 0) {
+		$(".trans_frame").hide();
+		return; 
+	}
+	
+	//var geometry = new THREE.Geometry();
+	var viewBox =getBoxLatLngBounds( { 
+		lat: parseFloat(args["lat"]), 
+		lng:parseFloat(args["lon"])}, 
+		parseInt(args["z"]), 
+		parseInt(args["tile_n_px_w"]), 
+		parseInt(args["tile_n_px_h"]) );
+	
+	
+	
+	var iconNo = 0;
+	for( var i=0; i<oGeo3DData.length; i++ )
+	{
+		if ( oGeo3DData[i].properties._markerType == "Polygon" )
+		{
+			var  geometry = new THREE.Geometry();
+			var triangles = _draw3DGEODataPolygon( geometry, viewBox, oGeo3DData[i] );
+			oGeo3DData[i].properties._fillOpacity = ( oGeo3DData[i].properties._fillOpacity || oGeo3DData[i].properties._fillOpacity == 0 ? oGeo3DData[i].properties._fillOpacity : 0.2 );
+			var fillColor = oGeo3DData[i].properties._fillColor;
+			fillColor = ( fillColor ? fillColor : 0x0033ff );
+			var material = new THREE.MeshBasicMaterial(
+				{color: fillColor, 
+					opacity: oGeo3DData[i].properties._fillOpacity, 
+					transparent:true, depthWrite:true, blending : THREE.NormalBlending});
+			
+			//var material = new THREE.MeshPhongMaterial( {  color: fillColor,
+			//		opacity: 1,oGeo3DData[i].properties._fillOpacity,  transparent:true } );
+			material.side = THREE.DoubleSide;
+			
+			geometry.computeFaceNormals();
+			geometry.computeVertexNormals();
+			
+		    var mesh = new THREE.Mesh(geometry, material);
+		    if ( !oSceneGEODataMeshArr ) oSceneGEODataMeshArr = [];
+		    oSceneGEODataMeshArr.push( {
+		    	type : "Polygon",
+		    	triangles : triangles,
+		    	mesh:mesh
+		    } );
+			oScene.add(mesh);
+			
+			
+			// line
+			
+			if ( oGeo3DData[i].properties._weight )
+			{
+				var lineGeometry = new THREE.Geometry();
+				var points = _draw3DGEODataLineString( lineGeometry, viewBox, oGeo3DData[i] );
+				
+				if ( points[0].h != points[points.length-1].h
+					|| points[0].lat != points[points.length-1].lat
+					|| points[0].lng != points[points.length-1].lng
+					)
+					points.push( {
+						h : points[0].h,
+						lat : points[0].lat,
+						lng : points[0].lng
+					});
+				
+				oGeo3DData[i].properties._opacity = ( oGeo3DData[i].properties._opacity || oGeo3DData[i].properties._opacity == 0 ? oGeo3DData[i].properties._opacity : 0.5 );
+				var color = ( oGeo3DData[i].properties._color ? oGeo3DData[i].properties._color : 0x0033ff );
+				var weight = ( oGeo3DData[i].properties._weight ? oGeo3DData[i].properties._weight : 5 );
+				
+				lineGeometry.computeFaceNormals();
+				lineGeometry.computeVertexNormals();
+				
+				var lineMesh = new THREE.Line( lineGeometry, new THREE.LineBasicMaterial( { 
+					color: color,linewidth:parseInt(weight),
+					opacity: oGeo3DData[i].properties._opacity, depthWrite:true,  transparent: true
+					} ) );
+				//mesh.material.linewidth = 10;
+			    if ( !oSceneGEODataMeshArr ) oSceneGEODataMeshArr = [];
+				oSceneGEODataMeshArr.push( {
+			    	type : "LineString",
+			    	"points" : points,
+			    	"mesh":lineMesh
+			    } );
+				oScene.add(lineMesh);
+				
+			}
+			
+		}
+		else if ( oGeo3DData[i].properties._markerType == "LineString" )
+		{
+			var geometry = new THREE.Geometry();
+			var points = _draw3DGEODataLineString( geometry, viewBox, oGeo3DData[i] );
+			oGeo3DData[i].properties._opacity = ( oGeo3DData[i].properties._opacity || oGeo3DData[i].properties._opacity == 0 ? oGeo3DData[i].properties._opacity : 0.5 );
+			var color = ( oGeo3DData[i].properties._color ? oGeo3DData[i].properties._color : 0x0033ff );
+			var weight = ( oGeo3DData[i].properties._weight ? oGeo3DData[i].properties._weight : 5 );
+			
+			
+			geometry.computeFaceNormals();
+			geometry.computeVertexNormals();
+			
+			var mesh = new THREE.Line( geometry, new THREE.LineBasicMaterial( { 
+				color: color,linewidth:parseInt(weight),
+				opacity: oGeo3DData[i].properties._opacity, depthWrite:true,  transparent: true
+				} ) );
+			//mesh.material.linewidth = 10;
+		    if ( !oSceneGEODataMeshArr ) oSceneGEODataMeshArr = [];
+			oSceneGEODataMeshArr.push( {
+		    	type : "LineString",
+		    	points : points,
+		    	mesh:mesh
+		    } );
+			oScene.add(mesh);
+			
+			
+		}
+		else if ( oGeo3DData[i].properties._markerType == "Icon" )
+		{
+			var latlngPoint = {
+				lat : oGeo3DData[i].geometry.coordinates[1],
+				lng : oGeo3DData[i].geometry.coordinates[0],
+				h : oGeo3DData[i].geometry.coordinates[2]
+			};
+			
+			if (oGeo3DData[i].properties._altitudeMode == "relativeToGround")
+			{
+				var x=( ( latlngPoint.lng - viewBox.lt.lng ) / ( viewBox.rb.lng - viewBox.lt.lng ) )  * viewBox.w;
+				var y=( ( latlngPoint.lat - viewBox.rb.lat ) / Math.abs( viewBox.rb.lat - viewBox.lt.lat ) )  * viewBox.h;
+				
+			    y = viewBox.h - y;
+				latlngPoint.h = parseFloat(latlngPoint.h) + getDEMValue( x, y, viewBox );
+				oGeo3DData[i].geometry.coordinates[2] = latlngPoint.h;
+			}
+			
+			var point = _latLngToPointData( 
+				viewBox, 
+				latlngPoint.lat, 
+				latlngPoint.lng, 
+				latlngPoint.h);
+            
+			var iconScale = oGeo3DData[i].properties._iconScale;
+			if (!iconScale ) iconScale = 1;
+			
+			var iconSize ={
+				w:oGeo3DData[i].properties._iconSize[0] * iconScale,
+				h:oGeo3DData[i].properties._iconSize[1] * iconScale
+			};
+			var screenSize = ( nGeomSizeX > nGeomSizeY ? nGeomSizeY :nGeomSizeX );
+			iconSize.w *= (nGeomSizeX / args["w"]);
+			iconSize.h *= (nGeomSizeX / args["w"]);
+			
+			var url = oGeo3DData[i].properties._iconUrl.replace(/cyberjapandata.gsi.go.jp/, "maps.gsi.go.jp");
+			if(url.indexOf('//maps.gsi.go.jp/') != -1){
+				url=url.replace('https://','//');
+				url=url.replace('http://','//');
+			}
+			var texture = THREE.ImageUtils.loadTexture( url );
+			var material = new THREE.SpriteMaterial( { map: texture, useScreenCoordinates: false,transparent:true, depthWrite:true } );
+			var mesh = new THREE.Sprite( material );
+			mesh.position.set( point.x, point.y, point.z );
+			mesh.scale.set( iconSize.w,iconSize.h, 1.0 );
+			
+			var img = new Image();
+			img.style.width = iconSize.w;
+			img.style.height = iconSize.h;
+			img.width = iconSize.w;
+			img.height = iconSize.h;
+			img._iconNo = iconNo;
+			img.crossOrigin = "anonymous";
+			img.onload = function()
+			{
+				try
+				{
+					if ( !oIconTextureCanvas )
+					{
+						oIconTextureCanvas = document.createElement('canvas');
+						oIconTextureCanvas.width = 512;
+						oIconTextureCanvas.height = 512;
+					}
+					var destX = ( (this._iconNo % 16 ) * 32 );
+					var destY = ( Math.floor(this._iconNo / 16) * 32 );
+					var iconTexture = oIconTextureCanvas.getContext('2d');
+					iconTexture.drawImage( this, destX, destY, 32, 32 );
+				}
+				catch(e){
+				}
+			};
+			img.src = url;
+			
+		    if ( !oSceneGEODataMeshArr ) oSceneGEODataMeshArr = [];
+			oSceneGEODataMeshArr.push( {
+		    	type : "Icon",
+		    	point : latlngPoint,
+		    	mesh:mesh,
+		    	iconSize : iconSize,
+		    	iconNo : iconNo
+		    } );
+			iconNo++;
+			oScene.add(mesh);
+			
+		}
+		
+	}
+	
+}
+
+function _draw3DGEODataIcon(geometry,viewBox, data )
+{
+	
+}
+
+function getDEMValue(x, y, viewBox)
+{
+	x = Math.round( x * ( ( nVertexNumX) / viewBox.w ) );
+	y = Math.round( y * ( ( nVertexNumY) / viewBox.h ) );
+	if ( x < 0 || y < 0 || x > nVertexNumX || y > nVertexNumY )return 0;
+	
+	//return 0;
+	var result =  vSceneMesh[ y * (nVertexNumX+1) + x ];
+	
+	if ( result ) return parseFloat( result );
+	else return 0;
+}
+	
+function _draw3DGEODataLineString(geometry,viewBox, data )
+{
+	var points = [];
+	
+	var isRelative = ( data.properties._altitudeMode == "relativeToGround" );
+	
+	
+	var coordinates = data.geometry.coordinates;
+	
+	if ( coordinates.length <= 1 )
+	{
+		coordinates = coordinates[0];
+    	for( var i=0; i<coordinates.length; i++ )
+    	{
+    		var p=coordinates[i];
+    		points.push( {lng:p[0],lat:p[1],h:p[2]} );
+    	}
+
+	}
+	else
+	{
+    	for( var i=0; i<coordinates.length; i++ )
+    	{
+    		var p=coordinates[i];
+    		
+    		if ( isRelative )
+    		{
+    			var x=( ( p[0] - viewBox.lt.lng ) / ( viewBox.rb.lng - viewBox.lt.lng ) )  * viewBox.w;
+    			var y=( ( p[1] - viewBox.rb.lat ) / Math.abs( viewBox.lt.lat - viewBox.rb.lat ) )  * viewBox.h;
+    			y = viewBox.h - y;
+    			var demValue = getDEMValue( x, y, viewBox );
+    			p[2] = parseFloat(p[2]) + demValue;
+    		}
+    		points.push( {lng:p[0],lat:p[1],h:p[2]} );
+    	}
+	}
+	for( var i=0; i<points.length; i++ )
+	{
+		var p1 = _latLngToPointData( viewBox, points[i].lat, points[i].lng, points[i].h );
+		
+		geometry.vertices.push( new THREE.Vertex( new THREE.Vector3(p1.x, p1.y, p1.z) ) );  
+	}
+	
+	return points
+}
+
+function _draw3DGEODataPolygon(geometry,viewBox, data )
+{
+	var isRelative = ( data.properties._altitudeMode == "relativeToGround" );
+	
+	
+	var points = [];
+	for( var i=0; i<data.geometry.coordinates[0].length; i ++ )
+	{
+		var p = data.geometry.coordinates[0][i];
+		
+		if ( isRelative )
+		{
+			var x=( ( p[0] - viewBox.lt.lng ) / ( viewBox.rb.lng - viewBox.lt.lng ) )  * viewBox.w;
+			var y=( ( p[1] - viewBox.rb.lat ) / Math.abs( viewBox.rb.lat - viewBox.lt.lat ) )  * viewBox.h;
+			y = viewBox.h - y;
+			var demValue = getDEMValue( x, y, viewBox );
+			p[2] = parseFloat(p[2]) + demValue;
+		}
+		points.push( {lng:p[0],lat:p[1],h:p[2]} );
+	}
+	
+	
+	var triangles = polyToriangles(points);
+	
+	
+	
+	
+	for( var j=0; j<triangles.length; j++ )
+	{
+		var p1 = _latLngToPointData( viewBox, triangles[j][0].lat, triangles[j][0].lng, triangles[j][0].h );//{x:triangles[0], y:triangles[1], z:vertexes[2]};
+		var p2 = _latLngToPointData( viewBox, triangles[j][1].lat, triangles[j][1].lng, triangles[j][1].h );//{x:vertexes[3], y:vertexes[4], z:vertexes[5]};
+		var p3 = _latLngToPointData( viewBox, triangles[j][2].lat, triangles[j][2].lng, triangles[j][2].h );//{x:vertexes[6], y:vertexes[7], z:vertexes[8]};
+		//var n = _normal( p1, p2, p3 );
+		var v1 = new THREE.Vector3(p1.x, p1.y, p1.z);
+		var v2 = new THREE.Vector3(p2.x, p2.y, p2.z);
+		var v3 = new THREE.Vector3(p3.x, p3.y, p3.z);
+		geometry.vertices.push(new THREE.Vertex(v1));
+		geometry.vertices.push(new THREE.Vertex(v2));
+		geometry.vertices.push(new THREE.Vertex(v3));
+		
+		var face = new THREE.Face3( geometry.vertices.length-3, geometry.vertices.length-2, geometry.vertices.length-1 );
+		geometry.faces.push( face );
+		
+	}
+	
+	return triangles;
+}
+
+
 function LoadSceneMeshBase(){
     oSceneMeshBase = new Array(5);
 
     var i = 0;
     var h = -1 * vSceneMeshDistanceRate * 100;
 
-	var material = new THREE.MeshPhongMaterial({color: 0xffffff, ambient: 0xffffff, specular: 0xcccccc, shininess:50, metal:true});
-	var geometry = new THREE.PlaneGeometry(100, 100, 1, 1);
-	for(i = 0; i < geometry.vertices.length; i++){
-		geometry.vertices[i].z = h;
+	var material = new THREE.MeshPhongMaterial({color: 0xffffff, depthWrite:false,ambient: 0xffffff, specular: 0xcccccc, shininess:50, metal:true});
+	
+	if ( args["frame"] == "trans" )
+	{
+		material.transparent = true;
+		material.opacity = 0.5;
 	}
-	geometry.vertices[0].y = -50;
-	geometry.vertices[1].y = -50;
-	geometry.vertices[2].y =  50;
-	geometry.vertices[3].y =  50;
-	geometry.computeFaceNormals();
-	geometry.computeVertexNormals();
-	geometry.dynamic            = true;
-	geometry.verticesNeedUpdate = true;
+	nGeomSizeX = 100;
+	nGeomSizeY = 100;
+	if ( args["tile_n_px_w"] > args["tile_n_px_h"] )
+	{
+		
+		nGeomSizeX = 100;
+		nGeomSizeY = Math.floor( args["tile_n_px_h"] * ( 100 / args["tile_n_px_w"]) );
+	}
+	else
+	{
+		
+		nGeomSizeY = 100;
+		nGeomSizeX = Math.floor( args["tile_n_px_w"] * ( 100 / args["tile_n_px_h"]) );
+	}
+	
+	if ( args["frame"] != "none" )
+    {
+		var geometry = new THREE.PlaneGeometry(nGeomSizeX, nGeomSizeY, 1, 1);
+		for(i = 0; i < geometry.vertices.length; i++){
+			geometry.vertices[i].z = h;
+		}
+		geometry.vertices[0].y = -(nGeomSizeY/2);
+		geometry.vertices[1].y = -(nGeomSizeY/2);
+		geometry.vertices[2].y =  (nGeomSizeY/2);
+		geometry.vertices[3].y =  (nGeomSizeY/2);
+		geometry.computeFaceNormals();
+		geometry.computeVertexNormals();
+		geometry.dynamic            = true;
+		geometry.verticesNeedUpdate = true;
 
-    oSceneMeshBase[0] = new THREE.Mesh(geometry, material);
-	oScene.add(oSceneMeshBase[0]);
-
-    var nz = 0;
-    var x  = null;
-    var y  = null;
-    for(n = 1; n < 5; n++){
-	    geometry = new THREE.PlaneGeometry(100, 1,256, 1);
-	    for(i = 0; i < geometry.vertices.length; i++){
-            if     (n == 1){ nz = 257 * 256 + i;         }
-            else if(n == 2){ nz = 257 * i;               }
-            else if(n == 3){ nz = 257 * (256 - i) + 256; }
-            else if(n == 4){ nz = 256 - i;               }
-
-		    if((0 <= i) && (i <= 256)){
-			    geometry.vertices[i].z = oSceneMesh.geometry.vertices[nz].z;
-		    }
-		    else{
+	    oSceneMeshBase[0] = new THREE.Mesh(geometry, material);
+		oScene.add(oSceneMeshBase[0]);
+		
+	    for(n = 1; n < 5; n++){
+			
+			if     (n == 1)geometry = new THREE.PlaneGeometry(nGeomSizeX, 1,nVertexNumX, 1);
+		    else if(n == 2)geometry = new THREE.PlaneGeometry(nGeomSizeY, 1,nVertexNumY, 1);
+		    else if(n == 3)geometry = new THREE.PlaneGeometry(nGeomSizeY, 1,nVertexNumY, 1);
+		    else if(n == 4)geometry = new THREE.PlaneGeometry(nGeomSizeX, 1,nVertexNumX, 1);
+		    
+		    for(i = 0; i < geometry.vertices.length; i++){
+				
 			    geometry.vertices[i].z = h;
+
+	            x = null;
+	            y = null;
+	            if     (n == 1){ x = null;       y = -(nGeomSizeY/2);                 }
+	            else if(n == 2){ x =  -(nGeomSizeX/2);      y =  (nGeomSizeY/2)-nGeomSizeY/nVertexNumY*(i%(nVertexNumY+1)); }
+	            else if(n == 3){ x =   (nGeomSizeX/2);      y = -(nGeomSizeY/2)+nGeomSizeY/nVertexNumY*(i%(nVertexNumY+1)); }
+	            else if(n == 4){ x =   (nGeomSizeX/2)-nGeomSizeX/nVertexNumX*(i%(nVertexNumX+1)); y =  (nGeomSizeY/2);                 }
+
+	            if(x != null){ geometry.vertices[i].x = x; }
+	            if(y != null){ geometry.vertices[i].y = y; }
 		    }
 
-            x = null;
-            y = null;
-            if     (n == 1){ x = null;                 y = -50;                 }
-            else if(n == 2){ x =  -50;                 y =  50-100/256*(i%257); }
-            else if(n == 3){ x =   50;                 y = -50+100/256*(i%257); }
-            else if(n == 4){ x =   50-100/256*(i%257); y =  50;                 }
-
-            if(x != null){ geometry.vertices[i].x = x; }
-            if(y != null){ geometry.vertices[i].y = y; }
+	        oSceneMeshBase[n] = new THREE.Mesh(geometry, material);
+	        oScene.add(oSceneMeshBase[n]);
 	    }
-
-        oSceneMeshBase[n] = new THREE.Mesh(geometry, material);
-        oScene.add(oSceneMeshBase[n]);
     }
 };
 
@@ -3053,9 +4224,9 @@ function LoadSceneMeshBase(){
 function SceneGeometryZ(){  
     var n  = 0;
     var nz = 0;  
-	for(ny = 0; ny <= 256; ny++){
-        for(nx = 0; nx <= 256; nx++){
-            nz = ny * 257 + nx;
+	for(ny = 0; ny <= nVertexNumY; ny++){
+        for(nx = 0; nx <= nVertexNumX; nx++){
+            nz = ny * (nVertexNumX+1) + nx;
 			oSceneMesh.geometry.vertices[nz].z = (vSceneMesh[nz] - vSceneMesh_ZMin) * vSceneMeshDistanceRate * vSceneMeshZRate;
 		}
 	}
@@ -3063,21 +4234,114 @@ function SceneGeometryZ(){
 	oSceneMesh.geometry.computeVertexNormals();
 	oSceneMesh.geometry.dynamic            = true;
 	oSceneMesh.geometry.verticesNeedUpdate = true;
-    if(oSceneMeshBase != null){
+	
+    if(oSceneMeshBase != null && args["frame"] != "none"){
         for(n = 1; n < 5; n++){
-	        for(i = 0; i < 257; i++){
-                if     (n == 1){ nz = 257 * 256 + i;         }
-                else if(n == 2){ nz = 257 * i;               }
-                else if(n == 3){ nz = 257 * (256 - i) + 256; }
-                else if(n == 4){ nz = 256 - i;               }
-                oSceneMeshBase[n].geometry.vertices[i].z = oSceneMesh.geometry.vertices[nz].z;
-	        }
+			switch( n )
+			{
+				case 1:
+				//bottom
+					for(i = 0; i < (nVertexNumX+1); i++){
+						nz = (nVertexNumY) * (nVertexNumX+1) + i;
+						try{
+							oSceneMeshBase[n].geometry.vertices[i].z = oSceneMesh.geometry.vertices[nz].z;
+						}catch(e){
+						}
+					}
+					break;
+					
+				case 2:
+				//left
+					for(i = 0; i < (nVertexNumY+1); i++){
+						nz = (nVertexNumX+1) * i;
+						oSceneMeshBase[n].geometry.vertices[i].z = oSceneMesh.geometry.vertices[nz].z;
+					}
+					
+					break;
+				case 3:
+				//right
+					for(i = 0; i < (nVertexNumY+1); i++){
+						nz = (nVertexNumX+1) * (nVertexNumY - i) + nVertexNumX;
+						oSceneMeshBase[n].geometry.vertices[i].z = oSceneMesh.geometry.vertices[nz].z;
+					}
+					break;
+				case 4:
+				//top
+					for(i = 0; i < (nVertexNumX+1); i++){
+						nz = nVertexNumX - i;
+						oSceneMeshBase[n].geometry.vertices[i].z = oSceneMesh.geometry.vertices[nz].z;
+					}
+					break;
+			}
+	       
 	        oSceneMeshBase[n].geometry.computeFaceNormals();
 	        oSceneMeshBase[n].geometry.computeVertexNormals();
 	        oSceneMeshBase[n].geometry.dynamic            = true;
 	        oSceneMeshBase[n].geometry.verticesNeedUpdate = true;
         }
     }
+    
+    
+    if ( oSceneGEODataMeshArr != null )
+    {
+		
+		for( var k=0; k<oSceneGEODataMeshArr.length; k++ )
+		{
+			var meshData = oSceneGEODataMeshArr[k];
+			var viewBox =getBoxLatLngBounds( { 
+				lat: parseFloat(args["lat"]), 
+				lng:parseFloat(args["lon"])}, 
+				parseInt(args["z"]), 
+				parseInt(args["tile_n_px_w"]), 
+				parseInt(args["tile_n_px_h"]) );
+			
+			if ( meshData.points )
+			{
+				for( var i=0; i<meshData.points.length; i++ )
+				{
+					var p1 = _latLngToPointData( viewBox, meshData.points[i].lat, meshData.points[i].lng, meshData.points[i].h );
+					meshData.mesh.geometry.vertices[i].z = p1.z;
+				
+				}
+			}
+			
+			else if ( meshData.triangles )
+			{
+				for( var i=0, idx=0; i<meshData.triangles.length; i++, idx+=3 )
+				{
+					var p1 = _latLngToPointData( viewBox, meshData.triangles[i][0].lat, meshData.triangles[i][0].lng, meshData.triangles[i][0].h );//{x:triangles[0], y:triangles[1], z:vertexes[2]};
+					var p2 = _latLngToPointData( viewBox, meshData.triangles[i][1].lat, meshData.triangles[i][1].lng, meshData.triangles[i][1].h );//{x:vertexes[3], y:vertexes[4], z:vertexes[5]};
+					var p3 = _latLngToPointData( viewBox, meshData.triangles[i][2].lat, meshData.triangles[i][2].lng, meshData.triangles[i][2].h );//{x:vertexes[6], y:vertexes[7], z:vertexes[8]};
+					meshData.mesh.geometry.vertices[idx].z = p1.z;
+					meshData.mesh.geometry.vertices[idx+1].z = p2.z;
+					meshData.mesh.geometry.vertices[idx+2].z = p3.z;
+				
+				}
+			}
+			else if (meshData.point)
+			{
+				var meshData = oSceneGEODataMeshArr[k];
+				var p = _latLngToPointData( 
+					viewBox, 
+					meshData.point.lat, 
+					meshData.point.lng, 
+					meshData.point.h);
+				meshData.mesh.position.set( p.x, p.y, p.z );
+				
+				meshData.mesh.updateMatrix();
+				meshData.mesh.matrixWorldNeedsUpdate = true;
+				
+			}
+			if ( meshData.mesh.geometry )
+			{
+				meshData.mesh.geometry.computeFaceNormals();
+				meshData.mesh.geometry.computeVertexNormals();
+				meshData.mesh.geometry.dynamic            = true;
+				meshData.mesh.geometry.verticesNeedUpdate = true;
+			}
+		}
+	}
+	
 };
 
 function SceneGeometryZ_Value(){
@@ -3106,12 +4370,49 @@ function SceneRender(){
 	    oRenderer.render(oScene, oCamera);
     }
 };
+function mpflag(param, x, id){
+  if (!param)
+  {
+	if (id.indexOf("relief") >= 0)
+		return 1;
+	else
+    	return 0;
+  }
+  if (x < 1)
+  {
+    return 0;
+  }
+  return param.charAt(x - 1);
+};
 
 /*-----------------------------------------------------------------------------------------------*/
 // Download
 /*-----------------------------------------------------------------------------------------------*/
-function Download(type){
-    oWinDownload = window.open("index_3d_download.html?type=" + type, "_brank");
+function showDownloadWindow(type){
+    //oWinDownload = window.open("index_3d_download.html?type=" + type, "_brank");
+    $( "tr.downloadfile" ).hide();
+    $( "tr.downloadfile." + type ).show();
+    if ( !oIconTextureCanvas )
+    	$( "tr.downloadfile.icon" ).hide();
+    
+    $( ".download .title span" ).hide();
+    $( ".download .title span." + type ).show();
+    
+    
+    $( ".download" ).css( {	"visibility" : "hidden"} ).show();
+    $( ".download" ).css( {
+    	"margin-left" : -parseInt( $( ".download" ).outerWidth() / 2 ) + "px",
+    	"margin-top" : -parseInt( $( ".download" ).outerHeight() / 2 ) + "px"
+    } );
+    $( ".download" ).hide().css( {	"visibility" : "visible"} );
+    $( ".download .close_btn" ).off("click").on( "click", function() {
+		 $( "#blind" ).fadeOut(300 );
+		 $( ".download" ).fadeOut(300 );
+    } );
+    
+    
+    $( ".download" ).fadeIn(300 );
+    $( "#blind" ).fadeIn(300 );
 };
 
 function Download_Arg_ZRate(){
@@ -3122,23 +4423,33 @@ function Download_Arg_ZRate(){
 // Event
 /*-----------------------------------------------------------------------------------------------*/
 function EvtResize(){
-	var w = window.innerWidth;
-	var h = window.innerHeight;
-
-    oFrame.style.width  = w + "px";
-    oFrame.style.height = h + "px";
+	//var w = window.innerWidth;
+	//var h = window.innerHeight;
+	var screenSize = {
+		w : window.innerWidth ? window.innerWidth: $(window).width(),
+		h : window.innerHeight ? window.innerHeight: $(window).height()
+	};
+	
+    oFrame.style.width  = screenSize.w + "px";
+    oFrame.style.height = screenSize.h + "px";
 
     if(oFrame.style.display == "block"){
-        vFrame3D_W = w -   2;
-        vFrame3D_H = h - vFrame3D_H_Ctrl;
-        oFrame3D.style.border = "solid 1px #000000";
-	    oFrame3D.style.width  = vFrame3D_W + "px";
-	    oFrame3D.style.height = vFrame3D_H + "px";
+		vFrame3D_H_Ctrl = $(oFrame3D_Download ).outerHeight() + 4;
+        oFrame3D.style.position ="absolute";
+        oFrame3D.style.border = "solid 1px #b9b9b9";
+	    oFrame3D.style.left  = "2px";
+	    oFrame3D.style.top ="2px";
+	    oFrame3D.style.right  = "2px";
+	    oFrame3D.style.bottom = vFrame3D_H_Ctrl + "px";
 
         oFrame3D_CtrlZ.style.position = "absolute";
-        oFrame3D_CtrlZ.style.top      = (vFrame3D_H - 40) + "px";
+        oFrame3D_CtrlZ.style.bottom      = (vFrame3D_H_Ctrl) + "px";
         oFrame3D_CtrlZ.style.left     = "10px";
-
+		
+		
+        vFrame3D_W = $(oFrame3D).outerWidth()-2;
+        vFrame3D_H = $(oFrame3D).outerHeight()-2;
+        
         oRenderer.setSize(vFrame3D_W, vFrame3D_H); // Re-setting of the screen
         oCamera.aspect = vFrame3D_W / vFrame3D_H;  // Readjustment of the camera aspect ratio
         oCamera.updateProjectionMatrix();
@@ -3161,3 +4472,828 @@ window.onbeforeunload = function(){
     catch(e){
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+var downLoadProgressTimerId = null;
+/*-----------------------------------------------------------------------------------------------*/
+// Download
+/*-----------------------------------------------------------------------------------------------*/
+function Download(fname,a){
+	
+	if ( $( ".download" ).data("downloading"))
+	{
+		return;
+	}
+	
+	var progressToggle = function()
+	{
+		clearTimeout( downLoadProgressTimerId );
+		if ( $( ".download_progress" ).is(":visible") )
+		{
+			$( ".download_progress" ).fadeOut(50);
+			downLoadProgressTimerId = setTimeout( progressToggle, 300 );
+		}
+		else
+		{
+			$( ".download_progress" ).fadeIn(50);
+			downLoadProgressTimerId = setTimeout( progressToggle, 800 );
+		}
+	};
+	downLoadProgressTimerId = setTimeout( progressToggle, 800 );
+	
+	$( ".download_progress" ).css({"visibility":"hidden"}).show();
+	
+	$( ".download_progress" ).css({
+		"margin-left" : -parseInt($(".download_progress").outerWidth()/2) + "px",
+		"margin-top" : -parseInt($(".download_progress").outerHeight()/2) + "px"
+	});
+	
+	$( ".download_progress" ).hide().css({"visibility":"visible"}).fadeIn(300);
+	$( ".download" ).data({"downloading":true}).addClass("disable");
+    setTimeout(function(){
+    	DownloadProc(fname,a);
+    	
+    }, 3000);
+};
+
+function DownloadProc(fname,a){
+    var fDone     = false;
+    var data      = null;
+    var data_type = null;
+    if(fname == "index.html"){
+        $.ajax({
+		      type     : "GET"
+	        , url      : "./index_3d_template.html"
+	        , dataType : "text"
+	        , cache    : false
+        }
+        )
+        .done(
+            function(data, status, jqXHR){
+                if(data != null){
+					data = data.replace( "/*[[texture_width]]*/", args["w"] );
+					data = data.replace( "/*[[texture_height]]*/", args["h"] );
+					data = data.replace( "/*[[mesh_width]]*/", nVertexNumX );
+					data = data.replace( "/*[[mesh_height]]*/", nVertexNumY );
+					data = data.replace( "/*[[geom_width]]*/", nGeomSizeX );
+					data = data.replace( "/*[[geom_height]]*/", nGeomSizeY );
+					if ( oGeo3DData )
+					{
+						var geo3DData = [];
+						for( var i=0; i<oGeo3DData.length; i++ )
+	                    {
+							if ( oGeo3DData[i].properties._markerType == "Polygon" )
+							{
+								geo3DData.push( {
+									properties : {
+										_markerType : "Polygon",
+										_fillOpacity : oGeo3DData[i].properties._fillOpacity,
+										_fillColor : oGeo3DData[i].properties._fillColor,
+										_color : oGeo3DData[i].properties._color,
+										_opacity : oGeo3DData[i].properties._opacity,
+										_weight : oGeo3DData[i].properties._weight
+									},
+									geometry :{
+										coordinates : oGeo3DData[i].geometry.coordinates
+									}
+								} );
+							}
+							else if ( oGeo3DData[i].properties._markerType == "LineString" )
+							{
+								geo3DData.push( {
+									properties : {
+										_markerType : "LineString",
+										_opacity : oGeo3DData[i].properties._opacity,
+										_color : oGeo3DData[i].properties._color,
+										_weight : oGeo3DData[i].properties._weight
+									},
+									geometry :{
+										coordinates : oGeo3DData[i].geometry.coordinates
+									}
+								} );
+							}
+							else if ( oGeo3DData[i].properties._markerType == "Icon" )
+							{
+								geo3DData.push( {
+									properties : {
+										_markerType : "Icon",
+										_iconUrl : oGeo3DData[i].properties._iconUrl,
+										_iconSize : oGeo3DData[i].properties._iconSize,
+										_iconAnchor : oGeo3DData[i].properties._iconAnchor,
+										_iconScale : oGeo3DData[i].properties._iconScale
+									},
+									geometry :{
+										coordinates : oGeo3DData[i].geometry.coordinates
+									}
+								} );
+							}
+							
+						}
+						
+						var geo3DDataText=JSON.stringify( geo3DData, undefined , ' ');
+						data = data.replace( "/*[[insertgeo3ddata]]*/", 
+							"var nGeomSizeX = " + nGeomSizeX + ";\n" +
+							"var nGeomSizeY = " + nGeomSizeY + ";\n" +
+							"var vSceneMesh_ZMin = " + vSceneMesh_ZMin + ";\n" +
+							"var vSceneMeshDistanceRate = " + vSceneMeshDistanceRate + ";\n" +
+							"var args = {};\n" +
+							"args['lat'] = " + args['lat']  + ";\n" +
+							"args['lon'] = " + args['lon']  + ";\n" +
+							"args['z'] = " + args['z']  + ";\n" +
+							"args['tile_n_px_w'] = " + args['tile_n_px_w']  + ";\n" +
+							"args['tile_n_px_h'] = " + args['tile_n_px_h']  + ";\n" +
+							"oGeo3DData = " + geo3DDataText + ";" 
+							);
+						
+					}
+                    
+                    DownloadProcDone(data, "txt", fname,a);
+                }
+                else{
+                    DownloadProcAlways();
+                }
+            }
+        )
+        .fail(
+            function(data, status, error){
+                DownloadProcAlways();
+            }
+        )
+    }
+    else if(fname == "dem.csv"){
+        fDone = true;
+
+            var vSceneMesh2             = [].concat(vSceneMesh);
+            data = vSceneMesh2;
+            
+            var n = 0;
+	        for(ny = 0; ny <= nVertexNumY; ny++){
+		        for(nx = 0; nx <= nVertexNumX; nx++){
+                    nz = ny * (nVertexNumX+1) + nx;
+			        data[nz] = vSceneMesh2[nz] * vSceneMeshDistanceRate;
+		        }
+	        }
+            data = data.join(",");
+            data_type = "txt_blob";
+    }
+    else if(fname == "texture.pgw"){
+        fDone = true;
+		var w = parseInt( args["w"] );
+		var h = parseInt( args["h"] );
+		var ret = getBoxLatLngBounds( { 
+			lat: args["lat"], 
+			lng:args["lon"]}, 
+			parseInt(args["z"]), 
+			w, 
+			h );
+		
+		ret.lt = latLngToMercator( ret.lt );
+		ret.rb = latLngToMercator( ret.rb );
+		
+		
+		var txt = "";
+		txt += ( ( ret.rb.lng - ret.lt.lng ) / w ) + "\n";
+		txt += "0\n";
+		txt += "0\n";
+		txt += -( ( ret.rb.lng - ret.lt.lng ) / w ) + "\n";
+		txt += ret.lt.lng + "\n";
+		txt += ret.lt.lat;
+		data = txt;
+        data_type = "txt_blob";
+    }
+    else if(fname == "texture.png"){
+        fDone = true;
+
+        data      = oTextureCanvas.toDataURL();
+        data_type = "img";
+    }
+    else if(fname == "icon.png"){
+        fDone = true;
+        data      = oIconTextureCanvas.toDataURL();
+        data_type = "img";
+    }
+    else if(fname == "dem.stl" || fname == "dem.wrl"){
+        fDone = true;
+
+            var vSceneMesh2 = [].concat(vSceneMesh);
+            var vTileN    = args["tile_n"];
+            var vDem      = [].concat(vSceneMesh2);
+            var vDemMesh  = new Array();
+            var vZRate    = Download_Arg_ZRate();
+            var vDistance = args["distance"];
+			
+            if(typeof vDemCSV != "undefined"){
+                vDemMesh = vDemCSV;
+            }
+            else{
+                for(var nY = 0; nY < vDem.length - (nVertexNumX+1); nY += (nVertexNumX+1)){
+                    var vDemX = "";
+                    for(var nX = nY; nX < (nY + nVertexNumX); nX++){
+                        if(vDemX != ""){
+                            vDemX += ",";
+                        }
+                        vDemX += vDem[nX];
+                    }
+                    vDemMesh.push(vDemX);
+                }
+            }
+            if     (fname == "dem.stl"){ data = Download_STL(vDemMesh, vZRate, vDistance); }
+            else if(fname == "dem.wrl"){ data = Download_WRL(vDemMesh, vZRate, vDistance); }
+			
+            data_type = "txt_blob";
+        
+    }
+    if(fDone){
+        DownloadProcDone(data, data_type, fname,a);
+    }
+};
+
+function latLngToMercator( latlng )
+{
+	var d = Math.PI / 180,
+	max = 85.0511287798,
+	lat = Math.max(Math.min(max, latlng.lat), -max),
+	x = latlng.lng * d,
+	y = lat * d;
+
+	y = Math.log(Math.tan((Math.PI / 4) + (y / 2)));
+
+	return {
+		lat : y * 6378137.0,
+		lng : x * 6378137.0
+	};
+}
+function DownloadProcDone(data, data_type, fname){
+    if(data != null){
+        try{
+            if(window.navigator.msSaveBlob){
+                var blob = null;
+                if(data_type == "txt" || data_type == "txt_blob"){
+                    blob = Download_Text(data);
+                }
+                else if(data_type == "img"){
+                    blob = Download_Image(data);
+                }
+                if(blob != null){
+                    window.navigator.msSaveBlob(blob, fname);
+                }
+            }
+            else{
+                var oA   = document.createElement("a");
+                
+                document.body.appendChild(oA);
+
+                var oURL = window.URL || window.webkitURL;
+
+                if(     data_type == "file"){
+                    oA.href = v;
+                }
+                else if(data_type == "txt"){
+                    oA.href = "data:application/octet-stream," + encodeURIComponent(data);
+                }
+                else if(data_type == "txt_blob"){
+                    oA.href = oURL.createObjectURL(Download_Text(data));
+                }
+                else if(data_type == "img"){
+                    oA.href = oURL.createObjectURL(Download_Image(data));
+                }
+
+                oA.download = fname;
+				oA.click();
+
+                document.body.removeChild(oA);
+            }
+        }
+        catch(e){
+        }
+    }
+
+    DownloadProcAlways();
+};
+
+
+function DownloadProcAlways()
+{
+	if ( downLoadProgressTimerId ) clearTimeout( downLoadProgressTimerId );
+	downLoadProgressTimerId = null;
+	
+	$( ".download_progress" ).fadeOut(300);
+	$( ".download" ).data({"downloading":false}).removeClass("disable");
+}
+
+
+function DownloadTextLine(v){
+    return v + "\n";
+};
+
+/*-----------------------------------------------------------------------------------------------*/
+// Download：Image
+/*-----------------------------------------------------------------------------------------------*/
+function Download_Image(v){
+    var o      = null;
+    var base64 = v.split(',');
+    if(base64.length > 1){
+        var data   = window.atob(base64[1]);
+        var data_n = data.length;
+        if(data_n > 0){
+            var data_buff = new ArrayBuffer(data_n);
+            var data_blob = new Uint8Array(data_buff);
+            
+            var i = 0;
+            
+	        for(i = 0; i < data_n; i++){
+		        data_blob[i] = data.charCodeAt(i);
+	        }
+	        o = new Blob([data_blob], {type: 'image/png'});
+        }
+    }
+    return o;
+};
+
+/*-----------------------------------------------------------------------------------------------*/
+// Download：Text
+/*-----------------------------------------------------------------------------------------------*/
+function Download_Text(v){
+    return new Blob([v], {type: 'text/plain'});
+};
+
+/*-----------------------------------------------------------------------------------------------*/
+// Download：STL
+/*-----------------------------------------------------------------------------------------------*/
+function Download_STL(vDem, vZRate, vDistance){
+    var ret = "";
+    /*....................................................................
+     * TEMPLATE
+     *....................................................................*/    
+    ret += DownloadTextLine("solid 3d_data");
+    ret += DownloadTextLine("{stlPointList}");
+    ret += DownloadTextLine("endsolid");
+    ret  = ret.substr(0, (ret.length - 1));
+    /*....................................................................
+     * Make
+     *....................................................................*/
+    var vData = Download_ConvertFromDem("STL", vDem, vZRate, vDistance)
+    /*....................................................................
+     * Complete
+     *....................................................................*/
+    ret = ret.replace(/{stlPointList}/g, vData.stlPointList);
+    return ret;
+};
+
+/*-----------------------------------------------------------------------------------------------*/
+// Download：VRML
+/*-----------------------------------------------------------------------------------------------*/
+function Download_WRL(vDem, vZRate, vDistance){
+    var ret = "";
+    /*....................................................................
+     * TEMPLATE
+     *....................................................................*/
+    ret += DownloadTextLine("#VRML V2.0 utf8");
+    ret += DownloadTextLine("DEF obj1 Transform {");
+    ret += DownloadTextLine("\tchildren [");
+    ret += DownloadTextLine("\t\tShape {");
+    ret += DownloadTextLine("\t\t\tappearance Appearance {");
+    ret += DownloadTextLine("\t\t\t\tmaterial Material {");
+    ret += DownloadTextLine("\t\t\t\t\tdiffuseColor 1.000000 1.000000 1.000000");
+    ret += DownloadTextLine("\t\t\t\t\tambientIntensity 0.600000");
+    ret += DownloadTextLine("\t\t\t\t\tspecularColor 0.000000 0.000000 0.000000");
+    ret += DownloadTextLine("\t\t\t\t\temissiveColor 0.000000 0.000000 0.000000");
+    ret += DownloadTextLine("\t\t\t\t\tshininess 0.050000");
+    ret += DownloadTextLine("\t\t\t\t}");
+    ret += DownloadTextLine("\t\t\t\ttexture ImageTexture {");
+    ret += DownloadTextLine("\t\t\t\t\turl [\"texture.png\"]");
+    ret += DownloadTextLine("\t\t\t\t}");
+    ret += DownloadTextLine("\t\t\t}");
+    ret += DownloadTextLine("\t\t\tgeometry IndexedFaceSet {");
+    ret += DownloadTextLine("\t\t\t\tcoord Coordinate {");
+    ret += DownloadTextLine("\t\t\t\t\tpoint [");
+    ret += DownloadTextLine(         "{pointList1}");
+    ret += DownloadTextLine("\t\t\t\t\t]");
+    ret += DownloadTextLine("\t\t\t\t}");
+    ret += DownloadTextLine("\t\t\t\tcoordIndex [");
+    ret += DownloadTextLine(       "{facetList1}");
+    ret += DownloadTextLine("\t\t\t\t]");
+    ret += DownloadTextLine("\t\t\t\ttexCoord TextureCoordinate {");
+    ret += DownloadTextLine("\t\t\t\t\tpoint [");
+    ret += DownloadTextLine(         "{pointCoordtList}");
+    ret += DownloadTextLine("\t\t\t\t\t]");
+    ret += DownloadTextLine("\t\t\t\t}");
+    ret += DownloadTextLine("\t\t\t\tnormalIndex [");
+    ret += DownloadTextLine(       "{facetList1}");
+    ret += DownloadTextLine("\t\t\t\t]");
+    ret += DownloadTextLine("\t\t\t}");
+    ret += DownloadTextLine("\t\t}");
+    ret += DownloadTextLine("\t\tShape {");
+    ret += DownloadTextLine("\t\t\tappearance Appearance {");
+    ret += DownloadTextLine("\t\t\t\tmaterial Material {");
+    ret += DownloadTextLine("\t\t\t\t\tdiffuseColor 1.000000 1.000000 1.000000");
+    ret += DownloadTextLine("\t\t\t\t\tambientIntensity 0.600000");
+    ret += DownloadTextLine("\t\t\t\t\tspecularColor 0.000000 0.000000 0.000000");
+    ret += DownloadTextLine("\t\t\t\t\temissiveColor 0.000000 0.000000 0.000000");
+    ret += DownloadTextLine("\t\t\t\t\tshininess 0.050000");
+    ret += DownloadTextLine("\t\t\t\t}");
+    ret += DownloadTextLine("\t\t\t}");
+    ret += DownloadTextLine("\t\t\tgeometry IndexedFaceSet {");
+    ret += DownloadTextLine("\t\t\t\tcoord Coordinate {");
+    ret += DownloadTextLine("\t\t\t\t\tpoint [");
+    ret += DownloadTextLine(         "{pointList1}");
+    ret += DownloadTextLine("\t\t\t\t\t]");
+    ret += DownloadTextLine("\t\t\t\t}");
+    ret += DownloadTextLine("\t\t\t\tcoordIndex [");
+    ret += DownloadTextLine(       "{facetList2}");
+    ret += DownloadTextLine("\t\t\t\t]");
+    ret += DownloadTextLine("\t\t\t}");
+    ret += DownloadTextLine("\t\t}")
+    ret += DownloadTextLine("\t]");
+    ret += DownloadTextLine("}");
+    ret  = ret.substr(0, (ret.length - 1));
+    /*....................................................................
+     * Make
+     *....................................................................*/
+    var vData = Download_ConvertFromDem("WRL", vDem, vZRate, vDistance)
+    /*....................................................................
+     * Complete
+     *....................................................................*/
+    ret = ret.replace(/{pointList1}/g     , vData.wrlPointList1);      // Point list
+    ret = ret.replace(/{facetList1}/g     , vData.wrlFacetList1);      // Surface list (top surface only)
+    ret = ret.replace(/{facetList2}/g     , vData.wrlFacetList2);      // Surface list (other than the top surface)
+    ret = ret.replace(/{pointCoordtList}/g, vData.wrlPointCoordtList); // Coordinate list of the vertices of the image（X is 0～1、Y is -1～0）
+
+    return ret;
+};
+
+/*-----------------------------------------------------------------------------------------------*/
+// Download：COnvert
+/*-----------------------------------------------------------------------------------------------*/
+function Download_ConvertFromDem(type, vDem, vZRate, vDistance){
+    var stlPointList       = "";
+
+    var wrlPointList1      = "";
+    var wrlFacetList1      = "";
+    var wrlFacetList2      = "";
+    var wrlPointCoordtList = "";
+
+    /*....................................................................
+     * VALUE
+     *....................................................................*/
+    var modelSize  = 150;    // Maximum model size（mm）
+    var modelSizeH = 5;      // The height of the model of the pedestal（mm）
+    /*....................................................................*/
+    var vData = vDem.concat();
+    vDem = new Array();
+    for(ny = 0; ny < vData.length; ny++){
+        vDem.push(vData[ny].split(","));
+    }
+
+    var colX = vDem[0].length
+    var colY = vDem.length;
+    /*....................................................................*/    
+    var modelSizeN = modelSize * colX / Math.max(colX, colY); // The size of the model[MAX]（mm）
+    var modelSizeNX = modelSize * colX / colX; // The size of the model[MAX]（mm）
+    var modelSizeNY = modelSize * colX / colY; // The size of the model[MAX]（mm）
+    var vDemXY     = modelSizeN / colX;		                  // Length per 1px of DEM          (mm) (Planar direction)
+    var vDemZ      = modelSize / vDistance;		          // Length on the model per DEM of 1m(mm) (Height direction) == scale
+    var modelSizeX = vDemXY * (colX - 1);		              // The size of the model（X direction）
+    var modelSizeY = vDemXY * (colY - 1);		              // The size of the model（Y direction）
+    if(type == "STL"){
+        modelSizeX = round(modelSizeX, 2);
+        modelSizeY = round(modelSizeY, 2);
+    }
+    var vCX        = Math.round(modelSizeX / 2);              // The center of the X coordinate（Rounded for data capacity reduction）for STL
+    var vCZ        = Math.round(modelSizeY / 2);              // The center of the Y coordinate（Rounded for data capacity reduction）for STL
+    /*....................................................................*/    
+    var vDemT = transpose(vDem);
+        vDem  = vDemT;
+    /*....................................................................*/    
+    if(type == "STL"){
+        // surface
+        for(nY = 0; nY < colY - 1; nY++){
+	        for(nX = 0; nX < colX -1; nX++){
+		        // Calculate the vertex coordinates
+		        var x1 = round(vDemXY *  nX     , 2);   var y1 = round(modelSizeH + vDem[nX    ][nY    ] * vDemZ * vZRate, 2);   var z1 = round(vDemXY *  nY     , 2);
+		        var x2 = x1;                            var y2 = round(modelSizeH + vDem[nX    ][nY + 1] * vDemZ * vZRate, 2);   var z2 = round(vDemXY * (nY + 1), 2);
+		        var x3 = round(vDemXY * (nX + 1), 2);   var y3 = round(modelSizeH + vDem[nX + 1][nY    ] * vDemZ * vZRate, 2);   var z3 = z1;
+
+		        // Respectively calculate the XYZ components of the vector
+		        var x12 = x2 - x1;   var y12 = y2 - y1;   var z12 = z2 - z1;
+		        var x13 = x3 - x1;   var y13 = y3 - y1;   var z13 = z3 - z1;
+		
+		        // Calculating the components of the cross product
+		        var nv123X = y12 * z13 - z12 - y13;
+		        var nv123Y = z12 * x13 - x12 * z13;
+		        var nv123Z = x12 * y13 - y12 * x13;
+		
+		        // Determine the length of the vector (for the vector of length 1)
+		        var nv123L = round(Math.sqrt(Math.pow(nv123X, 2) + Math.pow(nv123Y, 2) + Math.pow(nv123Z, 2)), 8);
+
+		        // Calculate the vertex coordinates
+		        var x4 = x3;   var y4 = y3;                                                              var z4 = z3;
+		        var x5 = x2;   var y5 = y2;                                                              var z5 = z2;
+		        var x6 = x4;   var y6 = round(modelSizeH +  vDem[nX + 1][nY + 1] * vDemZ * vZRate ,2);   var z6 = z2;
+
+		        // Respectively calculate the XYZ components of the vector
+		        var x45 = x5 - x4;   var y45 = y5 - y4;   var z45 = z5 - z4;
+		        var x46 = x6 - x4;   var y46 = y6 - y4;   var z46 = z6 - z4;
+
+		        // Calculating the components of the cross product
+		        var nv456X = y45 * z46 - z45 - y46;
+		        var nv456Y = z45 * x46 - x45 * z46;
+		        var nv456Z = x45 * y46 - y45 * x46;
+		
+		        // Determine the length of the vector (for the vector of length 1)
+		        var nv456L = round(Math.sqrt(Math.pow(nv456X, 2) + Math.pow(nv456Y, 2) + Math.pow(nv456Z, 2)), 8);
+
+		        stlPointList += "\tfacet normal " + nv123X / nv123L + " " + nv123Y / nv123L + " " + nv123Z / nv123L + "\n";
+		        stlPointList += "\t\touter loop\n";
+	
+		        stlPointList += "\t\t\t vertex " + x1 + " " + y1 + " " + z1 + "\n";
+		        stlPointList += "\t\t\t vertex " + x2 + " " + y2 + " " + z2  + "\n";
+		        stlPointList += "\t\t\t vertex " + x3 + " " + y3 + " " + z3  + "\n";
+
+		        stlPointList += "\t\tendloop\n";
+		        stlPointList += "\tendfacet\n";
+
+		        stlPointList += "\tfacet normal " + nv456X / nv456L + " " + nv456Y / nv456L + " " + nv456Z / nv456L + "\n";
+		        stlPointList += "\t\touter loop\n";
+
+		        stlPointList += "\t\t\t vertex " + x4 + " " + y4 + " " + z4 + "\n";
+		        stlPointList += "\t\t\t vertex " + x5 + " " + y5 + " " + z5  + "\n";
+		        stlPointList += "\t\t\t vertex " + x6 + " " + y6 + " " + z6  + "\n";
+
+		        stlPointList += "\t\tendloop\n";
+		        stlPointList += "\tendfacet\n";
+	        }
+        }
+
+        // The left surface
+        for(nY = 0; nY < colY - 1; nY++){
+	        var x1 = 0;   var y1 = round(modelSizeH +  vDem[0][nY    ] * vDemZ * vZRate, 2);   var z1 = round(vDemXY *  nY     , 2);
+	        var x2 = 0;   var y2 = 0;                                                          var z2 = z1;
+	        var x3 = 0;   var y3 = round(modelSizeH +  vDem[0][nY + 1] * vDemZ * vZRate ,2);   var z3 = round(vDemXY * (nY + 1), 2);
+	        var x4 = x3;  var y4 = y3;                                                         var z4 = z3;
+	        var x5 = x2;  var y5 = y2;                                                         var z5 = z2;
+	        var x6 = x4;  var y6 = 0;                                                          var z6 = z4;
+
+	        stlPointList += "\tfacet normal -1 0 0\n";
+	        stlPointList += "\t\touter loop\n";
+
+	        stlPointList += "\t\t\t vertex " + x1 + " " + y1 + " " + z1 + "\n";
+	        stlPointList += "\t\t\t vertex " + x2 + " " + y2 + " " + z2  + "\n";
+	        stlPointList += "\t\t\t vertex " + x3 + " " + y3 + " " + z3  + "\n";
+
+	        stlPointList += "\t\tendloop\n";
+	        stlPointList += "\tendfacet\n";
+
+	        stlPointList += "\tfacet normal -1 0 0\n";
+	        stlPointList += "\t\touter loop\n";
+
+	        stlPointList += "\t\t\t vertex " + x4 + " " + y4 + " " + z4 + "\n";
+	        stlPointList += "\t\t\t vertex " + x5 + " " + y5 + " " + z5  + "\n";
+	        stlPointList += "\t\t\t vertex " + x6 + " " + y6 + " " + z6  + "\n";
+
+	        stlPointList += "\t\tendloop\n";
+	        stlPointList += "\tendfacet\n";
+	
+	        // Bottom
+	        stlPointList += "\tfacet normal 0 -1 0\n";
+	        stlPointList += "\t\touter loop\n";
+
+	        stlPointList += "\t\t\t vertex " + vCX + " 0 " + vCZ + "\n";
+	        stlPointList += "\t\t\t vertex " + x6 + " " + y6 + " " + z6  + "\n";
+	        stlPointList += "\t\t\t vertex " + x5 + " " + y5 + " " + z5  + "\n";
+
+	        stlPointList += "\t\tendloop\n";
+	        stlPointList += "\tendfacet\n";
+        }
+
+        // Right side
+        for(nY = 0; nY < colY - 1; nY++){
+	        var x1 = modelSizeX;   var y1 = round(modelSizeH + vDem[colX - 1][nY    ] * vDemZ * vZRate, 2);   var z1 = round(vDemXY *  nY     , 2);
+	        var x2 = x1;           var y2 = 0;                                                                var z2 = round(vDemXY * (nY + 1), 2);
+	        var x3 = x1;           var y3 = 0;                                                                var z3 = z1;
+	        var x4 = x1;           var y4 = y1;                                                               var z4 = z1;
+	        var x5 = x1;           var y5 = round(modelSizeH + vDem[colX - 1][nY + 1] * vDemZ * vZRate, 2);   var z5 = z2;
+	        var x6 = x1;           var y6 = 0;                                                                var z6 = z2;
+
+	        stlPointList += "\tfacet normal 1 0 0\n";
+	        stlPointList += "\t\touter loop\n";
+
+	        stlPointList += "\t\t\t vertex " + x1 + " " + y1 + " " + z1 + "\n";
+	        stlPointList += "\t\t\t vertex " + x2 + " " + y2 + " " + z2  + "\n";
+	        stlPointList += "\t\t\t vertex " + x3 + " " + y3 + " " + z3  + "\n";
+
+	        stlPointList += "\t\tendloop\n";
+	        stlPointList += "\tendfacet\n";
+
+	        stlPointList += "\tfacet normal 1 0 0\n";
+	        stlPointList += "\t\touter loop\n";
+
+	        stlPointList += "\t\t\t vertex " + x4 + " " + y4 + " " + z4 + "\n";
+	        stlPointList += "\t\t\t vertex " + x5 + " " + y5 + " " + z5  + "\n";
+	        stlPointList += "\t\t\t vertex " + x6 + " " + y6 + " " + z6  + "\n";
+
+	        stlPointList += "\t\tendloop\n";
+	        stlPointList += "\tendfacet\n";
+
+	        // Bottom
+	        stlPointList += "\tfacet normal 0 -1 0\n";
+	        stlPointList += "\t\touter loop\n";
+
+	        stlPointList += "\t\t\t vertex " + vCX + " 0 " + vCZ + "\n";
+	        stlPointList += "\t\t\t vertex " + x3 + " " + y3 + " " + z3  + "\n";
+	        stlPointList += "\t\t\t vertex " + x2 + " " + y2 + " " + z2  + "\n";
+
+	        stlPointList += "\t\tendloop\n";
+	        stlPointList += "\tendfacet\n";
+        }
+
+        // Back surface
+        for(nX = 0; nX < colX - 1; nX++){
+            var x1 = round(vDemXY *  nX     , 2);   var y1 = round(modelSizeH + vDem[nX   ][0] * vDemZ * vZRate, 2);   var z1 = 0;
+            var x2 = round(vDemXY * (nX + 1), 2);   var y2 = 0;                                                        var z2 = 0;
+	        var x3 = x1;                            var y3 = 0;                                                        var z3 = 0;
+	        var x4 = x1;                            var y4 = y1;                                                       var z4 = 0;
+	        var x5 = x2;                            var y5 = round(modelSizeH + vDem[nX + 1][0] * vDemZ * vZRate, 2);  var z5 = 0;
+	        var x6 = x2;                            var y6 = 0;                                                        var z6 = 0;
+
+	        stlPointList += "\tfacet normal 0 0 -1\n";
+	        stlPointList += "\t\touter loop\n";
+
+	        stlPointList += "\t\t\t vertex " + x1 + " " + y1 + " " + z1 + "\n";
+	        stlPointList += "\t\t\t vertex " + x2 + " " + y2 + " " + z2  + "\n";
+	        stlPointList += "\t\t\t vertex " + x3 + " " + y3 + " " + z3  + "\n";
+
+	        stlPointList += "\t\tendloop\n";
+	        stlPointList += "\tendfacet\n";
+
+	        stlPointList += "\tfacet normal 0 0 -1\n";
+	        stlPointList += "\t\touter loop\n";
+
+	        stlPointList += "\t\t\t vertex " + x4 + " " + y4 + " " + z4 + "\n";
+	        stlPointList += "\t\t\t vertex " + x5 + " " + y5 + " " + z5  + "\n";
+	        stlPointList += "\t\t\t vertex " + x6 + " " + y6 + " " + z6  + "\n";
+
+	        stlPointList += "\t\tendloop\n";
+	        stlPointList += "\tendfacet\n";
+
+	        // Bottom
+	        stlPointList += "\tfacet normal 0 -1 0\n";
+	        stlPointList += "\t\touter loop\n";
+
+	        stlPointList += "\t\t\t vertex " + vCX + " 0 " + vCZ + "\n";
+	        stlPointList += "\t\t\t vertex " + x3 + " " + y3 + " " + z3  + "\n";
+	        stlPointList += "\t\t\t vertex " + x2 + " " + y2 + " " + z2  + "\n";
+
+	        stlPointList += "\t\tendloop\n";
+	        stlPointList += "\tendfacet\n";
+        }
+
+        // Front surface
+        for(nX = 0; nX < colX - 1; nX++){
+	        var x1 = round(vDemXY * nX, 2);         var y1 = round(modelSizeH + vDem[nX    ][colY - 1] * vDemZ * vZRate, 2);   var z1 = modelSizeY;
+	        var x2 = x1;                            var y2 = 0;                                                                var z2 = z1;
+	        var x3 = round(vDemXY * (nX + 1), 2);   var y3 = round(modelSizeH + vDem[nX + 1][colY - 1] * vDemZ * vZRate, 2);   var z3 = z1;
+	        var x4 = x3;                            var y4 = y3;                                                               var z4 = z1;
+	        var x5 = x2;                            var y5 = 0;                                                                var z5 = z1;
+	        var x6 = x3;                            var y6 = 0;                                                                var z6 = z1;
+
+	        stlPointList += "\tfacet normal 0 0 1\n";
+	        stlPointList += "\t\touter loop\n";
+
+	        stlPointList += "\t\t\t vertex " + x1 + " " + y1 + " " + z1 + "\n";
+	        stlPointList += "\t\t\t vertex " + x2 + " " + y2 + " " + z2  + "\n";
+	        stlPointList += "\t\t\t vertex " + x3 + " " + y3 + " " + z3  + "\n";
+
+	        stlPointList += "\t\tendloop\n";
+	        stlPointList += "\tendfacet\n";
+
+	        stlPointList += "\tfacet normal 0 0 1\n";
+	        stlPointList += "\t\touter loop\n";
+
+	        stlPointList += "\t\t\t vertex " + x4 + " " + y4 + " " + z4 + "\n";
+	        stlPointList += "\t\t\t vertex " + x5 + " " + y5 + " " + z5  + "\n";
+	        stlPointList += "\t\t\t vertex " + x6 + " " + y6 + " " + z6  + "\n";
+
+	        stlPointList += "\t\tendloop\n";
+	        stlPointList += "\tendfacet\n";
+
+	        // Bottom
+	        stlPointList += "\tfacet normal 0 -1 0\n";
+	        stlPointList += "\t\touter loop\n";
+
+	        stlPointList += "\t\t\t vertex " + vCX + " 0 " + vCZ + "\n";
+	        stlPointList += "\t\t\t vertex " + x6 + " " + y6 + " " + z6  + "\n";
+	        stlPointList += "\t\t\t vertex " + x5 + " " + y5 + " " + z5  + "\n";
+
+	        stlPointList += "\t\tendloop\n";
+	        stlPointList += "\tendfacet\n";
+        }
+        stlPointList = stlPointList.substr(0, (stlPointList.length - 1));
+    }
+    /*....................................................................*/    
+    else if(type == "WRL"){
+        // Point list
+        for(nY = 0; nY < colY; nY++){
+            
+        	for(nX = 0; nX < colX; nX++){
+        	
+                wrlPointList1 += "\t\t\t\t\t\t" + (modelSizeX * (-1) + vDemXY * nX) + " " + (modelSizeH + vDem[nX][nY] * vDemZ * vZRate) + " " + (vDemXY * nY) + ",\n";
+                
+	        }
+        }   
+        for(nY = 0; nY < colY    ; nY++){ wrlPointList1 += "\t\t\t\t\t\t" + (modelSizeX * (-1)                      ) + " 0 " + (vDemXY * nY) + ",\n";         } // ポイントリスト：左面        
+        for(nY = 0; nY < colY    ; nY++){ wrlPointList1 += "\t\t\t\t\t\t" + (modelSizeX * (-1) + vDemXY * (colX - 1)) + " 0 " + (vDemXY * nY) + ",\n";         } // ポイントリスト：右面        
+        for(nX = 1; nX < colX - 1; nX++){ wrlPointList1 += "\t\t\t\t\t\t" + (modelSizeX * (-1) + vDemXY * nX        ) + " 0 0,\n";                             } // ポイントリスト：奥面        
+        for(nX = 1; nX < colX - 1; nX++){ wrlPointList1 += "\t\t\t\t\t\t" + (modelSizeX * (-1) + vDemXY * nX        ) + " 0 " + (vDemXY * (colY - 1)) + ",\n"; } // ポイントリスト：手前面        
+        wrlPointList1 += "\t\t\t\t\t\t" + (Math.round(modelSizeX * (-1) / 2)) + " 0 " + (Math.round(modelSizeY / 2));                                            // ポイントリスト：底面の中心点
+		
+        // Face list：surface
+        for(nY = 0; nY < colY - 1; nY++){
+            for(nX = 0; nX < colX -1; nX++){
+		        wrlFacetList1 += "\t\t\t\t\t" + (nY * colX + nX    ) + ", " + ((nY + 1) * colX + nX) + ", " + ( nY      * colX + nX + 1) + ", -1,\n";
+		        wrlFacetList1 += "\t\t\t\t\t" + (nY * colX + nX + 1) + ", " + ((nY + 1) * colX + nX) + ", " + ((nY + 1) * colX + nX + 1) + ", -1,\n";
+	        }
+        }
+        wrlFacetList1 = wrlFacetList1.substr(0, (wrlFacetList1.length - 2));
+        
+        // Face list：The left surface
+        for(nY = 0; nY < colY - 1; nY++){
+	        wrlFacetList2 += "\t\t\t\t\t" + (colX *  nY                           ) + ", " + (colX * colY + nY    ) + ", " + (colX *       (nY + 1)) + ", -1,\n";
+	        wrlFacetList2 += "\t\t\t\t\t" + (colX * (nY + 1)                      ) + ", " + (colX * colY + nY    ) + ", " + (colX * colY + nY + 1 ) + ", -1,\n";
+	        wrlFacetList2 += "\t\t\t\t\t" + (colX * colY + 2 * colX + 2 * colY - 4) + ", " + (colX * colY + nY + 1) + ", " + (colX * colY + nY     ) + ", -1,\n";
+        }
+        // Face list：Right side
+        for(nY = 0; nY < colY - 1; nY++){
+	        wrlFacetList2 += "\t\t\t\t\t" + (colX * (nY + 1) - 1) + ", " + (colX * colY + colY + nY + 1) + ", " + (colX * colY + colY + nY) + ", -1,\n";
+	        wrlFacetList2 += "\t\t\t\t\t" + (colX * (nY + 1) - 1) + ", " + (colX * (nY + 2) - 1) + ", " + (colX * colY + colY + nY +1) + ", -1,\n";
+	        wrlFacetList2 += "\t\t\t\t\t" + (colX * colY + 2 * colX + 2 * colY - 4) + ", " + (colX * colY + colY + nY) + ", " + (colX * colY + colY + nY +1) + ", -1,\n";
+        }
+        // Face list：Back surface
+        wrlFacetList2 += "\t\t\t\t\t" + (0                                    ) + ", " + (colX * colY + 2 * colY) + ", " + (colX * colY           ) + ", -1,\n";
+        wrlFacetList2 += "\t\t\t\t\t" + (0                                    ) + ", " + (1                     ) + ", " + (colX * colY + 2 * colY) + ", -1,\n";
+        wrlFacetList2 += "\t\t\t\t\t" + (colX * colY + 2 * colX + 2 * colY - 4) + ", " + (colX * colY           ) + ", " + (colX * colY + 2 * colY) + ", -1,\n";
+        for (nX = 1; nX < colX - 2; nX++)	{
+	        wrlFacetList2 += "\t\t\t\t\t" + (nX                                   ) + ", " + (colX * colY + 2 * colY + nX    ) + ", " + (colX * colY + 2 * colY + nX - 1) + ", -1,\n";
+	        wrlFacetList2 += "\t\t\t\t\t" + (nX                                   ) + ", " + (nX + 1                         ) + ", " + (colX * colY + 2 * colY + nX    ) + ", -1,\n";
+	        wrlFacetList2 += "\t\t\t\t\t" + (colX * colY + 2 * colX + 2 * colY - 4) + ", " + (colX * colY + 2 * colY + nX - 1) + ", " + (colX * colY + 2 * colY + nX    ) + ", -1,\n";
+        }
+        wrlFacetList2 += "\t\t\t\t\t" + (colX - 2                             ) + ", " + (colX * colY + colY               ) + ", " + (colX * colY + colX + 2 * colY - 3) + ", -1,\n";
+        wrlFacetList2 += "\t\t\t\t\t" + (colX - 2                             ) + ", " + (colX - 1                         ) + ", " + (colX * colY + colY               ) + ", -1,\n";
+        wrlFacetList2 += "\t\t\t\t\t" + (colX * colY + 2 * colX + 2 * colY - 4) + ", " + (colX * colY + colX + 2 * colY - 3) + ", " + (colX * colY + colY               ) + ", -1,\n";
+        // Face list：Front surface
+        wrlFacetList2 += "\t\t\t\t\t" + (colX * (colY - 1)                    ) + ", " + (colX * colY + colY - 1           ) + ", " + (colX * (colY - 1) + 1            ) + ", -1,\n";
+        wrlFacetList2 += "\t\t\t\t\t" + (colX * (colY - 1) + 1                ) + ", " + (colX * colY + colY - 1           ) + ", " + (colX * colY + colX + 2 * colY - 2) + ", -1,\n";
+        wrlFacetList2 += "\t\t\t\t\t" + (colX * colY + 2 * colX + 2 * colY - 4) + ", " + (colX * colY + colX + 2 * colY - 2) + ", " + (colX * colY + colY - 1           ) + ", -1,\n";
+        for (nX = 1; nX < colX - 2; nX++)	{
+	        wrlFacetList2 += "\t\t\t\t\t" + (colX * (colY - 1) + nX) + ", " + (colX * colY + colX + 2 * colY - 3 + nX) + ", " + (colX * (colY - 1) + nX + 1) + ", -1,\n";
+	        wrlFacetList2 += "\t\t\t\t\t" + (colX * (colY - 1) + nX + 1) + ", " + (colX * colY + colX + 2 * colY - 3 + nX) + ", " + (colX * colY + colX + 2 * colY - 2 + nX) + ", -1,\n";
+	        wrlFacetList2 += "\t\t\t\t\t" + (colX * colY + 2 * colX + 2 * colY - 4) + ", " + (colX * colY + colX + 2 * colY - 2 + nX) + ", " + (colX * colY + colX + 2 * colY - 3 + nX) + ", -1,\n";
+        }
+        wrlFacetList2 += "\t\t\t\t\t" + (colX * colY - 2                      ) + ", " + (colX * colY + 2 * colX + 2 * colY - 5) + ", " + (colX * colY - 1                      ) + ", -1,\n";
+        wrlFacetList2 += "\t\t\t\t\t" + (colX * colY - 1                      ) + ", " + (colX * colY + 2 * colX + 2 * colY - 5) + ", " + (colX * colY + 2 * colY - 1           ) + ", -1,\n";
+        wrlFacetList2 += "\t\t\t\t\t" + (colX * colY + 2 * colX + 2 * colY - 4) + ", " + (colX * colY + 2 * colY - 1           ) + ", " + (colX * colY + 2 * colX + 2 * colY - 5) + ", -1";
+		
+        //XY coordinates of the vertices（X is 0～1、Y is -1～0）
+        for(nY = 0; nY < colY; nY++){
+	        for(nX = 0; nX < colX; nX++){
+		        wrlPointCoordtList += "\t\t\t\t\t\t" + round((vDemXY * nX / modelSizeX),4) + " " + round((-1 * vDemXY * nY / modelSizeY),4) + ",\n";
+		        //wrlPointCoordtList += "\t\t\t\t\t\t" +  + " " + round((-1 * vDemXY * nY / modelSizeY),4) + ",\n";
+	        }
+        }
+        wrlPointCoordtList = wrlPointCoordtList.substr(0, (wrlPointCoordtList.length - 2));
+    }
+    /*....................................................................*/    
+    return {
+      stlPointList       : stlPointList
+    , wrlPointList1      : wrlPointList1
+    , wrlFacetList1      : wrlFacetList1
+    , wrlFacetList2      : wrlFacetList2
+    , wrlPointCoordtList : wrlPointCoordtList
+    };
+};
+
+
+
+
+
+/*-----------------------------------------------------------------------------------------------*/
+// Download：Math
+/*-----------------------------------------------------------------------------------------------*/
+function round    (v, precision){ var digit = Math.pow(10, precision); return Math.round(v * digit) / digit; };
+function transpose(a           ){ return Object.keys(a[0]).map(function(c){ return a.map(function(r){ return r[c]; }); }); };

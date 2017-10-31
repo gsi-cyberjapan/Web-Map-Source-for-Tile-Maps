@@ -38,10 +38,35 @@ $.fn.simpleColorPicker = function(options) {
 
 			colorsMarkup += '<li id="' + prefix + 'color-' + i + '" class="color-box" style="' + breakLine + 'background-color: ' + item + '" title="' + item + '"></li>';
 		}
-
-		var box = $('<div id="' + prefix + 'color-picker" class="color-picker" style="position: absolute; left: 0px; top: 0px;"><ul>' + colorsMarkup + '</ul><div style="clear: both;"></div></div>');
+		var box = null;
+		
+		if ( opts.clearButton )
+		{
+			box = $('<div id="' + prefix + 'color-picker" class="color-picker" style="position: absolute; left: 0px; top: 0px;"><ul>' + colorsMarkup + '</ul><div style="clear: both;"></div><div  class="color-picker-clear-frame"><a href="javascript:void(0);">選択中の色をクリア</a></div></div>');
+		}
+		else
+		{
+			box = $('<div id="' + prefix + 'color-picker" class="color-picker" style="position: absolute; left: 0px; top: 0px;"><ul>' + colorsMarkup + '</ul><div style="clear: both;"></div></div>');		}
+		
 		$('body').append(box);
-		box.hide();
+		box.hide();		
+		box.find("div.color-picker-clear-frame a").click(function() {
+			if (txt.is('input')) {
+
+				txt.val("");
+
+				txt.blur();
+
+			}
+
+			if ($.isFunction(defaults.onChangeColor)) {
+
+				defaults.onChangeColor.call(txt, "");
+
+			}
+
+			hideBox(box);
+		} );
 
 		box.find('li.color-box').click(function() {
 			if (txt.is('input')) {
@@ -64,9 +89,9 @@ $.fn.simpleColorPicker = function(options) {
 
 		var positionAndShowBox = function(box) {
 			var pos = txt.offset();
-			var left = pos.left + txt.outerWidth() - box.outerWidth();
-			if (left < pos.left) left = pos.left;
-			box.css({ left: left, top: (pos.top + txt.outerHeight()) });
+			var left = pos.left + txt.outerWidth() - box.outerWidth();		
+			//if (left < pos.left) left = pos.left;
+			box.css({ left: left, top: (pos.top + txt.outerHeight() + 1) });
 			showBox(box);
 		}
 

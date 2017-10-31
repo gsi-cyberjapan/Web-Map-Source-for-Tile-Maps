@@ -369,6 +369,20 @@ h3 {
 	text-indent: 0px;
 }
 
+.edit .edit_folder .id_frame .dt
+{
+	float:left;
+	display: inline;
+	width:16px;
+	padding-left:4px;
+}
+.edit .edit_folder .id_frame .dd
+{
+	float:left;
+	margin-left:16px;
+	display: inline;
+}
+
 /***********************************
  popupmenu
 ***********************************/
@@ -514,6 +528,10 @@ h3 {
 .tree li a.folder { background-image:  url(../image/layers_txt/folder.png); background-position:0 50% ;background-repeat:no-repeat; }
 .tree li a.folder.open { background-image:  url(../image/layers_txt/folder-open.png); background-position:0 50%; background-repeat:no-repeat; }
 .tree li a.layer { margin-left:20px; background-image:  url(../image/layers_txt/file.png); background-position:0px 50%; background-repeat:no-repeat; }
+
+.tree li a.folder.file { background-image:  url(../image/layers_txt/folder-file.png); }
+.tree li a.folder.file.open { background-image:  url(../image/layers_txt/folder-file-open.png); }
+
 
 .tree a.selected {
 	background-color: #C7E6E2; 

@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
@@ -40,7 +40,13 @@
 			        <dt>Show all button</dt>
 			        <dd><label><input type="checkbox"  title="Whether or not to display the show all button to display information in the selection." name="toggleall">Use</label></dd>
 			        <dt>layers.txt URL</dt>
-			        <dd><input type="text" title="Only if you want to split the layer definition file to another file, enter the URL of the file." class="inputtext" name="layersUrl"></dd>			
+			        <dd><input type="text" title="Only if you want to split the layer definition file to another file, enter the URL of the file." class="inputtext" name="layersUrl"></dd>
+			        <dd><label><input type="checkbox" name="tolayer">Display all the subordinate layers.</label><br>
+			        <div class="id_frame">
+			        	<div class="dt">ID</div>
+			        	<div class="dd"><input type="text" title="Set a unique ID for handling as a layer." class="inputtext" name="id"></div><div style="clear:both;"></div>
+			        </div>
+			        </dd>
 		        </dl>
 	        </form>
 	        </div>
@@ -54,23 +60,25 @@
 				            <label><input type="radio" name="type" layer_mode=""        value="geojson">GeoJSON</label>
 				            <label><input type="radio" name="type" layer_mode=""        value="topojson">TopoJSON</label> <br>
 				            <label><input type="radio" name="type" layer_mode="tile"    value="tile">Image tile</label>
-				            <label><input type="radio" name="type" layer_mode="tile"    value="geojson_tile">GeoJSON tile</label>
-				            <label><input type="radio" name="type" layer_mode="tile"    value="topojson_tile">TopoJSON tile</label>
+				            <label><input type="radio" name="type" layer_mode="tile,vectortile"    value="geojson_tile">GeoJSON tile</label>
+				            <label><input type="radio" name="type" layer_mode="tile,vectortile"    value="topojson_tile">TopoJSON tile</label>
 				            <!--label><input type="radio" name="type" layer_mode="tile" value="tms">TMS</label-->
 			            </dd>
 			            <div class="layer_edit_frame">
 				            <dt>ID</dt>
-				            <dd><input type="text" title="This is used to identify the layer in the Share.<br>Set so as not the same as the other." class="inputtext" name="id"></dd>
+				            <dd><input type="text" title="his is used to identify the layer in the Share.<br>Set so as not the same as the other." class="inputtext" name="id"></dd>
 				            <dt>Name<span>Required</span></dt>
 				            <dd><input type="text" title="Enter the name to be displayed in the information button.<br>e.g.：library in Tsukuba" class="inputtext" name="title"></dd>
 				            <dt>URL<span>Required</span></dt>
-				            <dd><input type="text" title="Enter the URL of the data.<br>Examples of KML：http://cyberjapandata.gsi.go.jp/sample.kml<br>Examples of tile：http://cyberjapandata.gsi.go.jp/xyz/sample/{z}/{x}/{y}.png" class="inputtext" name="url"></dd>
+				            <dd><input type="text" title="Enter the URL of the data.<br>Examples of KML：https://maps.gsi.go.jp/sample.kml<br>Examples of tile：https://maps.gsi.go.jp/xyz/sample/{z}/{x}/{y}.png" class="inputtext" name="url"></dd>
 				            <dt layer_mode="tile">subdomains</dt>
 				            <dd layer_mode="tile"><input type="text" title="" class="inputtext" name="subdomains"></dd>
 				            <dt>attribution</dt>
 				            <dd><input type="text" title="" class="inputtext" name="attribution"></dd>
 				            <dt>Icon URL</dt>
 				            <dd><input type="text" title="Enter the URL of the icon to be displayed in the information button." class="inputtext" name="iconUrl"></dd>
+				            <dt layer_mode="vectortile">styleurl</dt>
+				            <dd layer_mode="vectortile"><input type="text" title="Enter the URL of the style definition file." class="inputtext" name="styleurl"></dd>
 				            <dt layer_mode="tile">errorTileUrl</dt>
 				            <dd layer_mode="tile"><input type="text" title="" class="inputtext" name="errorTileUrl"></dd>
 				            <dt layer_mode="tile">cocotile</dt>
@@ -143,6 +151,11 @@
 					            <option value="17">17</option>
 					            <option value="18">18</option>
 					            </select>
+				            </dd>
+				            <dt layer_mode="tile">bounds</dt>
+				            <dd layer_mode="tile">
+				            	Southwest<br><input type="text" class="inputtext" name="bounds_southwest" title="例:35.3953180,134.5891358"><br>
+				            	Northeast<br><input type="text" class="inputtext" name="bounds_northeast" title="例:35.3953180,134.5891358"><br>
 				            </dd>
 				            <dt>Legend URL</dt>
 				            <dd><input type="text" class="inputtext" name="legendUrl" title="Enter the URL of the legend data.<br>e.g.：http://sample.com/sample.pdf"></dd>

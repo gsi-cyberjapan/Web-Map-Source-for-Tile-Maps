@@ -18,21 +18,53 @@ var CONFIG = {};
 
 // for GSI Maps layers file
 // (CONFIG.layers = null; , Load layers.txt of the same hierarchy)
+
+CONFIG.layersTab = [
+/*	{
+		'caption' : 'Topics',
+		'layers' : [
+			'./layers_txt/layers1.txt',
+			'./layers_txt/layers_topic.txt',
+			'./layers_txt/layers_skhb.txt'
+		]
+	},*/
+	{
+		'caption' : 'Basemaps',
+		'layers' : [
+			'./layers_txt/layers0.txt'
+		]
+	},
+	{
+		'caption' : 'All',
+		'layers' : null,
+		'isDetail' : true
+	}
+	
+];
+
 CONFIG.layerBase          = ['./layers_txt/layers0.txt'];
 CONFIG.layerBaseDefaultID = "std";
 CONFIG.layerBaseFolder    = "Basemaps";
 CONFIG.layerBaseFolderSYS = "GSI.MAP.BASE";
 CONFIG.layers = [
 	'./layers_txt/layers1.txt',
-//	'./layers_txt/layers2.txt',
+	'./layers_txt/layers2.txt',
 //	'./layers_txt/layers3.txt',
 //	'./layers_txt/layers4.txt',
+//	'./layers_txt/layers_skhb.txt',
 //	'./layers_txt/layers5.txt',
 	'./layers_txt/layers_experimental.txt'
 ];
 
+/*
+CONFIG.layerEvacuationFolder = "指定緊急避難場所";
+CONFIG.layerEvacuationFolderSYS = "GSI.MAP.EVAC";
+CONFIG.layerEvacuationHeader = "skhb";
+CONFIG.layerEvacuationIsConfirmOK = false;
+*/
+
 //cache（Layers.txt）
-CONFIG.LOADLAYERSTXTCACHE = true;
+CONFIG.LOADLAYERSTXTCACHE = false;
 
 //cache（cocotile）
 CONFIG.LOADCOCOTILECACHE = true;
@@ -41,7 +73,7 @@ CONFIG.LOADCOCOTILECACHE = true;
 CONFIG.TOPMESSAGE = null;
 // ID when you close! = Announcement revival in the case where only the current ID or EXPIRES time
 /*CONFIG.TOPMESSAGE = {
-	MESSAGE : '<a href="//maps.gsi.go.jp/help/howtouse/150108abstract.pdf"  TARGET="_blank">The main function summary</a>',
+	MESSAGE : '<a href="http://maps.gsi.go.jp/help/howtouse/150108abstract.pdf"  TARGET="_blank">The main function summary</a>',
 	DETAILS : '',
 	ID : '20150216', // Specify a string, notice is resurrected is if there was change in this value.
 	EXPIRES : -1 //-1  // Expiration date of cookies( hour )
@@ -58,19 +90,25 @@ CONFIG.LAYERTYPELIST = {
 	"topojson"      : { caption : "TopoJSON", isTile: false },
 	"geojson_tile"  : { caption : "GeoJSON tile", isTile: true },
 	"topojson_tile" : { caption : "TopoJSON tile", isTile: true },
-	"tms"           : { caption : "TMS", isTile: true, isTileImage : true }
+	"tms"           : { caption : "TMS", isTile: true, isTileImage : true },
+	"multiLayer"    : { caption : "Multilayers", isTile: false }
 };
+
+// Globe
+CONFIG.GLOBEURL = "http://maps.gsi.go.jp/globe/index_globe.html";
+
+
+// The default value of formula bl2stf ONOFF
+CONFIG.USEGSIDISTANCE = true;
 
 // The default value of cocotile ONOFF
 CONFIG.COCOTILEVISIBLE = false;
 
-//cocotile URL setting
+// cocotile URL setting
 // Multiple setting example
-// CONFIG.COCOTILEURL = ['//cyberjapandata-t1.gsi.go.jp/xyz/cocotile/{z}/{x}/{y}.csv', '//cyberjapandata-t2.gsi.go.jp/xyz/cocotile/{z}/{x}/{y}.csv', '//cyberjapandata-t3.gsi.go.jp/xyz/cocotile/{z}/{x}/{y}.csv']
-CONFIG.COCOTILEURL = ['//cyberjapandata-t1.gsi.go.jp/xyz/cocotile/{z}/{x}/{y}.csv', '//cyberjapandata-t2.gsi.go.jp/xyz/cocotile/{z}/{x}/{y}.csv', '//cyberjapandata-t3.gsi.go.jp/xyz/cocotile/{z}/{x}/{y}.csv', '//insarmap.gsi.go.jp/xyz/cocotile/{z}/{x}/{y}.csv'];
+// CONFIG.COCOTILEURL = ['http://cyberjapandata-t1.gsi.go.jp/xyz/cocotile/{z}/{x}/{y}.csv', 'http://cyberjapandata-t2.gsi.go.jp/xyz/cocotile/{z}/{x}/{y}.csv', 'http://cyberjapandata-t3.gsi.go.jp/xyz/cocotile/{z}/{x}/{y}.csv']
+CONFIG.COCOTILEURL = ['https://cyberjapandata-t1.gsi.go.jp/xyz/cocotile/{z}/{x}/{y}.csv', 'https://cyberjapandata-t2.gsi.go.jp/xyz/cocotile/{z}/{x}/{y}.csv', 'https://cyberjapandata-t3.gsi.go.jp/xyz/cocotile/{z}/{x}/{y}.csv', 'http://insarmap.gsi.go.jp/xyz/cocotile/{z}/{x}/{y}.csv'];
 
-// to display the access counter
-CONFIG.USEACCESSCOUNTER = true;
 
 // to display the type of layer to the list（For debugging）
 CONFIG.VISIBLELAYERTYPE  = false;
@@ -137,9 +175,6 @@ CONFIG.PAPERSIZE = {
 	"A3_landscape" : {w:1400,h:900}  //A3side
 };
 
-// Access counter setting
-CONFIG.ACCESSCOUNTERRETRY = 0; // Not again with a retry count 0.
-
 // Effects of dialog display, etc
 CONFIG.EFFECTS = {
 	// Menu display effect
@@ -164,18 +199,28 @@ CONFIG.EFFECTS = {
 
 };
 
+// CIRCLE to  Half Number of strokes of polygons
+CONFIG.CIRCLETOPOLYGONNUMSIDES = 80;
+
+
 // Parameters
 CONFIG.PARAMETERNAMES = {
 	CENTERCROSS : 'centercross',
 	JIHOKULINE  : 'jihokuline',
 	LATLNGGRID  : 'latlnggrid',
 	UTMGRID     : 'utmgrid',
+	TILEGRID    : 'tilegrid',
+	AREAMESH    : 'areamesh',
+	T25000GRID  : 't25000grid',
+	CHIIKIMESH: 'chiikimesh',
 	MINIMAP     : 'minimap',
     FOOTER      : 'footer',
 	COCOTILE    : 'cocotile',
 	CLICKMOVE   : 'clickmove',
+	MULTIPOPUP  : 'multipopup',
 	HIGHQUALITY : 'highquality',
-	CONTEXTMENUOVERLAP : 'contextmenuoverlap'
+	CONTEXTMENUOVERLAP : 'contextmenuoverlap',
+	USEGSIDISTANCE : 'usegsidistance'
 };
 
 CONFIG.QUERYPARAMETER = {};
@@ -198,6 +243,21 @@ CONFIG.QUERYPARAMETER[ CONFIG.PARAMETERNAMES.UTMGRID ] = {
 	prefix : 'u',
 	settingName : 'utmGrid'
 };
+
+CONFIG.QUERYPARAMETER[ CONFIG.PARAMETERNAMES.TILEGRID ] = {
+	prefix : 't',
+	settingName : 'tileGrid'
+};
+CONFIG.QUERYPARAMETER[ CONFIG.PARAMETERNAMES.T25000GRID ] = {
+	prefix : 'z',
+	settingName : 't25000Grid'
+};
+CONFIG.QUERYPARAMETER[ CONFIG.PARAMETERNAMES.CHIIKIMESH ] = {
+	prefix : 'r',
+	settingName : 'chiikiMesh'
+};
+
+
 
 CONFIG.QUERYPARAMETER[ CONFIG.PARAMETERNAMES.MINIMAP ] = {
 	prefix : 'm',
@@ -271,56 +331,109 @@ CONFIG.RIGHTDBLCLICKINTERVAL = 500;
 // Background map
 CONFIG.BASETILES = [];
 
-// Elevation
+/// Elevation
 /*
 CONFIG.DEM     = new Array(1);
-CONFIG.DEM[0] = { type : "PNG", url : "./[@]/tile.gsi/{z}/{x}/{y}.png"                   , z :  9, fixed : 1, src : "elevation PNG" };
+CONFIG.DEM[0] = { type : "PNG", url : "./[@]/tile.gsi/{z}/{x}/{y}.png"                   , z :  9, fixed : 1, src : "標高ＰＮＧ" };
 */
-CONFIG.DEM = new Array(3);
-CONFIG.DEM[0] = { type : "TXT", url : "//cyberjapandata.gsi.go.jp/xyz/dem5a/{z}/{x}/{y}.txt", z : 15, fixed : 1, src : "DEM5A" };
-CONFIG.DEM[1] = { type : "TXT", url : "//cyberjapandata.gsi.go.jp/xyz/dem5b/{z}/{x}/{y}.txt", z : 15, fixed : 1, src : "DEM5B" };
-CONFIG.DEM[2] = { type : "TXT", url : "//cyberjapandata.gsi.go.jp/xyz/dem/{z}/{x}/{y}.txt"  , z : 14, fixed : 0, src : "DEM10B"};
+CONFIG.DEM = new Array(4);
+CONFIG.DEM[0] = { type : "TXT", url : "https://cyberjapandata.gsi.go.jp/xyz/dem5a/{z}/{x}/{y}.txt", z : 15, fixed : 1, src : "DEM5A" };
+CONFIG.DEM[1] = { type : "TXT", url : "https://cyberjapandata.gsi.go.jp/xyz/dem5b/{z}/{x}/{y}.txt", z : 15, fixed : 1, src : "DEM5B" };
+CONFIG.DEM[2] = { type : "TXT", url : "https://cyberjapandata.gsi.go.jp/xyz/dem/{z}/{x}/{y}.txt"  , z : 14, fixed : 0, src : "DEM10B"};
+CONFIG.DEM[3] = { type : "TXT", url : "https://cyberjapandata.gsi.go.jp/xyz/demgm/{z}/{x}/{y}.txt"  , z : 8, fixed : 0, src : "DEMGM"};
+ 
+//for IE9
+var vs = window.navigator.appVersion.toLowerCase();
+var ua = window.navigator.userAgent.toLowerCase();
+if((ua.indexOf("msie") >= 0) && (vs.indexOf("msie 9") >= 0))
+{
+  CONFIG.DEM[0] = { type : "TXT", url : "http://cyberjapandata.gsi.go.jp/xyz/dem5a/{z}/{x}/{y}.txt", z : 15, fixed : 1, src : "DEM5A" };
+  CONFIG.DEM[1] = { type : "TXT", url : "http://cyberjapandata.gsi.go.jp/xyz/dem5b/{z}/{x}/{y}.txt", z : 15, fixed : 1, src : "DEM5B" };
+  CONFIG.DEM[2] = { type : "TXT", url : "http://cyberjapandata.gsi.go.jp/xyz/dem/{z}/{x}/{y}.txt"  , z : 14, fixed : 0, src : "DEM10B"};
+  CONFIG.DEM[3] = { type : "TXT", url : "http://cyberjapandata.gsi.go.jp/xyz/demgm/{z}/{x}/{y}.txt"  , z : 8, fixed : 0, src : "DEMGM"};
+
+}
 
 // Server-side API
 CONFIG.SERVERAPI = {};
 
-// Access counter
-CONFIG.SERVERAPI.ACCESSCOUNTER = '//mcounter.gsi.go.jp/CounterJson.php?id=001';
+CONFIG.SERVERAPI.GETADDR = "https://mreversegeocoder.gsi.go.jp/reverse-geocoder/LonLatToAddress";
+CONFIG.SERVERAPI.CHIMEI_SEARCH="https://msearch.gsi.go.jp/address-search/AddressSearch";
 
-CONFIG.SERVERAPI.GETADDR = "//mreversegeocoder.gsi.go.jp/reverse-geocoder/LonLatToAddress";
-CONFIG.SERVERAPI.CHIMEI_SEARCH="//msearch.gsi.go.jp/address-search/AddressSearch";
-
+//for IE9
+if((ua.indexOf("msie") >= 0) && (vs.indexOf("msie 9") >= 0))
+{
+	CONFIG.SERVERAPI.GETADDR = "http://mreversegeocoder.gsi.go.jp/reverse-geocoder/LonLatToAddress";
+	CONFIG.SERVERAPI.CHIMEI_SEARCH="http://msearch.gsi.go.jp/address-search/AddressSearch";
+}
 
 /************************************************************************
  Setting: menu: Help
  ************************************************************************/
 CONFIG.HELPMENU = [
- {'Moji':'Help',                   'Img':'./image/help/help_icon.png',    'Link':'http://maps.gsi.go.jp/help/'},
- {'Moji':'Use GSI Tiles ',          'Img':'./image/help/use_icon.png',     'Link':'http://maps.gsi.go.jp/help/use.html'},
- {'Moji':'Twitter',                'Img':'./image/help/twitter.png',      'Link':'//twitter.com/gsi_cyberjapan'},
- {'Moji':'GitHub',                 'Img':'./image/help/github.png',       'Link':'//github.com/gsi-cyberjapan'},
- {'Moji':'Partner Network',        'Img':'./image/help/partner_icon.png', 'Link':'//maps.gsi.go.jp/pn/'},
- {'Moji':'GSI HOME',               'Img':'./image/help/gsi_top.png',      'Link':'http://www.gsi.go.jp/'}
+ {'Moji':'Help',                 'Img':'./image/help/help_icon.png',    'Link':'http://maps.gsi.go.jp/help/'},
+ {'Moji':'Twitter',                'Img':'./image/help/twitter.png',      'Link':'https://twitter.com/gsi_cyberjapan'},
+ {'Moji':'GitHub',                 'Img':'./image/help/github.png',       'Link':'https://github.com/gsi-cyberjapan'},
+ {'Moji':'Partner Network', 'Img':'./image/help/partner_icon.png', 'Link':'http://maps.gsi.go.jp/pn/'},
+ {'Moji':'GSI HOME',       'Img':'./image/help/gsi_top.png',      'Link':'http://www.gsi.go.jp/'}
 ];
 
 /************************************************************************
  Setting: menu: Information
  ************************************************************************/
 CONFIG.MAPMENU = {
-	title : 'Layer'
+	title : 'Layers'
 };
 
 /************************************************************************
  Setting: menu: Function
  ************************************************************************/
 CONFIG.FUNCMENU = {
-	title : 'Function',
+	title : 'Functions',
 	children : [
 		{
-			title : 'settings',
+			title : 'Settings',
 			arrow : true,
-			childrenWidth:230,
+			childrenWidth:240,
 			children : [
+				{
+					title : 'Grid',
+					arrow : true,
+					textAlign:"left",
+					childrenWidth:230,
+					children : [
+						{
+							id : CONFIG.PARAMETERNAMES.LATLNGGRID,
+							title : 'Lat/Lon grid',
+							typeA : 'check',
+							defaultCheck : false
+						},
+						{
+							id : CONFIG.PARAMETERNAMES.UTMGRID,
+							title : 'MGRS',
+							typeA : 'check',
+							defaultCheck : false
+						},
+						{
+							id : CONFIG.PARAMETERNAMES.TILEGRID,
+							title : 'Tile coordinates',
+							typeA : 'check',
+							defaultCheck : false
+						},
+						{
+							id : CONFIG.PARAMETERNAMES.CHIIKIMESH,
+							title : 'Regional mesh',
+							typeA : 'check',
+							defaultCheck : false
+						},
+						{
+							id : CONFIG.PARAMETERNAMES.T25000GRID,
+							title : '1:25,000 topographic maps grid',
+							typeA : 'check',
+							defaultCheck : false
+						}
+					]
+				},
 				{
 					id : CONFIG.PARAMETERNAMES.CENTERCROSS,
 					title : 'Cross-hair',
@@ -328,20 +441,8 @@ CONFIG.FUNCMENU = {
 					defaultCheck : true
 				},
 				{
-					id : CONFIG.PARAMETERNAMES.LATLNGGRID,
-					title : 'Lat/Lon grid',
-					typeA : 'check',
-					defaultCheck : false
-				},
-				{
-					id : CONFIG.PARAMETERNAMES.UTMGRID,
-					title : 'UTM grid',
-					typeA : 'check',
-					defaultCheck : false
-				},
-				{
 					id : CONFIG.PARAMETERNAMES.JIHOKULINE,
-					title : 'Magnetic North line',
+					title : 'Magnetic north line',
 					typeA : 'check',
 					defaultCheck : false
 				},
@@ -353,14 +454,20 @@ CONFIG.FUNCMENU = {
 				},
 				{
 					id : CONFIG.PARAMETERNAMES.CLICKMOVE,
-					title : 'Click to move',
+					title : 'Move by click',
+					typeA : 'check',
+					defaultCheck : false
+				},
+				{
+					id : CONFIG.PARAMETERNAMES.MULTIPOPUP,
+					title : 'Multiple popup display',
 					typeA : 'check',
 					defaultCheck : false
 				}
 			]
 		},
 		{
-			title : 'tools',
+			title : 'Tools',
 			arrow : true,
 			childrenWidth:150,
 			children : [
@@ -375,16 +482,10 @@ CONFIG.FUNCMENU = {
 					arrow : true
 				},
 				{
-					id : 'gps',
-					title : 'Actual location',
-					arrow : true,
-					checkCondition : function() { return GSI.GeoLocation.can; }
-				},
-				{
 					id : 'ucode',
-					title : 'ucode',
+					title : 'uPlace',
 					arrow : true,
-					href : 'ucodehref'//'//ucopendb.gsi.go.jp/ucode_app/logical_code/ucode_disp.php?lat={y}&lng={x}&zoom={z}'
+					href : 'ucodehref'//'http://ucopendb.gsi.go.jp/ucode_app/logical_code/ucode_disp.php?lat={y}&lng={x}&zoom={z}'
 				},				
 				{
 					title : 'Share',
@@ -412,18 +513,50 @@ CONFIG.FUNCMENU = {
 					id : 'print',
 					title : 'Print',
 					arrow : true
+				},
+				{
+					id : 'saveimage',
+					title : 'Save as an image',
+					arrow : true
 				}
 			]
 		},
 		{
-			title : '3D',
+			title : 'Current location',
 			arrow : true,
-			href : 'gsi3d'//'//cyberjapandata.gsi.go.jp/3d/site/index.html?z={z}&lat={y}&lon={x}'
+			id : 'gps',
+			checkCondition : function() { return GSI.GeoLocation.can; }
 		},
 		{
-			title : 'Globe<span style="font-size: 12px;">(test site)</span>',
+			
+			title : '3D',
 			arrow : true,
-			href : 'gsiglobe'//'//maps.gsi.go.jp/globe/index_globe.html'
+			childrenWidth:210,
+			children : [
+				{
+					id : 'gsi3d_l',
+					title : 'Large (2048×2048)',
+					//arrow : true,
+					href : 'gsi3d_l'//'http://cyberjapandata.gsi.go.jp/3d/site/index.html?z={z}&lat={y}&lon={x}'
+				},
+				
+				{
+					id : 'gsi3d_s',
+					title : 'Medium (1024×1024)',
+					//arrow : true,
+					href : 'gsi3d_s'//'http://cyberjapandata.gsi.go.jp/3d/site/index.html?z={z}&lat={y}&lon={x}'
+				},
+				
+				{
+					id : 'gsi3d_custom',
+					title : 'Custom'
+				}
+			]
+		},
+		{
+			title : 'Globe',
+			arrow : true,
+			href : 'gsiglobe'//'http://maps.gsi.go.jp/globe/index_globe.html'
 		}
 	]
 };
@@ -475,18 +608,14 @@ CONFIG.UTMGRID = {
 /************************************************************************
  Setting: wording
  ************************************************************************/
-// Access counter
-GSI.TEXT.ACCESSCOUNTER = {};
-GSI.TEXT.ACCESSCOUNTER.TOOLTIP = "The number of access";
-
 // Measurement
 GSI.TEXT.MEASURE = {};
 GSI.TEXT.MEASURE.DIALOG_TITLE = 'Measure';
 GSI.TEXT.MEASURE.DIALOG_DISTANCE_CAPTION = 'Dist';
 GSI.TEXT.MEASURE.DIALOG_AREA_CAPTION = 'Area';
-GSI.TEXT.MEASURE.DIALOG_OBJECT_CAPTION = 'Graphic';
+GSI.TEXT.MEASURE.DIALOG_OBJECT_CAPTION = 'Figure';     //Drawn 又は Figureに変更案(170707)
 
-// Construction related
+// Drawing
 GSI.TEXT.SAKUZU = {};
 GSI.TEXT.SAKUZU.SAKUZUTITLE = 'New drawing information';
 GSI.TEXT.SAKUZU.LOAD_ERROR = 'Can not load file.';
@@ -499,15 +628,18 @@ GSI.TEXT.SAKUZU.DIALOG_TOOLTIP_ADDMARKER = 'Add marker (icon)';
 GSI.TEXT.SAKUZU.DIALOG_TOOLTIP_ADDCIRCLEMARKER = 'Add marker (circle)';
 GSI.TEXT.SAKUZU.DIALOG_TOOLTIP_ADDDIVMARKER = 'Add text';
 GSI.TEXT.SAKUZU.DIALOG_TOOLTIP_ADDLINE = 'Add line';
-GSI.TEXT.SAKUZU.DIALOG_TOOLTIP_ADDPOLY = 'Add  polygon';
+GSI.TEXT.SAKUZU.DIALOG_TOOLTIP_ADDPOLY = 'Add polygon';
 GSI.TEXT.SAKUZU.DIALOG_TOOLTIP_ADDCIRCLE = 'Add circle';
 GSI.TEXT.SAKUZU.DIALOG_TOOLTIP_ADDFREEHAND = 'Add freehand lines';
 
 GSI.TEXT.SAKUZU.DIALOG_LIST_EDITBTN = 'Edit';
 GSI.TEXT.SAKUZU.DIALOG_LIST_REMOVEBTN = 'Delete';
+GSI.TEXT.SAKUZU.DIALOG_LIST_VISIBLEICONLABELBTN = 'Show labels of icons';
 
-GSI.TEXT.SAKUZU.DIALOG_LOAD_COMMENT = 'Select a <strong>KML, GeoJSON</strong> or <strong>TopoJSON</strong>.';
-GSI.TEXT.SAKUZU.DIALOG_LOAD_COMMENT_IE8 = '<strong>KML, GeoJSON, TopoJSON</strong> Enter the contents of the file.' ;
+
+GSI.TEXT.SAKUZU.DIALOG_LOAD_COMMENT = 'Select a <strong>KML, GeoJSON</strong> or <strong>TopoJSON</strong>.<br><div style="font-size:85%">※You can also load files by dragging and dropping them on the map.</div>';
+GSI.TEXT.SAKUZU.DIALOG_LOAD_COMMENT_IE8 = '<strong>KML, GeoJSON, TopoJSON</strong> Enter the contents of the file.<br><div style="font-size:85%">※You can also load files by dragging and dropping them on the map.</div>' ;
+GSI.TEXT.SAKUZU.DIALOG_LOAD_COMMENT_IE9 = 'Select a <strong>KML, GeoJSON</strong> or <strong>TopoJSON</strong>.';
 GSI.TEXT.SAKUZU.DIALOG_LOAD_FILENAMECAPTION = 'Display name on the panel.' ;
 
 GSI.TEXT.SAKUZU.DIALOG_LOAD_OKBTN = 'Load';
@@ -521,11 +653,13 @@ GSI.TEXT.SAKUZU.DIALOG_SAVE_COMMENT2= 'Drawing information that consists of the 
 GSI.TEXT.SAKUZU.DIALOG_SAVE_COMMENT_IE8 = '<strong>KML, GeoJSON, TopoJSON</strong> Enter the contents of the file.' ;
 GSI.TEXT.SAKUZU.DIALOG_SAVE_OKBTN = 'Save this content';
 GSI.TEXT.SAKUZU.DIALOG_SAVE_OKBTN_CLIPBOARD = 'Copy to clipboard';
-GSI.TEXT.SAKUZU.DIALOG_SAVE_CANCELBTN = 'Return';
+GSI.TEXT.SAKUZU.DIALOG_SAVE_CANCELBTN = 'Cancel';
 
 GSI.TEXT.SAKUZU.DIALOG_EDIT_REMOVEBTN = 'Delete of object';
-GSI.TEXT.SAKUZU.DIALOG_EDIT_OKBTN = 'Confirm';
+GSI.TEXT.SAKUZU.DIALOG_EDIT_OKBTN = 'Fix';
+GSI.TEXT.SAKUZU.DIALOG_EDIT_OK2BTN = 'OK';
 GSI.TEXT.SAKUZU.DIALOG_EDIT_CANCELBTN = 'End';
+GSI.TEXT.SAKUZU.DIALOG_EDIT_CANCEL2BTN = 'Cancel';
 GSI.TEXT.SAKUZU.DIALOG_EDIT_CANCELCONFIRMMSG = 'Are you sure you want to exit the editing? Edits that have not been finalized will be discarded.';
 GSI.TEXT.SAKUZU.DIALOG_HIDECONFIRMMSG = 'Are you sure you want to close a drawing file panel? Edits that have not been finalized will be discarded.';
 GSI.TEXT.SAKUZU.DIALOG_EDIT_REMOVECONFIRMMSG = 'You want to delete this object. Is it OK?';
@@ -533,7 +667,9 @@ GSI.TEXT.SAKUZU.DIALOG_EDIT_REMOVELAYERCONFIRMMSG = 'You want to delete this lay
 GSI.TEXT.SAKUZU.DIALOG_EDIT_INFOFREE_BTN = 'Switch to the free text input.';
 GSI.TEXT.SAKUZU.DIALOG_EDIT_INFOTABLE_BTN = 'Switch to the table input.';
 GSI.TEXT.SAKUZU.DIALOG_EDIT_POINTTEXT_MSG = 'Enter the HTML to be displayed.';
+GSI.TEXT.SAKUZU.DIALOG_EDIT_POINTTEXT_TEXTMODE_MSG = 'Enter the TEXT to be displayed.';
 GSI.TEXT.SAKUZU.DIALOG_EDIT_POINTTEXT_HINT = 'e.g.1:Zoo　\ne.g.2:<span style="background:#00FFFF; color:red; font-size:20pt;">library</span>';
+GSI.TEXT.SAKUZU.DIALOG_EDIT_POINTTEXT_TEXTMODE_HINT = 'e.g.1:Zoo';
 
 // Share
 GSI.TEXT.SHARE = {};
@@ -553,1932 +689,37 @@ GSI.TEXT.SHARE.DIALOG_DOWNLOADBTN = 'Save the above HTML';
 GSI.TEXT.SHARE.DIALOG_COPYBTN = 'Copy to clipboard';
 GSI.TEXT.SHARE.DIALOG_NOCOPYMSG = 'Please use and copy the URL.';
 
-/************************************************************************
- Setting: From the old GSI Maps(in japanese)
- ************************************************************************/
-GSI.MUNI_ARRAY = {};
-GSI.MUNI_ARRAY["1100"] = '1,北海道,1100,札幌市';
-GSI.MUNI_ARRAY["1101"] = '1,北海道,1101,札幌市　中央区';
-GSI.MUNI_ARRAY["1102"] = '1,北海道,1102,札幌市　北区';
-GSI.MUNI_ARRAY["1103"] = '1,北海道,1103,札幌市　東区';
-GSI.MUNI_ARRAY["1104"] = '1,北海道,1104,札幌市　白石区';
-GSI.MUNI_ARRAY["1105"] = '1,北海道,1105,札幌市　豊平区';
-GSI.MUNI_ARRAY["1106"] = '1,北海道,1106,札幌市　南区';
-GSI.MUNI_ARRAY["1107"] = '1,北海道,1107,札幌市　西区';
-GSI.MUNI_ARRAY["1108"] = '1,北海道,1108,札幌市　厚別区';
-GSI.MUNI_ARRAY["1109"] = '1,北海道,1109,札幌市　手稲区';
-GSI.MUNI_ARRAY["1110"] = '1,北海道,1110,札幌市　清田区';
-GSI.MUNI_ARRAY["1202"] = '1,北海道,1202,函館市';
-GSI.MUNI_ARRAY["1203"] = '1,北海道,1203,小樽市';
-GSI.MUNI_ARRAY["1204"] = '1,北海道,1204,旭川市';
-GSI.MUNI_ARRAY["1205"] = '1,北海道,1205,室蘭市';
-GSI.MUNI_ARRAY["1206"] = '1,北海道,1206,釧路市';
-GSI.MUNI_ARRAY["1207"] = '1,北海道,1207,帯広市';
-GSI.MUNI_ARRAY["1208"] = '1,北海道,1208,北見市';
-GSI.MUNI_ARRAY["1209"] = '1,北海道,1209,夕張市';
-GSI.MUNI_ARRAY["1210"] = '1,北海道,1210,岩見沢市';
-GSI.MUNI_ARRAY["1211"] = '1,北海道,1211,網走市';
-GSI.MUNI_ARRAY["1212"] = '1,北海道,1212,留萌市';
-GSI.MUNI_ARRAY["1213"] = '1,北海道,1213,苫小牧市';
-GSI.MUNI_ARRAY["1214"] = '1,北海道,1214,稚内市';
-GSI.MUNI_ARRAY["1215"] = '1,北海道,1215,美唄市';
-GSI.MUNI_ARRAY["1216"] = '1,北海道,1216,芦別市';
-GSI.MUNI_ARRAY["1217"] = '1,北海道,1217,江別市';
-GSI.MUNI_ARRAY["1218"] = '1,北海道,1218,赤平市';
-GSI.MUNI_ARRAY["1219"] = '1,北海道,1219,紋別市';
-GSI.MUNI_ARRAY["1220"] = '1,北海道,1220,士別市';
-GSI.MUNI_ARRAY["1221"] = '1,北海道,1221,名寄市';
-GSI.MUNI_ARRAY["1222"] = '1,北海道,1222,三笠市';
-GSI.MUNI_ARRAY["1223"] = '1,北海道,1223,根室市';
-GSI.MUNI_ARRAY["1224"] = '1,北海道,1224,千歳市';
-GSI.MUNI_ARRAY["1225"] = '1,北海道,1225,滝川市';
-GSI.MUNI_ARRAY["1226"] = '1,北海道,1226,砂川市';
-GSI.MUNI_ARRAY["1227"] = '1,北海道,1227,歌志内市';
-GSI.MUNI_ARRAY["1228"] = '1,北海道,1228,深川市';
-GSI.MUNI_ARRAY["1229"] = '1,北海道,1229,富良野市';
-GSI.MUNI_ARRAY["1230"] = '1,北海道,1230,登別市';
-GSI.MUNI_ARRAY["1231"] = '1,北海道,1231,恵庭市';
-GSI.MUNI_ARRAY["1233"] = '1,北海道,1233,伊達市';
-GSI.MUNI_ARRAY["1234"] = '1,北海道,1234,北広島市';
-GSI.MUNI_ARRAY["1235"] = '1,北海道,1235,石狩市';
-GSI.MUNI_ARRAY["1236"] = '1,北海道,1236,北斗市';
-GSI.MUNI_ARRAY["1303"] = '1,北海道,1303,当別町';
-GSI.MUNI_ARRAY["1304"] = '1,北海道,1304,新篠津村';
-GSI.MUNI_ARRAY["1331"] = '1,北海道,1331,松前町';
-GSI.MUNI_ARRAY["1332"] = '1,北海道,1332,福島町';
-GSI.MUNI_ARRAY["1333"] = '1,北海道,1333,知内町';
-GSI.MUNI_ARRAY["1334"] = '1,北海道,1334,木古内町';
-GSI.MUNI_ARRAY["1337"] = '1,北海道,1337,七飯町';
-GSI.MUNI_ARRAY["1343"] = '1,北海道,1343,鹿部町';
-GSI.MUNI_ARRAY["1345"] = '1,北海道,1345,森町';
-GSI.MUNI_ARRAY["1346"] = '1,北海道,1346,八雲町';
-GSI.MUNI_ARRAY["1347"] = '1,北海道,1347,長万部町';
-GSI.MUNI_ARRAY["1361"] = '1,北海道,1361,江差町';
-GSI.MUNI_ARRAY["1362"] = '1,北海道,1362,上ノ国町';
-GSI.MUNI_ARRAY["1363"] = '1,北海道,1363,厚沢部町';
-GSI.MUNI_ARRAY["1364"] = '1,北海道,1364,乙部町';
-GSI.MUNI_ARRAY["1367"] = '1,北海道,1367,奥尻町';
-GSI.MUNI_ARRAY["1370"] = '1,北海道,1370,今金町';
-GSI.MUNI_ARRAY["1371"] = '1,北海道,1371,せたな町';
-GSI.MUNI_ARRAY["1391"] = '1,北海道,1391,島牧村';
-GSI.MUNI_ARRAY["1392"] = '1,北海道,1392,寿都町';
-GSI.MUNI_ARRAY["1393"] = '1,北海道,1393,黒松内町';
-GSI.MUNI_ARRAY["1394"] = '1,北海道,1394,蘭越町';
-GSI.MUNI_ARRAY["1395"] = '1,北海道,1395,ニセコ町';
-GSI.MUNI_ARRAY["1396"] = '1,北海道,1396,真狩村';
-GSI.MUNI_ARRAY["1397"] = '1,北海道,1397,留寿都村';
-GSI.MUNI_ARRAY["1398"] = '1,北海道,1398,喜茂別町';
-GSI.MUNI_ARRAY["1399"] = '1,北海道,1399,京極町';
-GSI.MUNI_ARRAY["1400"] = '1,北海道,1400,倶知安町';
-GSI.MUNI_ARRAY["1401"] = '1,北海道,1401,共和町';
-GSI.MUNI_ARRAY["1402"] = '1,北海道,1402,岩内町';
-GSI.MUNI_ARRAY["1403"] = '1,北海道,1403,泊村';
-GSI.MUNI_ARRAY["1404"] = '1,北海道,1404,神恵内村';
-GSI.MUNI_ARRAY["1405"] = '1,北海道,1405,積丹町';
-GSI.MUNI_ARRAY["1406"] = '1,北海道,1406,古平町';
-GSI.MUNI_ARRAY["1407"] = '1,北海道,1407,仁木町';
-GSI.MUNI_ARRAY["1408"] = '1,北海道,1408,余市町';
-GSI.MUNI_ARRAY["1409"] = '1,北海道,1409,赤井川村';
-GSI.MUNI_ARRAY["1423"] = '1,北海道,1423,南幌町';
-GSI.MUNI_ARRAY["1424"] = '1,北海道,1424,奈井江町';
-GSI.MUNI_ARRAY["1425"] = '1,北海道,1425,上砂川町';
-GSI.MUNI_ARRAY["1427"] = '1,北海道,1427,由仁町';
-GSI.MUNI_ARRAY["1428"] = '1,北海道,1428,長沼町';
-GSI.MUNI_ARRAY["1429"] = '1,北海道,1429,栗山町';
-GSI.MUNI_ARRAY["1430"] = '1,北海道,1430,月形町';
-GSI.MUNI_ARRAY["1431"] = '1,北海道,1431,浦臼町';
-GSI.MUNI_ARRAY["1432"] = '1,北海道,1432,新十津川町';
-GSI.MUNI_ARRAY["1433"] = '1,北海道,1433,妹背牛町';
-GSI.MUNI_ARRAY["1434"] = '1,北海道,1434,秩父別町';
-GSI.MUNI_ARRAY["1436"] = '1,北海道,1436,雨竜町';
-GSI.MUNI_ARRAY["1437"] = '1,北海道,1437,北竜町';
-GSI.MUNI_ARRAY["1438"] = '1,北海道,1438,沼田町';
-GSI.MUNI_ARRAY["1452"] = '1,北海道,1452,鷹栖町';
-GSI.MUNI_ARRAY["1453"] = '1,北海道,1453,東神楽町';
-GSI.MUNI_ARRAY["1454"] = '1,北海道,1454,当麻町';
-GSI.MUNI_ARRAY["1455"] = '1,北海道,1455,比布町';
-GSI.MUNI_ARRAY["1456"] = '1,北海道,1456,愛別町';
-GSI.MUNI_ARRAY["1457"] = '1,北海道,1457,上川町';
-GSI.MUNI_ARRAY["1458"] = '1,北海道,1458,東川町';
-GSI.MUNI_ARRAY["1459"] = '1,北海道,1459,美瑛町';
-GSI.MUNI_ARRAY["1460"] = '1,北海道,1460,上富良野町';
-GSI.MUNI_ARRAY["1461"] = '1,北海道,1461,中富良野町';
-GSI.MUNI_ARRAY["1462"] = '1,北海道,1462,南富良野町';
-GSI.MUNI_ARRAY["1463"] = '1,北海道,1463,占冠村';
-GSI.MUNI_ARRAY["1464"] = '1,北海道,1464,和寒町';
-GSI.MUNI_ARRAY["1465"] = '1,北海道,1465,剣淵町';
-GSI.MUNI_ARRAY["1468"] = '1,北海道,1468,下川町';
-GSI.MUNI_ARRAY["1469"] = '1,北海道,1469,美深町';
-GSI.MUNI_ARRAY["1470"] = '1,北海道,1470,音威子府村';
-GSI.MUNI_ARRAY["1471"] = '1,北海道,1471,中川町';
-GSI.MUNI_ARRAY["1472"] = '1,北海道,1472,幌加内町';
-GSI.MUNI_ARRAY["1481"] = '1,北海道,1481,増毛町';
-GSI.MUNI_ARRAY["1482"] = '1,北海道,1482,小平町';
-GSI.MUNI_ARRAY["1483"] = '1,北海道,1483,苫前町';
-GSI.MUNI_ARRAY["1484"] = '1,北海道,1484,羽幌町';
-GSI.MUNI_ARRAY["1485"] = '1,北海道,1485,初山別村';
-GSI.MUNI_ARRAY["1486"] = '1,北海道,1486,遠別町';
-GSI.MUNI_ARRAY["1487"] = '1,北海道,1487,天塩町';
-GSI.MUNI_ARRAY["1511"] = '1,北海道,1511,猿払村';
-GSI.MUNI_ARRAY["1512"] = '1,北海道,1512,浜頓別町';
-GSI.MUNI_ARRAY["1513"] = '1,北海道,1513,中頓別町';
-GSI.MUNI_ARRAY["1514"] = '1,北海道,1514,枝幸町';
-GSI.MUNI_ARRAY["1516"] = '1,北海道,1516,豊富町';
-GSI.MUNI_ARRAY["1517"] = '1,北海道,1517,礼文町';
-GSI.MUNI_ARRAY["1518"] = '1,北海道,1518,利尻町';
-GSI.MUNI_ARRAY["1519"] = '1,北海道,1519,利尻富士町';
-GSI.MUNI_ARRAY["1520"] = '1,北海道,1520,幌延町';
-GSI.MUNI_ARRAY["1543"] = '1,北海道,1543,美幌町';
-GSI.MUNI_ARRAY["1544"] = '1,北海道,1544,津別町';
-GSI.MUNI_ARRAY["1545"] = '1,北海道,1545,斜里町';
-GSI.MUNI_ARRAY["1546"] = '1,北海道,1546,清里町';
-GSI.MUNI_ARRAY["1547"] = '1,北海道,1547,小清水町';
-GSI.MUNI_ARRAY["1549"] = '1,北海道,1549,訓子府町';
-GSI.MUNI_ARRAY["1550"] = '1,北海道,1550,置戸町';
-GSI.MUNI_ARRAY["1552"] = '1,北海道,1552,佐呂間町';
-GSI.MUNI_ARRAY["1555"] = '1,北海道,1555,遠軽町';
-GSI.MUNI_ARRAY["1559"] = '1,北海道,1559,湧別町';
-GSI.MUNI_ARRAY["1560"] = '1,北海道,1560,滝上町';
-GSI.MUNI_ARRAY["1561"] = '1,北海道,1561,興部町';
-GSI.MUNI_ARRAY["1562"] = '1,北海道,1562,西興部村';
-GSI.MUNI_ARRAY["1563"] = '1,北海道,1563,雄武町';
-GSI.MUNI_ARRAY["1564"] = '1,北海道,1564,大空町';
-GSI.MUNI_ARRAY["1571"] = '1,北海道,1571,豊浦町';
-GSI.MUNI_ARRAY["1575"] = '1,北海道,1575,壮瞥町';
-GSI.MUNI_ARRAY["1578"] = '1,北海道,1578,白老町';
-GSI.MUNI_ARRAY["1581"] = '1,北海道,1581,厚真町';
-GSI.MUNI_ARRAY["1584"] = '1,北海道,1584,洞爺湖町';
-GSI.MUNI_ARRAY["1585"] = '1,北海道,1585,安平町';
-GSI.MUNI_ARRAY["1586"] = '1,北海道,1586,むかわ町';
-GSI.MUNI_ARRAY["1601"] = '1,北海道,1601,日高町';
-GSI.MUNI_ARRAY["1602"] = '1,北海道,1602,平取町';
-GSI.MUNI_ARRAY["1604"] = '1,北海道,1604,新冠町';
-GSI.MUNI_ARRAY["1607"] = '1,北海道,1607,浦河町';
-GSI.MUNI_ARRAY["1608"] = '1,北海道,1608,様似町';
-GSI.MUNI_ARRAY["1609"] = '1,北海道,1609,えりも町';
-GSI.MUNI_ARRAY["1610"] = '1,北海道,1610,新ひだか町';
-GSI.MUNI_ARRAY["1631"] = '1,北海道,1631,音更町';
-GSI.MUNI_ARRAY["1632"] = '1,北海道,1632,士幌町';
-GSI.MUNI_ARRAY["1633"] = '1,北海道,1633,上士幌町';
-GSI.MUNI_ARRAY["1634"] = '1,北海道,1634,鹿追町';
-GSI.MUNI_ARRAY["1635"] = '1,北海道,1635,新得町';
-GSI.MUNI_ARRAY["1636"] = '1,北海道,1636,清水町';
-GSI.MUNI_ARRAY["1637"] = '1,北海道,1637,芽室町';
-GSI.MUNI_ARRAY["1638"] = '1,北海道,1638,中札内村';
-GSI.MUNI_ARRAY["1639"] = '1,北海道,1639,更別村';
-GSI.MUNI_ARRAY["1641"] = '1,北海道,1641,大樹町';
-GSI.MUNI_ARRAY["1642"] = '1,北海道,1642,広尾町';
-GSI.MUNI_ARRAY["1643"] = '1,北海道,1643,幕別町';
-GSI.MUNI_ARRAY["1644"] = '1,北海道,1644,池田町';
-GSI.MUNI_ARRAY["1645"] = '1,北海道,1645,豊頃町';
-GSI.MUNI_ARRAY["1646"] = '1,北海道,1646,本別町';
-GSI.MUNI_ARRAY["1647"] = '1,北海道,1647,足寄町';
-GSI.MUNI_ARRAY["1648"] = '1,北海道,1648,陸別町';
-GSI.MUNI_ARRAY["1649"] = '1,北海道,1649,浦幌町';
-GSI.MUNI_ARRAY["1661"] = '1,北海道,1661,釧路町';
-GSI.MUNI_ARRAY["1662"] = '1,北海道,1662,厚岸町';
-GSI.MUNI_ARRAY["1663"] = '1,北海道,1663,浜中町';
-GSI.MUNI_ARRAY["1664"] = '1,北海道,1664,標茶町';
-GSI.MUNI_ARRAY["1665"] = '1,北海道,1665,弟子屈町';
-GSI.MUNI_ARRAY["1667"] = '1,北海道,1667,鶴居村';
-GSI.MUNI_ARRAY["1668"] = '1,北海道,1668,白糠町';
-GSI.MUNI_ARRAY["1691"] = '1,北海道,1691,別海町';
-GSI.MUNI_ARRAY["1692"] = '1,北海道,1692,中標津町';
-GSI.MUNI_ARRAY["1693"] = '1,北海道,1693,標津町';
-GSI.MUNI_ARRAY["1694"] = '1,北海道,1694,羅臼町';
-GSI.MUNI_ARRAY["1695"] = '1,北海道,1695,色丹村';
-GSI.MUNI_ARRAY["1696"] = '1,北海道,1696,泊村';
-GSI.MUNI_ARRAY["1697"] = '1,北海道,1697,留夜別村';
-GSI.MUNI_ARRAY["1698"] = '1,北海道,1698,留別村';
-GSI.MUNI_ARRAY["1699"] = '1,北海道,1699,紗那村';
-GSI.MUNI_ARRAY["1700"] = '1,北海道,1700,蘂取村';
-GSI.MUNI_ARRAY["2201"] = '2,青森県,2201,青森市';
-GSI.MUNI_ARRAY["2202"] = '2,青森県,2202,弘前市';
-GSI.MUNI_ARRAY["2203"] = '2,青森県,2203,八戸市';
-GSI.MUNI_ARRAY["2204"] = '2,青森県,2204,黒石市';
-GSI.MUNI_ARRAY["2205"] = '2,青森県,2205,五所川原市';
-GSI.MUNI_ARRAY["2206"] = '2,青森県,2206,十和田市';
-GSI.MUNI_ARRAY["2207"] = '2,青森県,2207,三沢市';
-GSI.MUNI_ARRAY["2208"] = '2,青森県,2208,むつ市';
-GSI.MUNI_ARRAY["2209"] = '2,青森県,2209,つがる市';
-GSI.MUNI_ARRAY["2210"] = '2,青森県,2210,平川市';
-GSI.MUNI_ARRAY["2301"] = '2,青森県,2301,平内町';
-GSI.MUNI_ARRAY["2303"] = '2,青森県,2303,今別町';
-GSI.MUNI_ARRAY["2304"] = '2,青森県,2304,蓬田村';
-GSI.MUNI_ARRAY["2307"] = '2,青森県,2307,外ヶ浜町';
-GSI.MUNI_ARRAY["2321"] = '2,青森県,2321,鰺ヶ沢町';
-GSI.MUNI_ARRAY["2323"] = '2,青森県,2323,深浦町';
-GSI.MUNI_ARRAY["2343"] = '2,青森県,2343,西目屋村';
-GSI.MUNI_ARRAY["2361"] = '2,青森県,2361,藤崎町';
-GSI.MUNI_ARRAY["2362"] = '2,青森県,2362,大鰐町';
-GSI.MUNI_ARRAY["2367"] = '2,青森県,2367,田舎館村';
-GSI.MUNI_ARRAY["2381"] = '2,青森県,2381,板柳町';
-GSI.MUNI_ARRAY["2384"] = '2,青森県,2384,鶴田町';
-GSI.MUNI_ARRAY["2387"] = '2,青森県,2387,中泊町';
-GSI.MUNI_ARRAY["2401"] = '2,青森県,2401,野辺地町';
-GSI.MUNI_ARRAY["2402"] = '2,青森県,2402,七戸町';
-GSI.MUNI_ARRAY["2405"] = '2,青森県,2405,六戸町';
-GSI.MUNI_ARRAY["2406"] = '2,青森県,2406,横浜町';
-GSI.MUNI_ARRAY["2408"] = '2,青森県,2408,東北町';
-GSI.MUNI_ARRAY["2411"] = '2,青森県,2411,六ヶ所村';
-GSI.MUNI_ARRAY["2412"] = '2,青森県,2412,おいらせ町';
-GSI.MUNI_ARRAY["2423"] = '2,青森県,2423,大間町';
-GSI.MUNI_ARRAY["2424"] = '2,青森県,2424,東通村';
-GSI.MUNI_ARRAY["2425"] = '2,青森県,2425,風間浦村';
-GSI.MUNI_ARRAY["2426"] = '2,青森県,2426,佐井村';
-GSI.MUNI_ARRAY["2441"] = '2,青森県,2441,三戸町';
-GSI.MUNI_ARRAY["2442"] = '2,青森県,2442,五戸町';
-GSI.MUNI_ARRAY["2443"] = '2,青森県,2443,田子町';
-GSI.MUNI_ARRAY["2445"] = '2,青森県,2445,南部町';
-GSI.MUNI_ARRAY["2446"] = '2,青森県,2446,階上町';
-GSI.MUNI_ARRAY["2450"] = '2,青森県,2450,新郷村';
-GSI.MUNI_ARRAY["3201"] = '3,岩手県,3201,盛岡市';
-GSI.MUNI_ARRAY["3202"] = '3,岩手県,3202,宮古市';
-GSI.MUNI_ARRAY["3203"] = '3,岩手県,3203,大船渡市';
-GSI.MUNI_ARRAY["3205"] = '3,岩手県,3205,花巻市';
-GSI.MUNI_ARRAY["3206"] = '3,岩手県,3206,北上市';
-GSI.MUNI_ARRAY["3207"] = '3,岩手県,3207,久慈市';
-GSI.MUNI_ARRAY["3208"] = '3,岩手県,3208,遠野市';
-GSI.MUNI_ARRAY["3209"] = '3,岩手県,3209,一関市';
-GSI.MUNI_ARRAY["3210"] = '3,岩手県,3210,陸前高田市';
-GSI.MUNI_ARRAY["3211"] = '3,岩手県,3211,釜石市';
-GSI.MUNI_ARRAY["3213"] = '3,岩手県,3213,二戸市';
-GSI.MUNI_ARRAY["3214"] = '3,岩手県,3214,八幡平市';
-GSI.MUNI_ARRAY["3215"] = '3,岩手県,3215,奥州市';
-GSI.MUNI_ARRAY["3216"] = '3,岩手県,3216,滝沢市';
-GSI.MUNI_ARRAY["3301"] = '3,岩手県,3301,雫石町';
-GSI.MUNI_ARRAY["3302"] = '3,岩手県,3302,葛巻町';
-GSI.MUNI_ARRAY["3303"] = '3,岩手県,3303,岩手町';
-GSI.MUNI_ARRAY["3321"] = '3,岩手県,3321,紫波町';
-GSI.MUNI_ARRAY["3322"] = '3,岩手県,3322,矢巾町';
-GSI.MUNI_ARRAY["3366"] = '3,岩手県,3366,西和賀町';
-GSI.MUNI_ARRAY["3381"] = '3,岩手県,3381,金ケ崎町';
-GSI.MUNI_ARRAY["3402"] = '3,岩手県,3402,平泉町';
-GSI.MUNI_ARRAY["3441"] = '3,岩手県,3441,住田町';
-GSI.MUNI_ARRAY["3461"] = '3,岩手県,3461,大槌町';
-GSI.MUNI_ARRAY["3482"] = '3,岩手県,3482,山田町';
-GSI.MUNI_ARRAY["3483"] = '3,岩手県,3483,岩泉町';
-GSI.MUNI_ARRAY["3484"] = '3,岩手県,3484,田野畑村';
-GSI.MUNI_ARRAY["3485"] = '3,岩手県,3485,普代村';
-GSI.MUNI_ARRAY["3501"] = '3,岩手県,3501,軽米町';
-GSI.MUNI_ARRAY["3503"] = '3,岩手県,3503,野田村';
-GSI.MUNI_ARRAY["3506"] = '3,岩手県,3506,九戸村';
-GSI.MUNI_ARRAY["3507"] = '3,岩手県,3507,洋野町';
-GSI.MUNI_ARRAY["3524"] = '3,岩手県,3524,一戸町';
-GSI.MUNI_ARRAY["4100"] = '4,宮城県,4100,仙台市';
-GSI.MUNI_ARRAY["4101"] = '4,宮城県,4101,仙台市　青葉区';
-GSI.MUNI_ARRAY["4102"] = '4,宮城県,4102,仙台市　宮城野区';
-GSI.MUNI_ARRAY["4103"] = '4,宮城県,4103,仙台市　若林区';
-GSI.MUNI_ARRAY["4104"] = '4,宮城県,4104,仙台市　太白区';
-GSI.MUNI_ARRAY["4105"] = '4,宮城県,4105,仙台市　泉区';
-GSI.MUNI_ARRAY["4202"] = '4,宮城県,4202,石巻市';
-GSI.MUNI_ARRAY["4203"] = '4,宮城県,4203,塩竈市';
-GSI.MUNI_ARRAY["4205"] = '4,宮城県,4205,気仙沼市';
-GSI.MUNI_ARRAY["4206"] = '4,宮城県,4206,白石市';
-GSI.MUNI_ARRAY["4207"] = '4,宮城県,4207,名取市';
-GSI.MUNI_ARRAY["4208"] = '4,宮城県,4208,角田市';
-GSI.MUNI_ARRAY["4209"] = '4,宮城県,4209,多賀城市';
-GSI.MUNI_ARRAY["4211"] = '4,宮城県,4211,岩沼市';
-GSI.MUNI_ARRAY["4212"] = '4,宮城県,4212,登米市';
-GSI.MUNI_ARRAY["4213"] = '4,宮城県,4213,栗原市';
-GSI.MUNI_ARRAY["4214"] = '4,宮城県,4214,東松島市';
-GSI.MUNI_ARRAY["4215"] = '4,宮城県,4215,大崎市';
-GSI.MUNI_ARRAY["4423"] = '4,宮城県,4216,富谷市';
-GSI.MUNI_ARRAY["4301"] = '4,宮城県,4301,蔵王町';
-GSI.MUNI_ARRAY["4302"] = '4,宮城県,4302,七ケ宿町';
-GSI.MUNI_ARRAY["4321"] = '4,宮城県,4321,大河原町';
-GSI.MUNI_ARRAY["4322"] = '4,宮城県,4322,村田町';
-GSI.MUNI_ARRAY["4323"] = '4,宮城県,4323,柴田町';
-GSI.MUNI_ARRAY["4324"] = '4,宮城県,4324,川崎町';
-GSI.MUNI_ARRAY["4341"] = '4,宮城県,4341,丸森町';
-GSI.MUNI_ARRAY["4361"] = '4,宮城県,4361,亘理町';
-GSI.MUNI_ARRAY["4362"] = '4,宮城県,4362,山元町';
-GSI.MUNI_ARRAY["4401"] = '4,宮城県,4401,松島町';
-GSI.MUNI_ARRAY["4404"] = '4,宮城県,4404,七ヶ浜町';
-GSI.MUNI_ARRAY["4406"] = '4,宮城県,4406,利府町';
-GSI.MUNI_ARRAY["4421"] = '4,宮城県,4421,大和町';
-GSI.MUNI_ARRAY["4422"] = '4,宮城県,4422,大郷町';
-GSI.MUNI_ARRAY["4424"] = '4,宮城県,4424,大衡村';
-GSI.MUNI_ARRAY["4444"] = '4,宮城県,4444,色麻町';
-GSI.MUNI_ARRAY["4445"] = '4,宮城県,4445,加美町';
-GSI.MUNI_ARRAY["4501"] = '4,宮城県,4501,涌谷町';
-GSI.MUNI_ARRAY["4505"] = '4,宮城県,4505,美里町';
-GSI.MUNI_ARRAY["4581"] = '4,宮城県,4581,女川町';
-GSI.MUNI_ARRAY["4606"] = '4,宮城県,4606,南三陸町';
-GSI.MUNI_ARRAY["5201"] = '5,秋田県,5201,秋田市';
-GSI.MUNI_ARRAY["5202"] = '5,秋田県,5202,能代市';
-GSI.MUNI_ARRAY["5203"] = '5,秋田県,5203,横手市';
-GSI.MUNI_ARRAY["5204"] = '5,秋田県,5204,大館市';
-GSI.MUNI_ARRAY["5206"] = '5,秋田県,5206,男鹿市';
-GSI.MUNI_ARRAY["5207"] = '5,秋田県,5207,湯沢市';
-GSI.MUNI_ARRAY["5209"] = '5,秋田県,5209,鹿角市';
-GSI.MUNI_ARRAY["5210"] = '5,秋田県,5210,由利本荘市';
-GSI.MUNI_ARRAY["5211"] = '5,秋田県,5211,潟上市';
-GSI.MUNI_ARRAY["5212"] = '5,秋田県,5212,大仙市';
-GSI.MUNI_ARRAY["5213"] = '5,秋田県,5213,北秋田市';
-GSI.MUNI_ARRAY["5214"] = '5,秋田県,5214,にかほ市';
-GSI.MUNI_ARRAY["5215"] = '5,秋田県,5215,仙北市';
-GSI.MUNI_ARRAY["5303"] = '5,秋田県,5303,小坂町';
-GSI.MUNI_ARRAY["5327"] = '5,秋田県,5327,上小阿仁村';
-GSI.MUNI_ARRAY["5346"] = '5,秋田県,5346,藤里町';
-GSI.MUNI_ARRAY["5348"] = '5,秋田県,5348,三種町';
-GSI.MUNI_ARRAY["5349"] = '5,秋田県,5349,八峰町';
-GSI.MUNI_ARRAY["5361"] = '5,秋田県,5361,五城目町';
-GSI.MUNI_ARRAY["5363"] = '5,秋田県,5363,八郎潟町';
-GSI.MUNI_ARRAY["5366"] = '5,秋田県,5366,井川町';
-GSI.MUNI_ARRAY["5368"] = '5,秋田県,5368,大潟村';
-GSI.MUNI_ARRAY["5434"] = '5,秋田県,5434,美郷町';
-GSI.MUNI_ARRAY["5463"] = '5,秋田県,5463,羽後町';
-GSI.MUNI_ARRAY["5464"] = '5,秋田県,5464,東成瀬村';
-GSI.MUNI_ARRAY["6201"] = '6,山形県,6201,山形市';
-GSI.MUNI_ARRAY["6202"] = '6,山形県,6202,米沢市';
-GSI.MUNI_ARRAY["6203"] = '6,山形県,6203,鶴岡市';
-GSI.MUNI_ARRAY["6204"] = '6,山形県,6204,酒田市';
-GSI.MUNI_ARRAY["6205"] = '6,山形県,6205,新庄市';
-GSI.MUNI_ARRAY["6206"] = '6,山形県,6206,寒河江市';
-GSI.MUNI_ARRAY["6207"] = '6,山形県,6207,上山市';
-GSI.MUNI_ARRAY["6208"] = '6,山形県,6208,村山市';
-GSI.MUNI_ARRAY["6209"] = '6,山形県,6209,長井市';
-GSI.MUNI_ARRAY["6210"] = '6,山形県,6210,天童市';
-GSI.MUNI_ARRAY["6211"] = '6,山形県,6211,東根市';
-GSI.MUNI_ARRAY["6212"] = '6,山形県,6212,尾花沢市';
-GSI.MUNI_ARRAY["6213"] = '6,山形県,6213,南陽市';
-GSI.MUNI_ARRAY["6301"] = '6,山形県,6301,山辺町';
-GSI.MUNI_ARRAY["6302"] = '6,山形県,6302,中山町';
-GSI.MUNI_ARRAY["6321"] = '6,山形県,6321,河北町';
-GSI.MUNI_ARRAY["6322"] = '6,山形県,6322,西川町';
-GSI.MUNI_ARRAY["6323"] = '6,山形県,6323,朝日町';
-GSI.MUNI_ARRAY["6324"] = '6,山形県,6324,大江町';
-GSI.MUNI_ARRAY["6341"] = '6,山形県,6341,大石田町';
-GSI.MUNI_ARRAY["6361"] = '6,山形県,6361,金山町';
-GSI.MUNI_ARRAY["6362"] = '6,山形県,6362,最上町';
-GSI.MUNI_ARRAY["6363"] = '6,山形県,6363,舟形町';
-GSI.MUNI_ARRAY["6364"] = '6,山形県,6364,真室川町';
-GSI.MUNI_ARRAY["6365"] = '6,山形県,6365,大蔵村';
-GSI.MUNI_ARRAY["6366"] = '6,山形県,6366,鮭川村';
-GSI.MUNI_ARRAY["6367"] = '6,山形県,6367,戸沢村';
-GSI.MUNI_ARRAY["6381"] = '6,山形県,6381,高畠町';
-GSI.MUNI_ARRAY["6382"] = '6,山形県,6382,川西町';
-GSI.MUNI_ARRAY["6401"] = '6,山形県,6401,小国町';
-GSI.MUNI_ARRAY["6402"] = '6,山形県,6402,白鷹町';
-GSI.MUNI_ARRAY["6403"] = '6,山形県,6403,飯豊町';
-GSI.MUNI_ARRAY["6426"] = '6,山形県,6426,三川町';
-GSI.MUNI_ARRAY["6428"] = '6,山形県,6428,庄内町';
-GSI.MUNI_ARRAY["6461"] = '6,山形県,6461,遊佐町';
-GSI.MUNI_ARRAY["7201"] = '7,福島県,7201,福島市';
-GSI.MUNI_ARRAY["7202"] = '7,福島県,7202,会津若松市';
-GSI.MUNI_ARRAY["7203"] = '7,福島県,7203,郡山市';
-GSI.MUNI_ARRAY["7204"] = '7,福島県,7204,いわき市';
-GSI.MUNI_ARRAY["7205"] = '7,福島県,7205,白河市';
-GSI.MUNI_ARRAY["7207"] = '7,福島県,7207,須賀川市';
-GSI.MUNI_ARRAY["7208"] = '7,福島県,7208,喜多方市';
-GSI.MUNI_ARRAY["7209"] = '7,福島県,7209,相馬市';
-GSI.MUNI_ARRAY["7210"] = '7,福島県,7210,二本松市';
-GSI.MUNI_ARRAY["7211"] = '7,福島県,7211,田村市';
-GSI.MUNI_ARRAY["7212"] = '7,福島県,7212,南相馬市';
-GSI.MUNI_ARRAY["7213"] = '7,福島県,7213,伊達市';
-GSI.MUNI_ARRAY["7214"] = '7,福島県,7214,本宮市';
-GSI.MUNI_ARRAY["7301"] = '7,福島県,7301,桑折町';
-GSI.MUNI_ARRAY["7303"] = '7,福島県,7303,国見町';
-GSI.MUNI_ARRAY["7308"] = '7,福島県,7308,川俣町';
-GSI.MUNI_ARRAY["7322"] = '7,福島県,7322,大玉村';
-GSI.MUNI_ARRAY["7342"] = '7,福島県,7342,鏡石町';
-GSI.MUNI_ARRAY["7344"] = '7,福島県,7344,天栄村';
-GSI.MUNI_ARRAY["7362"] = '7,福島県,7362,下郷町';
-GSI.MUNI_ARRAY["7364"] = '7,福島県,7364,檜枝岐村';
-GSI.MUNI_ARRAY["7367"] = '7,福島県,7367,只見町';
-GSI.MUNI_ARRAY["7368"] = '7,福島県,7368,南会津町';
-GSI.MUNI_ARRAY["7402"] = '7,福島県,7402,北塩原村';
-GSI.MUNI_ARRAY["7405"] = '7,福島県,7405,西会津町';
-GSI.MUNI_ARRAY["7407"] = '7,福島県,7407,磐梯町';
-GSI.MUNI_ARRAY["7408"] = '7,福島県,7408,猪苗代町';
-GSI.MUNI_ARRAY["7421"] = '7,福島県,7421,会津坂下町';
-GSI.MUNI_ARRAY["7422"] = '7,福島県,7422,湯川村';
-GSI.MUNI_ARRAY["7423"] = '7,福島県,7423,柳津町';
-GSI.MUNI_ARRAY["7444"] = '7,福島県,7444,三島町';
-GSI.MUNI_ARRAY["7445"] = '7,福島県,7445,金山町';
-GSI.MUNI_ARRAY["7446"] = '7,福島県,7446,昭和村';
-GSI.MUNI_ARRAY["7447"] = '7,福島県,7447,会津美里町';
-GSI.MUNI_ARRAY["7461"] = '7,福島県,7461,西郷村';
-GSI.MUNI_ARRAY["7464"] = '7,福島県,7464,泉崎村';
-GSI.MUNI_ARRAY["7465"] = '7,福島県,7465,中島村';
-GSI.MUNI_ARRAY["7466"] = '7,福島県,7466,矢吹町';
-GSI.MUNI_ARRAY["7481"] = '7,福島県,7481,棚倉町';
-GSI.MUNI_ARRAY["7482"] = '7,福島県,7482,矢祭町';
-GSI.MUNI_ARRAY["7483"] = '7,福島県,7483,塙町';
-GSI.MUNI_ARRAY["7484"] = '7,福島県,7484,鮫川村';
-GSI.MUNI_ARRAY["7501"] = '7,福島県,7501,石川町';
-GSI.MUNI_ARRAY["7502"] = '7,福島県,7502,玉川村';
-GSI.MUNI_ARRAY["7503"] = '7,福島県,7503,平田村';
-GSI.MUNI_ARRAY["7504"] = '7,福島県,7504,浅川町';
-GSI.MUNI_ARRAY["7505"] = '7,福島県,7505,古殿町';
-GSI.MUNI_ARRAY["7521"] = '7,福島県,7521,三春町';
-GSI.MUNI_ARRAY["7522"] = '7,福島県,7522,小野町';
-GSI.MUNI_ARRAY["7541"] = '7,福島県,7541,広野町';
-GSI.MUNI_ARRAY["7542"] = '7,福島県,7542,楢葉町';
-GSI.MUNI_ARRAY["7543"] = '7,福島県,7543,富岡町';
-GSI.MUNI_ARRAY["7544"] = '7,福島県,7544,川内村';
-GSI.MUNI_ARRAY["7545"] = '7,福島県,7545,大熊町';
-GSI.MUNI_ARRAY["7546"] = '7,福島県,7546,双葉町';
-GSI.MUNI_ARRAY["7547"] = '7,福島県,7547,浪江町';
-GSI.MUNI_ARRAY["7548"] = '7,福島県,7548,葛尾村';
-GSI.MUNI_ARRAY["7561"] = '7,福島県,7561,新地町';
-GSI.MUNI_ARRAY["7564"] = '7,福島県,7564,飯舘村';
-GSI.MUNI_ARRAY["8201"] = '8,茨城県,8201,水戸市';
-GSI.MUNI_ARRAY["8202"] = '8,茨城県,8202,日立市';
-GSI.MUNI_ARRAY["8203"] = '8,茨城県,8203,土浦市';
-GSI.MUNI_ARRAY["8204"] = '8,茨城県,8204,古河市';
-GSI.MUNI_ARRAY["8205"] = '8,茨城県,8205,石岡市';
-GSI.MUNI_ARRAY["8207"] = '8,茨城県,8207,結城市';
-GSI.MUNI_ARRAY["8208"] = '8,茨城県,8208,龍ケ崎市';
-GSI.MUNI_ARRAY["8210"] = '8,茨城県,8210,下妻市';
-GSI.MUNI_ARRAY["8211"] = '8,茨城県,8211,常総市';
-GSI.MUNI_ARRAY["8212"] = '8,茨城県,8212,常陸太田市';
-GSI.MUNI_ARRAY["8214"] = '8,茨城県,8214,高萩市';
-GSI.MUNI_ARRAY["8215"] = '8,茨城県,8215,北茨城市';
-GSI.MUNI_ARRAY["8216"] = '8,茨城県,8216,笠間市';
-GSI.MUNI_ARRAY["8217"] = '8,茨城県,8217,取手市';
-GSI.MUNI_ARRAY["8219"] = '8,茨城県,8219,牛久市';
-GSI.MUNI_ARRAY["8220"] = '8,茨城県,8220,つくば市';
-GSI.MUNI_ARRAY["8221"] = '8,茨城県,8221,ひたちなか市';
-GSI.MUNI_ARRAY["8222"] = '8,茨城県,8222,鹿嶋市';
-GSI.MUNI_ARRAY["8223"] = '8,茨城県,8223,潮来市';
-GSI.MUNI_ARRAY["8224"] = '8,茨城県,8224,守谷市';
-GSI.MUNI_ARRAY["8225"] = '8,茨城県,8225,常陸大宮市';
-GSI.MUNI_ARRAY["8226"] = '8,茨城県,8226,那珂市';
-GSI.MUNI_ARRAY["8227"] = '8,茨城県,8227,筑西市';
-GSI.MUNI_ARRAY["8228"] = '8,茨城県,8228,坂東市';
-GSI.MUNI_ARRAY["8229"] = '8,茨城県,8229,稲敷市';
-GSI.MUNI_ARRAY["8230"] = '8,茨城県,8230,かすみがうら市';
-GSI.MUNI_ARRAY["8231"] = '8,茨城県,8231,桜川市';
-GSI.MUNI_ARRAY["8232"] = '8,茨城県,8232,神栖市';
-GSI.MUNI_ARRAY["8233"] = '8,茨城県,8233,行方市';
-GSI.MUNI_ARRAY["8234"] = '8,茨城県,8234,鉾田市';
-GSI.MUNI_ARRAY["8235"] = '8,茨城県,8235,つくばみらい市';
-GSI.MUNI_ARRAY["8236"] = '8,茨城県,8236,小美玉市';
-GSI.MUNI_ARRAY["8302"] = '8,茨城県,8302,茨城町';
-GSI.MUNI_ARRAY["8309"] = '8,茨城県,8309,大洗町';
-GSI.MUNI_ARRAY["8310"] = '8,茨城県,8310,城里町';
-GSI.MUNI_ARRAY["8341"] = '8,茨城県,8341,東海村';
-GSI.MUNI_ARRAY["8364"] = '8,茨城県,8364,大子町';
-GSI.MUNI_ARRAY["8442"] = '8,茨城県,8442,美浦村';
-GSI.MUNI_ARRAY["8443"] = '8,茨城県,8443,阿見町';
-GSI.MUNI_ARRAY["8447"] = '8,茨城県,8447,河内町';
-GSI.MUNI_ARRAY["8521"] = '8,茨城県,8521,八千代町';
-GSI.MUNI_ARRAY["8542"] = '8,茨城県,8542,五霞町';
-GSI.MUNI_ARRAY["8546"] = '8,茨城県,8546,境町';
-GSI.MUNI_ARRAY["8564"] = '8,茨城県,8564,利根町';
-GSI.MUNI_ARRAY["9201"] = '9,栃木県,9201,宇都宮市';
-GSI.MUNI_ARRAY["9202"] = '9,栃木県,9202,足利市';
-GSI.MUNI_ARRAY["9203"] = '9,栃木県,9203,栃木市';
-GSI.MUNI_ARRAY["9204"] = '9,栃木県,9204,佐野市';
-GSI.MUNI_ARRAY["9205"] = '9,栃木県,9205,鹿沼市';
-GSI.MUNI_ARRAY["9206"] = '9,栃木県,9206,日光市';
-GSI.MUNI_ARRAY["9208"] = '9,栃木県,9208,小山市';
-GSI.MUNI_ARRAY["9209"] = '9,栃木県,9209,真岡市';
-GSI.MUNI_ARRAY["9210"] = '9,栃木県,9210,大田原市';
-GSI.MUNI_ARRAY["9211"] = '9,栃木県,9211,矢板市';
-GSI.MUNI_ARRAY["9213"] = '9,栃木県,9213,那須塩原市';
-GSI.MUNI_ARRAY["9214"] = '9,栃木県,9214,さくら市';
-GSI.MUNI_ARRAY["9215"] = '9,栃木県,9215,那須烏山市';
-GSI.MUNI_ARRAY["9216"] = '9,栃木県,9216,下野市';
-GSI.MUNI_ARRAY["9301"] = '9,栃木県,9301,上三川町';
-GSI.MUNI_ARRAY["9342"] = '9,栃木県,9342,益子町';
-GSI.MUNI_ARRAY["9343"] = '9,栃木県,9343,茂木町';
-GSI.MUNI_ARRAY["9344"] = '9,栃木県,9344,市貝町';
-GSI.MUNI_ARRAY["9345"] = '9,栃木県,9345,芳賀町';
-GSI.MUNI_ARRAY["9361"] = '9,栃木県,9361,壬生町';
-GSI.MUNI_ARRAY["9364"] = '9,栃木県,9364,野木町';
-GSI.MUNI_ARRAY["9384"] = '9,栃木県,9384,塩谷町';
-GSI.MUNI_ARRAY["9386"] = '9,栃木県,9386,高根沢町';
-GSI.MUNI_ARRAY["9407"] = '9,栃木県,9407,那須町';
-GSI.MUNI_ARRAY["9411"] = '9,栃木県,9411,那珂川町';
-GSI.MUNI_ARRAY["10201"] = '10,群馬県,10201,前橋市';
-GSI.MUNI_ARRAY["10202"] = '10,群馬県,10202,高崎市';
-GSI.MUNI_ARRAY["10203"] = '10,群馬県,10203,桐生市';
-GSI.MUNI_ARRAY["10204"] = '10,群馬県,10204,伊勢崎市';
-GSI.MUNI_ARRAY["10205"] = '10,群馬県,10205,太田市';
-GSI.MUNI_ARRAY["10206"] = '10,群馬県,10206,沼田市';
-GSI.MUNI_ARRAY["10207"] = '10,群馬県,10207,館林市';
-GSI.MUNI_ARRAY["10208"] = '10,群馬県,10208,渋川市';
-GSI.MUNI_ARRAY["10209"] = '10,群馬県,10209,藤岡市';
-GSI.MUNI_ARRAY["10210"] = '10,群馬県,10210,富岡市';
-GSI.MUNI_ARRAY["10211"] = '10,群馬県,10211,安中市';
-GSI.MUNI_ARRAY["10212"] = '10,群馬県,10212,みどり市';
-GSI.MUNI_ARRAY["10344"] = '10,群馬県,10344,榛東村';
-GSI.MUNI_ARRAY["10345"] = '10,群馬県,10345,吉岡町';
-GSI.MUNI_ARRAY["10366"] = '10,群馬県,10366,上野村';
-GSI.MUNI_ARRAY["10367"] = '10,群馬県,10367,神流町';
-GSI.MUNI_ARRAY["10382"] = '10,群馬県,10382,下仁田町';
-GSI.MUNI_ARRAY["10383"] = '10,群馬県,10383,南牧村';
-GSI.MUNI_ARRAY["10384"] = '10,群馬県,10384,甘楽町';
-GSI.MUNI_ARRAY["10421"] = '10,群馬県,10421,中之条町';
-GSI.MUNI_ARRAY["10424"] = '10,群馬県,10424,長野原町';
-GSI.MUNI_ARRAY["10425"] = '10,群馬県,10425,嬬恋村';
-GSI.MUNI_ARRAY["10426"] = '10,群馬県,10426,草津町';
-GSI.MUNI_ARRAY["10428"] = '10,群馬県,10428,高山村';
-GSI.MUNI_ARRAY["10429"] = '10,群馬県,10429,東吾妻町';
-GSI.MUNI_ARRAY["10443"] = '10,群馬県,10443,片品村';
-GSI.MUNI_ARRAY["10444"] = '10,群馬県,10444,川場村';
-GSI.MUNI_ARRAY["10448"] = '10,群馬県,10448,昭和村';
-GSI.MUNI_ARRAY["10449"] = '10,群馬県,10449,みなかみ町';
-GSI.MUNI_ARRAY["10464"] = '10,群馬県,10464,玉村町';
-GSI.MUNI_ARRAY["10521"] = '10,群馬県,10521,板倉町';
-GSI.MUNI_ARRAY["10522"] = '10,群馬県,10522,明和町';
-GSI.MUNI_ARRAY["10523"] = '10,群馬県,10523,千代田町';
-GSI.MUNI_ARRAY["10524"] = '10,群馬県,10524,大泉町';
-GSI.MUNI_ARRAY["10525"] = '10,群馬県,10525,邑楽町';
-GSI.MUNI_ARRAY["11100"] = '11,埼玉県,11100,さいたま市';
-GSI.MUNI_ARRAY["11101"] = '11,埼玉県,11101,さいたま市　西区';
-GSI.MUNI_ARRAY["11102"] = '11,埼玉県,11102,さいたま市　北区';
-GSI.MUNI_ARRAY["11103"] = '11,埼玉県,11103,さいたま市　大宮区';
-GSI.MUNI_ARRAY["11104"] = '11,埼玉県,11104,さいたま市　見沼区';
-GSI.MUNI_ARRAY["11105"] = '11,埼玉県,11105,さいたま市　中央区';
-GSI.MUNI_ARRAY["11106"] = '11,埼玉県,11106,さいたま市　桜区';
-GSI.MUNI_ARRAY["11107"] = '11,埼玉県,11107,さいたま市　浦和区';
-GSI.MUNI_ARRAY["11108"] = '11,埼玉県,11108,さいたま市　南区';
-GSI.MUNI_ARRAY["11109"] = '11,埼玉県,11109,さいたま市　緑区';
-GSI.MUNI_ARRAY["11110"] = '11,埼玉県,11110,さいたま市　岩槻区';
-GSI.MUNI_ARRAY["11201"] = '11,埼玉県,11201,川越市';
-GSI.MUNI_ARRAY["11202"] = '11,埼玉県,11202,熊谷市';
-GSI.MUNI_ARRAY["11203"] = '11,埼玉県,11203,川口市';
-GSI.MUNI_ARRAY["11206"] = '11,埼玉県,11206,行田市';
-GSI.MUNI_ARRAY["11207"] = '11,埼玉県,11207,秩父市';
-GSI.MUNI_ARRAY["11208"] = '11,埼玉県,11208,所沢市';
-GSI.MUNI_ARRAY["11209"] = '11,埼玉県,11209,飯能市';
-GSI.MUNI_ARRAY["11210"] = '11,埼玉県,11210,加須市';
-GSI.MUNI_ARRAY["11211"] = '11,埼玉県,11211,本庄市';
-GSI.MUNI_ARRAY["11212"] = '11,埼玉県,11212,東松山市';
-GSI.MUNI_ARRAY["11214"] = '11,埼玉県,11214,春日部市';
-GSI.MUNI_ARRAY["11215"] = '11,埼玉県,11215,狭山市';
-GSI.MUNI_ARRAY["11216"] = '11,埼玉県,11216,羽生市';
-GSI.MUNI_ARRAY["11217"] = '11,埼玉県,11217,鴻巣市';
-GSI.MUNI_ARRAY["11218"] = '11,埼玉県,11218,深谷市';
-GSI.MUNI_ARRAY["11219"] = '11,埼玉県,11219,上尾市';
-GSI.MUNI_ARRAY["11221"] = '11,埼玉県,11221,草加市';
-GSI.MUNI_ARRAY["11222"] = '11,埼玉県,11222,越谷市';
-GSI.MUNI_ARRAY["11223"] = '11,埼玉県,11223,蕨市';
-GSI.MUNI_ARRAY["11224"] = '11,埼玉県,11224,戸田市';
-GSI.MUNI_ARRAY["11225"] = '11,埼玉県,11225,入間市';
-GSI.MUNI_ARRAY["11227"] = '11,埼玉県,11227,朝霞市';
-GSI.MUNI_ARRAY["11228"] = '11,埼玉県,11228,志木市';
-GSI.MUNI_ARRAY["11229"] = '11,埼玉県,11229,和光市';
-GSI.MUNI_ARRAY["11230"] = '11,埼玉県,11230,新座市';
-GSI.MUNI_ARRAY["11231"] = '11,埼玉県,11231,桶川市';
-GSI.MUNI_ARRAY["11232"] = '11,埼玉県,11232,久喜市';
-GSI.MUNI_ARRAY["11233"] = '11,埼玉県,11233,北本市';
-GSI.MUNI_ARRAY["11234"] = '11,埼玉県,11234,八潮市';
-GSI.MUNI_ARRAY["11235"] = '11,埼玉県,11235,富士見市';
-GSI.MUNI_ARRAY["11237"] = '11,埼玉県,11237,三郷市';
-GSI.MUNI_ARRAY["11238"] = '11,埼玉県,11238,蓮田市';
-GSI.MUNI_ARRAY["11239"] = '11,埼玉県,11239,坂戸市';
-GSI.MUNI_ARRAY["11240"] = '11,埼玉県,11240,幸手市';
-GSI.MUNI_ARRAY["11241"] = '11,埼玉県,11241,鶴ヶ島市';
-GSI.MUNI_ARRAY["11242"] = '11,埼玉県,11242,日高市';
-GSI.MUNI_ARRAY["11243"] = '11,埼玉県,11243,吉川市';
-GSI.MUNI_ARRAY["11245"] = '11,埼玉県,11245,ふじみ野市';
-GSI.MUNI_ARRAY["11301"] = '11,埼玉県,11301,伊奈町';
-GSI.MUNI_ARRAY["11324"] = '11,埼玉県,11324,三芳町';
-GSI.MUNI_ARRAY["11326"] = '11,埼玉県,11326,毛呂山町';
-GSI.MUNI_ARRAY["11327"] = '11,埼玉県,11327,越生町';
-GSI.MUNI_ARRAY["11341"] = '11,埼玉県,11341,滑川町';
-GSI.MUNI_ARRAY["11342"] = '11,埼玉県,11342,嵐山町';
-GSI.MUNI_ARRAY["11343"] = '11,埼玉県,11343,小川町';
-GSI.MUNI_ARRAY["11346"] = '11,埼玉県,11346,川島町';
-GSI.MUNI_ARRAY["11347"] = '11,埼玉県,11347,吉見町';
-GSI.MUNI_ARRAY["11348"] = '11,埼玉県,11348,鳩山町';
-GSI.MUNI_ARRAY["11349"] = '11,埼玉県,11349,ときがわ町';
-GSI.MUNI_ARRAY["11361"] = '11,埼玉県,11361,横瀬町';
-GSI.MUNI_ARRAY["11362"] = '11,埼玉県,11362,皆野町';
-GSI.MUNI_ARRAY["11363"] = '11,埼玉県,11363,長瀞町';
-GSI.MUNI_ARRAY["11365"] = '11,埼玉県,11365,小鹿野町';
-GSI.MUNI_ARRAY["11369"] = '11,埼玉県,11369,東秩父村';
-GSI.MUNI_ARRAY["11381"] = '11,埼玉県,11381,美里町';
-GSI.MUNI_ARRAY["11383"] = '11,埼玉県,11383,神川町';
-GSI.MUNI_ARRAY["11385"] = '11,埼玉県,11385,上里町';
-GSI.MUNI_ARRAY["11408"] = '11,埼玉県,11408,寄居町';
-GSI.MUNI_ARRAY["11442"] = '11,埼玉県,11442,宮代町';
-GSI.MUNI_ARRAY["11246"] = '11,埼玉県,11246,白岡市';
-GSI.MUNI_ARRAY["11464"] = '11,埼玉県,11464,杉戸町';
-GSI.MUNI_ARRAY["11465"] = '11,埼玉県,11465,松伏町';
-GSI.MUNI_ARRAY["12100"] = '12,千葉県,12100,千葉市';
-GSI.MUNI_ARRAY["12101"] = '12,千葉県,12101,千葉市　中央区';
-GSI.MUNI_ARRAY["12102"] = '12,千葉県,12102,千葉市　花見川区';
-GSI.MUNI_ARRAY["12103"] = '12,千葉県,12103,千葉市　稲毛区';
-GSI.MUNI_ARRAY["12104"] = '12,千葉県,12104,千葉市　若葉区';
-GSI.MUNI_ARRAY["12105"] = '12,千葉県,12105,千葉市　緑区';
-GSI.MUNI_ARRAY["12106"] = '12,千葉県,12106,千葉市　美浜区';
-GSI.MUNI_ARRAY["12202"] = '12,千葉県,12202,銚子市';
-GSI.MUNI_ARRAY["12203"] = '12,千葉県,12203,市川市';
-GSI.MUNI_ARRAY["12204"] = '12,千葉県,12204,船橋市';
-GSI.MUNI_ARRAY["12205"] = '12,千葉県,12205,館山市';
-GSI.MUNI_ARRAY["12206"] = '12,千葉県,12206,木更津市';
-GSI.MUNI_ARRAY["12207"] = '12,千葉県,12207,松戸市';
-GSI.MUNI_ARRAY["12208"] = '12,千葉県,12208,野田市';
-GSI.MUNI_ARRAY["12210"] = '12,千葉県,12210,茂原市';
-GSI.MUNI_ARRAY["12211"] = '12,千葉県,12211,成田市';
-GSI.MUNI_ARRAY["12212"] = '12,千葉県,12212,佐倉市';
-GSI.MUNI_ARRAY["12213"] = '12,千葉県,12213,東金市';
-GSI.MUNI_ARRAY["12215"] = '12,千葉県,12215,旭市';
-GSI.MUNI_ARRAY["12216"] = '12,千葉県,12216,習志野市';
-GSI.MUNI_ARRAY["12217"] = '12,千葉県,12217,柏市';
-GSI.MUNI_ARRAY["12218"] = '12,千葉県,12218,勝浦市';
-GSI.MUNI_ARRAY["12219"] = '12,千葉県,12219,市原市';
-GSI.MUNI_ARRAY["12220"] = '12,千葉県,12220,流山市';
-GSI.MUNI_ARRAY["12221"] = '12,千葉県,12221,八千代市';
-GSI.MUNI_ARRAY["12222"] = '12,千葉県,12222,我孫子市';
-GSI.MUNI_ARRAY["12223"] = '12,千葉県,12223,鴨川市';
-GSI.MUNI_ARRAY["12224"] = '12,千葉県,12224,鎌ケ谷市';
-GSI.MUNI_ARRAY["12225"] = '12,千葉県,12225,君津市';
-GSI.MUNI_ARRAY["12226"] = '12,千葉県,12226,富津市';
-GSI.MUNI_ARRAY["12227"] = '12,千葉県,12227,浦安市';
-GSI.MUNI_ARRAY["12228"] = '12,千葉県,12228,四街道市';
-GSI.MUNI_ARRAY["12229"] = '12,千葉県,12229,袖ケ浦市';
-GSI.MUNI_ARRAY["12230"] = '12,千葉県,12230,八街市';
-GSI.MUNI_ARRAY["12231"] = '12,千葉県,12231,印西市';
-GSI.MUNI_ARRAY["12232"] = '12,千葉県,12232,白井市';
-GSI.MUNI_ARRAY["12233"] = '12,千葉県,12233,富里市';
-GSI.MUNI_ARRAY["12234"] = '12,千葉県,12234,南房総市';
-GSI.MUNI_ARRAY["12235"] = '12,千葉県,12235,匝瑳市';
-GSI.MUNI_ARRAY["12236"] = '12,千葉県,12236,香取市';
-GSI.MUNI_ARRAY["12237"] = '12,千葉県,12237,山武市';
-GSI.MUNI_ARRAY["12238"] = '12,千葉県,12238,いすみ市';
-GSI.MUNI_ARRAY["12322"] = '12,千葉県,12322,酒々井町';
-GSI.MUNI_ARRAY["12329"] = '12,千葉県,12329,栄町';
-GSI.MUNI_ARRAY["12342"] = '12,千葉県,12342,神崎町';
-GSI.MUNI_ARRAY["12347"] = '12,千葉県,12347,多古町';
-GSI.MUNI_ARRAY["12349"] = '12,千葉県,12349,東庄町';
-GSI.MUNI_ARRAY["12239"] = '12,千葉県,12239,大網白里市';
-GSI.MUNI_ARRAY["12403"] = '12,千葉県,12403,九十九里町';
-GSI.MUNI_ARRAY["12409"] = '12,千葉県,12409,芝山町';
-GSI.MUNI_ARRAY["12410"] = '12,千葉県,12410,横芝光町';
-GSI.MUNI_ARRAY["12421"] = '12,千葉県,12421,一宮町';
-GSI.MUNI_ARRAY["12422"] = '12,千葉県,12422,睦沢町';
-GSI.MUNI_ARRAY["12423"] = '12,千葉県,12423,長生村';
-GSI.MUNI_ARRAY["12424"] = '12,千葉県,12424,白子町';
-GSI.MUNI_ARRAY["12426"] = '12,千葉県,12426,長柄町';
-GSI.MUNI_ARRAY["12427"] = '12,千葉県,12427,長南町';
-GSI.MUNI_ARRAY["12441"] = '12,千葉県,12441,大多喜町';
-GSI.MUNI_ARRAY["12443"] = '12,千葉県,12443,御宿町';
-GSI.MUNI_ARRAY["12463"] = '12,千葉県,12463,鋸南町';
-GSI.MUNI_ARRAY["13101"] = '13,東京都,13101,千代田区';
-GSI.MUNI_ARRAY["13102"] = '13,東京都,13102,中央区';
-GSI.MUNI_ARRAY["13103"] = '13,東京都,13103,港区';
-GSI.MUNI_ARRAY["13104"] = '13,東京都,13104,新宿区';
-GSI.MUNI_ARRAY["13105"] = '13,東京都,13105,文京区';
-GSI.MUNI_ARRAY["13106"] = '13,東京都,13106,台東区';
-GSI.MUNI_ARRAY["13107"] = '13,東京都,13107,墨田区';
-GSI.MUNI_ARRAY["13108"] = '13,東京都,13108,江東区';
-GSI.MUNI_ARRAY["13109"] = '13,東京都,13109,品川区';
-GSI.MUNI_ARRAY["13110"] = '13,東京都,13110,目黒区';
-GSI.MUNI_ARRAY["13111"] = '13,東京都,13111,大田区';
-GSI.MUNI_ARRAY["13112"] = '13,東京都,13112,世田谷区';
-GSI.MUNI_ARRAY["13113"] = '13,東京都,13113,渋谷区';
-GSI.MUNI_ARRAY["13114"] = '13,東京都,13114,中野区';
-GSI.MUNI_ARRAY["13115"] = '13,東京都,13115,杉並区';
-GSI.MUNI_ARRAY["13116"] = '13,東京都,13116,豊島区';
-GSI.MUNI_ARRAY["13117"] = '13,東京都,13117,北区';
-GSI.MUNI_ARRAY["13118"] = '13,東京都,13118,荒川区';
-GSI.MUNI_ARRAY["13119"] = '13,東京都,13119,板橋区';
-GSI.MUNI_ARRAY["13120"] = '13,東京都,13120,練馬区';
-GSI.MUNI_ARRAY["13121"] = '13,東京都,13121,足立区';
-GSI.MUNI_ARRAY["13122"] = '13,東京都,13122,葛飾区';
-GSI.MUNI_ARRAY["13123"] = '13,東京都,13123,江戸川区';
-GSI.MUNI_ARRAY["13201"] = '13,東京都,13201,八王子市';
-GSI.MUNI_ARRAY["13202"] = '13,東京都,13202,立川市';
-GSI.MUNI_ARRAY["13203"] = '13,東京都,13203,武蔵野市';
-GSI.MUNI_ARRAY["13204"] = '13,東京都,13204,三鷹市';
-GSI.MUNI_ARRAY["13205"] = '13,東京都,13205,青梅市';
-GSI.MUNI_ARRAY["13206"] = '13,東京都,13206,府中市';
-GSI.MUNI_ARRAY["13207"] = '13,東京都,13207,昭島市';
-GSI.MUNI_ARRAY["13208"] = '13,東京都,13208,調布市';
-GSI.MUNI_ARRAY["13209"] = '13,東京都,13209,町田市';
-GSI.MUNI_ARRAY["13210"] = '13,東京都,13210,小金井市';
-GSI.MUNI_ARRAY["13211"] = '13,東京都,13211,小平市';
-GSI.MUNI_ARRAY["13212"] = '13,東京都,13212,日野市';
-GSI.MUNI_ARRAY["13213"] = '13,東京都,13213,東村山市';
-GSI.MUNI_ARRAY["13214"] = '13,東京都,13214,国分寺市';
-GSI.MUNI_ARRAY["13215"] = '13,東京都,13215,国立市';
-GSI.MUNI_ARRAY["13218"] = '13,東京都,13218,福生市';
-GSI.MUNI_ARRAY["13219"] = '13,東京都,13219,狛江市';
-GSI.MUNI_ARRAY["13220"] = '13,東京都,13220,東大和市';
-GSI.MUNI_ARRAY["13221"] = '13,東京都,13221,清瀬市';
-GSI.MUNI_ARRAY["13222"] = '13,東京都,13222,東久留米市';
-GSI.MUNI_ARRAY["13223"] = '13,東京都,13223,武蔵村山市';
-GSI.MUNI_ARRAY["13224"] = '13,東京都,13224,多摩市';
-GSI.MUNI_ARRAY["13225"] = '13,東京都,13225,稲城市';
-GSI.MUNI_ARRAY["13227"] = '13,東京都,13227,羽村市';
-GSI.MUNI_ARRAY["13228"] = '13,東京都,13228,あきる野市';
-GSI.MUNI_ARRAY["13229"] = '13,東京都,13229,西東京市';
-GSI.MUNI_ARRAY["13303"] = '13,東京都,13303,瑞穂町';
-GSI.MUNI_ARRAY["13305"] = '13,東京都,13305,日の出町';
-GSI.MUNI_ARRAY["13307"] = '13,東京都,13307,檜原村';
-GSI.MUNI_ARRAY["13308"] = '13,東京都,13308,奥多摩町';
-GSI.MUNI_ARRAY["13361"] = '13,東京都,13361,大島町';
-GSI.MUNI_ARRAY["13362"] = '13,東京都,13362,利島村';
-GSI.MUNI_ARRAY["13363"] = '13,東京都,13363,新島村';
-GSI.MUNI_ARRAY["13364"] = '13,東京都,13364,神津島村';
-GSI.MUNI_ARRAY["13381"] = '13,東京都,13381,三宅村';
-GSI.MUNI_ARRAY["13382"] = '13,東京都,13382,御蔵島村';
-GSI.MUNI_ARRAY["13401"] = '13,東京都,13401,八丈町';
-GSI.MUNI_ARRAY["13402"] = '13,東京都,13402,青ヶ島村';
-GSI.MUNI_ARRAY["13421"] = '13,東京都,13421,小笠原村';
-GSI.MUNI_ARRAY["14100"] = '14,神奈川県,14100,横浜市';
-GSI.MUNI_ARRAY["14101"] = '14,神奈川県,14101,横浜市　鶴見区';
-GSI.MUNI_ARRAY["14102"] = '14,神奈川県,14102,横浜市　神奈川区';
-GSI.MUNI_ARRAY["14103"] = '14,神奈川県,14103,横浜市　西区';
-GSI.MUNI_ARRAY["14104"] = '14,神奈川県,14104,横浜市　中区';
-GSI.MUNI_ARRAY["14105"] = '14,神奈川県,14105,横浜市　南区';
-GSI.MUNI_ARRAY["14106"] = '14,神奈川県,14106,横浜市　保土ケ谷区';
-GSI.MUNI_ARRAY["14107"] = '14,神奈川県,14107,横浜市　磯子区';
-GSI.MUNI_ARRAY["14108"] = '14,神奈川県,14108,横浜市　金沢区';
-GSI.MUNI_ARRAY["14109"] = '14,神奈川県,14109,横浜市　港北区';
-GSI.MUNI_ARRAY["14110"] = '14,神奈川県,14110,横浜市　戸塚区';
-GSI.MUNI_ARRAY["14111"] = '14,神奈川県,14111,横浜市　港南区';
-GSI.MUNI_ARRAY["14112"] = '14,神奈川県,14112,横浜市　旭区';
-GSI.MUNI_ARRAY["14113"] = '14,神奈川県,14113,横浜市　緑区';
-GSI.MUNI_ARRAY["14114"] = '14,神奈川県,14114,横浜市　瀬谷区';
-GSI.MUNI_ARRAY["14115"] = '14,神奈川県,14115,横浜市　栄区';
-GSI.MUNI_ARRAY["14116"] = '14,神奈川県,14116,横浜市　泉区';
-GSI.MUNI_ARRAY["14117"] = '14,神奈川県,14117,横浜市　青葉区';
-GSI.MUNI_ARRAY["14118"] = '14,神奈川県,14118,横浜市　都筑区';
-GSI.MUNI_ARRAY["14130"] = '14,神奈川県,14130,川崎市';
-GSI.MUNI_ARRAY["14131"] = '14,神奈川県,14131,川崎市　川崎区';
-GSI.MUNI_ARRAY["14132"] = '14,神奈川県,14132,川崎市　幸区';
-GSI.MUNI_ARRAY["14133"] = '14,神奈川県,14133,川崎市　中原区';
-GSI.MUNI_ARRAY["14134"] = '14,神奈川県,14134,川崎市　高津区';
-GSI.MUNI_ARRAY["14135"] = '14,神奈川県,14135,川崎市　多摩区';
-GSI.MUNI_ARRAY["14136"] = '14,神奈川県,14136,川崎市　宮前区';
-GSI.MUNI_ARRAY["14137"] = '14,神奈川県,14137,川崎市　麻生区';
-GSI.MUNI_ARRAY["14150"] = '14,神奈川県,14150,相模原市';
-GSI.MUNI_ARRAY["14151"] = '14,神奈川県,14151,相模原市　緑区';
-GSI.MUNI_ARRAY["14152"] = '14,神奈川県,14152,相模原市　中央区';
-GSI.MUNI_ARRAY["14153"] = '14,神奈川県,14153,相模原市　南区';
-GSI.MUNI_ARRAY["14201"] = '14,神奈川県,14201,横須賀市';
-GSI.MUNI_ARRAY["14203"] = '14,神奈川県,14203,平塚市';
-GSI.MUNI_ARRAY["14204"] = '14,神奈川県,14204,鎌倉市';
-GSI.MUNI_ARRAY["14205"] = '14,神奈川県,14205,藤沢市';
-GSI.MUNI_ARRAY["14206"] = '14,神奈川県,14206,小田原市';
-GSI.MUNI_ARRAY["14207"] = '14,神奈川県,14207,茅ヶ崎市';
-GSI.MUNI_ARRAY["14208"] = '14,神奈川県,14208,逗子市';
-GSI.MUNI_ARRAY["14210"] = '14,神奈川県,14210,三浦市';
-GSI.MUNI_ARRAY["14211"] = '14,神奈川県,14211,秦野市';
-GSI.MUNI_ARRAY["14212"] = '14,神奈川県,14212,厚木市';
-GSI.MUNI_ARRAY["14213"] = '14,神奈川県,14213,大和市';
-GSI.MUNI_ARRAY["14214"] = '14,神奈川県,14214,伊勢原市';
-GSI.MUNI_ARRAY["14215"] = '14,神奈川県,14215,海老名市';
-GSI.MUNI_ARRAY["14216"] = '14,神奈川県,14216,座間市';
-GSI.MUNI_ARRAY["14217"] = '14,神奈川県,14217,南足柄市';
-GSI.MUNI_ARRAY["14218"] = '14,神奈川県,14218,綾瀬市';
-GSI.MUNI_ARRAY["14301"] = '14,神奈川県,14301,葉山町';
-GSI.MUNI_ARRAY["14321"] = '14,神奈川県,14321,寒川町';
-GSI.MUNI_ARRAY["14341"] = '14,神奈川県,14341,大磯町';
-GSI.MUNI_ARRAY["14342"] = '14,神奈川県,14342,二宮町';
-GSI.MUNI_ARRAY["14361"] = '14,神奈川県,14361,中井町';
-GSI.MUNI_ARRAY["14362"] = '14,神奈川県,14362,大井町';
-GSI.MUNI_ARRAY["14363"] = '14,神奈川県,14363,松田町';
-GSI.MUNI_ARRAY["14364"] = '14,神奈川県,14364,山北町';
-GSI.MUNI_ARRAY["14366"] = '14,神奈川県,14366,開成町';
-GSI.MUNI_ARRAY["14382"] = '14,神奈川県,14382,箱根町';
-GSI.MUNI_ARRAY["14383"] = '14,神奈川県,14383,真鶴町';
-GSI.MUNI_ARRAY["14384"] = '14,神奈川県,14384,湯河原町';
-GSI.MUNI_ARRAY["14401"] = '14,神奈川県,14401,愛川町';
-GSI.MUNI_ARRAY["14402"] = '14,神奈川県,14402,清川村';
-GSI.MUNI_ARRAY["15100"] = '15,新潟県,15100,新潟市';
-GSI.MUNI_ARRAY["15101"] = '15,新潟県,15101,新潟市　北区';
-GSI.MUNI_ARRAY["15102"] = '15,新潟県,15102,新潟市　東区';
-GSI.MUNI_ARRAY["15103"] = '15,新潟県,15103,新潟市　中央区';
-GSI.MUNI_ARRAY["15104"] = '15,新潟県,15104,新潟市　江南区';
-GSI.MUNI_ARRAY["15105"] = '15,新潟県,15105,新潟市　秋葉区';
-GSI.MUNI_ARRAY["15106"] = '15,新潟県,15106,新潟市　南区';
-GSI.MUNI_ARRAY["15107"] = '15,新潟県,15107,新潟市　西区';
-GSI.MUNI_ARRAY["15108"] = '15,新潟県,15108,新潟市　西蒲区';
-GSI.MUNI_ARRAY["15202"] = '15,新潟県,15202,長岡市';
-GSI.MUNI_ARRAY["15204"] = '15,新潟県,15204,三条市';
-GSI.MUNI_ARRAY["15205"] = '15,新潟県,15205,柏崎市';
-GSI.MUNI_ARRAY["15206"] = '15,新潟県,15206,新発田市';
-GSI.MUNI_ARRAY["15208"] = '15,新潟県,15208,小千谷市';
-GSI.MUNI_ARRAY["15209"] = '15,新潟県,15209,加茂市';
-GSI.MUNI_ARRAY["15210"] = '15,新潟県,15210,十日町市';
-GSI.MUNI_ARRAY["15211"] = '15,新潟県,15211,見附市';
-GSI.MUNI_ARRAY["15212"] = '15,新潟県,15212,村上市';
-GSI.MUNI_ARRAY["15213"] = '15,新潟県,15213,燕市';
-GSI.MUNI_ARRAY["15216"] = '15,新潟県,15216,糸魚川市';
-GSI.MUNI_ARRAY["15217"] = '15,新潟県,15217,妙高市';
-GSI.MUNI_ARRAY["15218"] = '15,新潟県,15218,五泉市';
-GSI.MUNI_ARRAY["15222"] = '15,新潟県,15222,上越市';
-GSI.MUNI_ARRAY["15223"] = '15,新潟県,15223,阿賀野市';
-GSI.MUNI_ARRAY["15224"] = '15,新潟県,15224,佐渡市';
-GSI.MUNI_ARRAY["15225"] = '15,新潟県,15225,魚沼市';
-GSI.MUNI_ARRAY["15226"] = '15,新潟県,15226,南魚沼市';
-GSI.MUNI_ARRAY["15227"] = '15,新潟県,15227,胎内市';
-GSI.MUNI_ARRAY["15307"] = '15,新潟県,15307,聖籠町';
-GSI.MUNI_ARRAY["15342"] = '15,新潟県,15342,弥彦村';
-GSI.MUNI_ARRAY["15361"] = '15,新潟県,15361,田上町';
-GSI.MUNI_ARRAY["15385"] = '15,新潟県,15385,阿賀町';
-GSI.MUNI_ARRAY["15405"] = '15,新潟県,15405,出雲崎町';
-GSI.MUNI_ARRAY["15461"] = '15,新潟県,15461,湯沢町';
-GSI.MUNI_ARRAY["15482"] = '15,新潟県,15482,津南町';
-GSI.MUNI_ARRAY["15504"] = '15,新潟県,15504,刈羽村';
-GSI.MUNI_ARRAY["15581"] = '15,新潟県,15581,関川村';
-GSI.MUNI_ARRAY["15586"] = '15,新潟県,15586,粟島浦村';
-GSI.MUNI_ARRAY["16201"] = '16,富山県,16201,富山市';
-GSI.MUNI_ARRAY["16202"] = '16,富山県,16202,高岡市';
-GSI.MUNI_ARRAY["16204"] = '16,富山県,16204,魚津市';
-GSI.MUNI_ARRAY["16205"] = '16,富山県,16205,氷見市';
-GSI.MUNI_ARRAY["16206"] = '16,富山県,16206,滑川市';
-GSI.MUNI_ARRAY["16207"] = '16,富山県,16207,黒部市';
-GSI.MUNI_ARRAY["16208"] = '16,富山県,16208,砺波市';
-GSI.MUNI_ARRAY["16209"] = '16,富山県,16209,小矢部市';
-GSI.MUNI_ARRAY["16210"] = '16,富山県,16210,南砺市';
-GSI.MUNI_ARRAY["16211"] = '16,富山県,16211,射水市';
-GSI.MUNI_ARRAY["16321"] = '16,富山県,16321,舟橋村';
-GSI.MUNI_ARRAY["16322"] = '16,富山県,16322,上市町';
-GSI.MUNI_ARRAY["16323"] = '16,富山県,16323,立山町';
-GSI.MUNI_ARRAY["16342"] = '16,富山県,16342,入善町';
-GSI.MUNI_ARRAY["16343"] = '16,富山県,16343,朝日町';
-GSI.MUNI_ARRAY["17201"] = '17,石川県,17201,金沢市';
-GSI.MUNI_ARRAY["17202"] = '17,石川県,17202,七尾市';
-GSI.MUNI_ARRAY["17203"] = '17,石川県,17203,小松市';
-GSI.MUNI_ARRAY["17204"] = '17,石川県,17204,輪島市';
-GSI.MUNI_ARRAY["17205"] = '17,石川県,17205,珠洲市';
-GSI.MUNI_ARRAY["17206"] = '17,石川県,17206,加賀市';
-GSI.MUNI_ARRAY["17207"] = '17,石川県,17207,羽咋市';
-GSI.MUNI_ARRAY["17209"] = '17,石川県,17209,かほく市';
-GSI.MUNI_ARRAY["17210"] = '17,石川県,17210,白山市';
-GSI.MUNI_ARRAY["17211"] = '17,石川県,17211,能美市';
-GSI.MUNI_ARRAY["17212"] = '17,石川県,17212,野々市市';
-GSI.MUNI_ARRAY["17324"] = '17,石川県,17324,川北町';
-GSI.MUNI_ARRAY["17361"] = '17,石川県,17361,津幡町';
-GSI.MUNI_ARRAY["17365"] = '17,石川県,17365,内灘町';
-GSI.MUNI_ARRAY["17384"] = '17,石川県,17384,志賀町';
-GSI.MUNI_ARRAY["17386"] = '17,石川県,17386,宝達志水町';
-GSI.MUNI_ARRAY["17407"] = '17,石川県,17407,中能登町';
-GSI.MUNI_ARRAY["17461"] = '17,石川県,17461,穴水町';
-GSI.MUNI_ARRAY["17463"] = '17,石川県,17463,能登町';
-GSI.MUNI_ARRAY["18201"] = '18,福井県,18201,福井市';
-GSI.MUNI_ARRAY["18202"] = '18,福井県,18202,敦賀市';
-GSI.MUNI_ARRAY["18204"] = '18,福井県,18204,小浜市';
-GSI.MUNI_ARRAY["18205"] = '18,福井県,18205,大野市';
-GSI.MUNI_ARRAY["18206"] = '18,福井県,18206,勝山市';
-GSI.MUNI_ARRAY["18207"] = '18,福井県,18207,鯖江市';
-GSI.MUNI_ARRAY["18208"] = '18,福井県,18208,あわら市';
-GSI.MUNI_ARRAY["18209"] = '18,福井県,18209,越前市';
-GSI.MUNI_ARRAY["18210"] = '18,福井県,18210,坂井市';
-GSI.MUNI_ARRAY["18322"] = '18,福井県,18322,永平寺町';
-GSI.MUNI_ARRAY["18382"] = '18,福井県,18382,池田町';
-GSI.MUNI_ARRAY["18404"] = '18,福井県,18404,南越前町';
-GSI.MUNI_ARRAY["18423"] = '18,福井県,18423,越前町';
-GSI.MUNI_ARRAY["18442"] = '18,福井県,18442,美浜町';
-GSI.MUNI_ARRAY["18481"] = '18,福井県,18481,高浜町';
-GSI.MUNI_ARRAY["18483"] = '18,福井県,18483,おおい町';
-GSI.MUNI_ARRAY["18501"] = '18,福井県,18501,若狭町';
-GSI.MUNI_ARRAY["19201"] = '19,山梨県,19201,甲府市';
-GSI.MUNI_ARRAY["19202"] = '19,山梨県,19202,富士吉田市';
-GSI.MUNI_ARRAY["19204"] = '19,山梨県,19204,都留市';
-GSI.MUNI_ARRAY["19205"] = '19,山梨県,19205,山梨市';
-GSI.MUNI_ARRAY["19206"] = '19,山梨県,19206,大月市';
-GSI.MUNI_ARRAY["19207"] = '19,山梨県,19207,韮崎市';
-GSI.MUNI_ARRAY["19208"] = '19,山梨県,19208,南アルプス市';
-GSI.MUNI_ARRAY["19209"] = '19,山梨県,19209,北杜市';
-GSI.MUNI_ARRAY["19210"] = '19,山梨県,19210,甲斐市';
-GSI.MUNI_ARRAY["19211"] = '19,山梨県,19211,笛吹市';
-GSI.MUNI_ARRAY["19212"] = '19,山梨県,19212,上野原市';
-GSI.MUNI_ARRAY["19213"] = '19,山梨県,19213,甲州市';
-GSI.MUNI_ARRAY["19214"] = '19,山梨県,19214,中央市';
-GSI.MUNI_ARRAY["19346"] = '19,山梨県,19346,市川三郷町';
-GSI.MUNI_ARRAY["19364"] = '19,山梨県,19364,早川町';
-GSI.MUNI_ARRAY["19365"] = '19,山梨県,19365,身延町';
-GSI.MUNI_ARRAY["19366"] = '19,山梨県,19366,南部町';
-GSI.MUNI_ARRAY["19368"] = '19,山梨県,19368,富士川町';
-GSI.MUNI_ARRAY["19384"] = '19,山梨県,19384,昭和町';
-GSI.MUNI_ARRAY["19422"] = '19,山梨県,19422,道志村';
-GSI.MUNI_ARRAY["19423"] = '19,山梨県,19423,西桂町';
-GSI.MUNI_ARRAY["19424"] = '19,山梨県,19424,忍野村';
-GSI.MUNI_ARRAY["19425"] = '19,山梨県,19425,山中湖村';
-GSI.MUNI_ARRAY["19429"] = '19,山梨県,19429,鳴沢村';
-GSI.MUNI_ARRAY["19430"] = '19,山梨県,19430,富士河口湖町';
-GSI.MUNI_ARRAY["19442"] = '19,山梨県,19442,小菅村';
-GSI.MUNI_ARRAY["19443"] = '19,山梨県,19443,丹波山村';
-GSI.MUNI_ARRAY["20201"] = '20,長野県,20201,長野市';
-GSI.MUNI_ARRAY["20202"] = '20,長野県,20202,松本市';
-GSI.MUNI_ARRAY["20203"] = '20,長野県,20203,上田市';
-GSI.MUNI_ARRAY["20204"] = '20,長野県,20204,岡谷市';
-GSI.MUNI_ARRAY["20205"] = '20,長野県,20205,飯田市';
-GSI.MUNI_ARRAY["20206"] = '20,長野県,20206,諏訪市';
-GSI.MUNI_ARRAY["20207"] = '20,長野県,20207,須坂市';
-GSI.MUNI_ARRAY["20208"] = '20,長野県,20208,小諸市';
-GSI.MUNI_ARRAY["20209"] = '20,長野県,20209,伊那市';
-GSI.MUNI_ARRAY["20210"] = '20,長野県,20210,駒ヶ根市';
-GSI.MUNI_ARRAY["20211"] = '20,長野県,20211,中野市';
-GSI.MUNI_ARRAY["20212"] = '20,長野県,20212,大町市';
-GSI.MUNI_ARRAY["20213"] = '20,長野県,20213,飯山市';
-GSI.MUNI_ARRAY["20214"] = '20,長野県,20214,茅野市';
-GSI.MUNI_ARRAY["20215"] = '20,長野県,20215,塩尻市';
-GSI.MUNI_ARRAY["20217"] = '20,長野県,20217,佐久市';
-GSI.MUNI_ARRAY["20218"] = '20,長野県,20218,千曲市';
-GSI.MUNI_ARRAY["20219"] = '20,長野県,20219,東御市';
-GSI.MUNI_ARRAY["20220"] = '20,長野県,20220,安曇野市';
-GSI.MUNI_ARRAY["20303"] = '20,長野県,20303,小海町';
-GSI.MUNI_ARRAY["20304"] = '20,長野県,20304,川上村';
-GSI.MUNI_ARRAY["20305"] = '20,長野県,20305,南牧村';
-GSI.MUNI_ARRAY["20306"] = '20,長野県,20306,南相木村';
-GSI.MUNI_ARRAY["20307"] = '20,長野県,20307,北相木村';
-GSI.MUNI_ARRAY["20309"] = '20,長野県,20309,佐久穂町';
-GSI.MUNI_ARRAY["20321"] = '20,長野県,20321,軽井沢町';
-GSI.MUNI_ARRAY["20323"] = '20,長野県,20323,御代田町';
-GSI.MUNI_ARRAY["20324"] = '20,長野県,20324,立科町';
-GSI.MUNI_ARRAY["20349"] = '20,長野県,20349,青木村';
-GSI.MUNI_ARRAY["20350"] = '20,長野県,20350,長和町';
-GSI.MUNI_ARRAY["20361"] = '20,長野県,20361,下諏訪町';
-GSI.MUNI_ARRAY["20362"] = '20,長野県,20362,富士見町';
-GSI.MUNI_ARRAY["20363"] = '20,長野県,20363,原村';
-GSI.MUNI_ARRAY["20382"] = '20,長野県,20382,辰野町';
-GSI.MUNI_ARRAY["20383"] = '20,長野県,20383,箕輪町';
-GSI.MUNI_ARRAY["20384"] = '20,長野県,20384,飯島町';
-GSI.MUNI_ARRAY["20385"] = '20,長野県,20385,南箕輪村';
-GSI.MUNI_ARRAY["20386"] = '20,長野県,20386,中川村';
-GSI.MUNI_ARRAY["20388"] = '20,長野県,20388,宮田村';
-GSI.MUNI_ARRAY["20402"] = '20,長野県,20402,松川町';
-GSI.MUNI_ARRAY["20403"] = '20,長野県,20403,高森町';
-GSI.MUNI_ARRAY["20404"] = '20,長野県,20404,阿南町';
-GSI.MUNI_ARRAY["20407"] = '20,長野県,20407,阿智村';
-GSI.MUNI_ARRAY["20409"] = '20,長野県,20409,平谷村';
-GSI.MUNI_ARRAY["20410"] = '20,長野県,20410,根羽村';
-GSI.MUNI_ARRAY["20411"] = '20,長野県,20411,下條村';
-GSI.MUNI_ARRAY["20412"] = '20,長野県,20412,売木村';
-GSI.MUNI_ARRAY["20413"] = '20,長野県,20413,天龍村';
-GSI.MUNI_ARRAY["20414"] = '20,長野県,20414,泰阜村';
-GSI.MUNI_ARRAY["20415"] = '20,長野県,20415,喬木村';
-GSI.MUNI_ARRAY["20416"] = '20,長野県,20416,豊丘村';
-GSI.MUNI_ARRAY["20417"] = '20,長野県,20417,大鹿村';
-GSI.MUNI_ARRAY["20422"] = '20,長野県,20422,上松町';
-GSI.MUNI_ARRAY["20423"] = '20,長野県,20423,南木曽町';
-GSI.MUNI_ARRAY["20425"] = '20,長野県,20425,木祖村';
-GSI.MUNI_ARRAY["20429"] = '20,長野県,20429,王滝村';
-GSI.MUNI_ARRAY["20430"] = '20,長野県,20430,大桑村';
-GSI.MUNI_ARRAY["20432"] = '20,長野県,20432,木曽町';
-GSI.MUNI_ARRAY["20446"] = '20,長野県,20446,麻績村';
-GSI.MUNI_ARRAY["20448"] = '20,長野県,20448,生坂村';
-GSI.MUNI_ARRAY["20450"] = '20,長野県,20450,山形村';
-GSI.MUNI_ARRAY["20451"] = '20,長野県,20451,朝日村';
-GSI.MUNI_ARRAY["20452"] = '20,長野県,20452,筑北村';
-GSI.MUNI_ARRAY["20481"] = '20,長野県,20481,池田町';
-GSI.MUNI_ARRAY["20482"] = '20,長野県,20482,松川村';
-GSI.MUNI_ARRAY["20485"] = '20,長野県,20485,白馬村';
-GSI.MUNI_ARRAY["20486"] = '20,長野県,20486,小谷村';
-GSI.MUNI_ARRAY["20521"] = '20,長野県,20521,坂城町';
-GSI.MUNI_ARRAY["20541"] = '20,長野県,20541,小布施町';
-GSI.MUNI_ARRAY["20543"] = '20,長野県,20543,高山村';
-GSI.MUNI_ARRAY["20561"] = '20,長野県,20561,山ノ内町';
-GSI.MUNI_ARRAY["20562"] = '20,長野県,20562,木島平村';
-GSI.MUNI_ARRAY["20563"] = '20,長野県,20563,野沢温泉村';
-GSI.MUNI_ARRAY["20583"] = '20,長野県,20583,信濃町';
-GSI.MUNI_ARRAY["20588"] = '20,長野県,20588,小川村';
-GSI.MUNI_ARRAY["20590"] = '20,長野県,20590,飯綱町';
-GSI.MUNI_ARRAY["20602"] = '20,長野県,20602,栄村';
-GSI.MUNI_ARRAY["21201"] = '21,岐阜県,21201,岐阜市';
-GSI.MUNI_ARRAY["21202"] = '21,岐阜県,21202,大垣市';
-GSI.MUNI_ARRAY["21203"] = '21,岐阜県,21203,高山市';
-GSI.MUNI_ARRAY["21204"] = '21,岐阜県,21204,多治見市';
-GSI.MUNI_ARRAY["21205"] = '21,岐阜県,21205,関市';
-GSI.MUNI_ARRAY["21206"] = '21,岐阜県,21206,中津川市';
-GSI.MUNI_ARRAY["21207"] = '21,岐阜県,21207,美濃市';
-GSI.MUNI_ARRAY["21208"] = '21,岐阜県,21208,瑞浪市';
-GSI.MUNI_ARRAY["21209"] = '21,岐阜県,21209,羽島市';
-GSI.MUNI_ARRAY["21210"] = '21,岐阜県,21210,恵那市';
-GSI.MUNI_ARRAY["21211"] = '21,岐阜県,21211,美濃加茂市';
-GSI.MUNI_ARRAY["21212"] = '21,岐阜県,21212,土岐市';
-GSI.MUNI_ARRAY["21213"] = '21,岐阜県,21213,各務原市';
-GSI.MUNI_ARRAY["21214"] = '21,岐阜県,21214,可児市';
-GSI.MUNI_ARRAY["21215"] = '21,岐阜県,21215,山県市';
-GSI.MUNI_ARRAY["21216"] = '21,岐阜県,21216,瑞穂市';
-GSI.MUNI_ARRAY["21217"] = '21,岐阜県,21217,飛騨市';
-GSI.MUNI_ARRAY["21218"] = '21,岐阜県,21218,本巣市';
-GSI.MUNI_ARRAY["21219"] = '21,岐阜県,21219,郡上市';
-GSI.MUNI_ARRAY["21220"] = '21,岐阜県,21220,下呂市';
-GSI.MUNI_ARRAY["21221"] = '21,岐阜県,21221,海津市';
-GSI.MUNI_ARRAY["21302"] = '21,岐阜県,21302,岐南町';
-GSI.MUNI_ARRAY["21303"] = '21,岐阜県,21303,笠松町';
-GSI.MUNI_ARRAY["21341"] = '21,岐阜県,21341,養老町';
-GSI.MUNI_ARRAY["21361"] = '21,岐阜県,21361,垂井町';
-GSI.MUNI_ARRAY["21362"] = '21,岐阜県,21362,関ケ原町';
-GSI.MUNI_ARRAY["21381"] = '21,岐阜県,21381,神戸町';
-GSI.MUNI_ARRAY["21382"] = '21,岐阜県,21382,輪之内町';
-GSI.MUNI_ARRAY["21383"] = '21,岐阜県,21383,安八町';
-GSI.MUNI_ARRAY["21401"] = '21,岐阜県,21401,揖斐川町';
-GSI.MUNI_ARRAY["21403"] = '21,岐阜県,21403,大野町';
-GSI.MUNI_ARRAY["21404"] = '21,岐阜県,21404,池田町';
-GSI.MUNI_ARRAY["21421"] = '21,岐阜県,21421,北方町';
-GSI.MUNI_ARRAY["21501"] = '21,岐阜県,21501,坂祝町';
-GSI.MUNI_ARRAY["21502"] = '21,岐阜県,21502,富加町';
-GSI.MUNI_ARRAY["21503"] = '21,岐阜県,21503,川辺町';
-GSI.MUNI_ARRAY["21504"] = '21,岐阜県,21504,七宗町';
-GSI.MUNI_ARRAY["21505"] = '21,岐阜県,21505,八百津町';
-GSI.MUNI_ARRAY["21506"] = '21,岐阜県,21506,白川町';
-GSI.MUNI_ARRAY["21507"] = '21,岐阜県,21507,東白川村';
-GSI.MUNI_ARRAY["21521"] = '21,岐阜県,21521,御嵩町';
-GSI.MUNI_ARRAY["21604"] = '21,岐阜県,21604,白川村';
-GSI.MUNI_ARRAY["22100"] = '22,静岡県,22100,静岡市';
-GSI.MUNI_ARRAY["22101"] = '22,静岡県,22101,静岡市　葵区';
-GSI.MUNI_ARRAY["22102"] = '22,静岡県,22102,静岡市　駿河区';
-GSI.MUNI_ARRAY["22103"] = '22,静岡県,22103,静岡市　清水区';
-GSI.MUNI_ARRAY["22130"] = '22,静岡県,22130,浜松市';
-GSI.MUNI_ARRAY["22131"] = '22,静岡県,22131,浜松市　中区';
-GSI.MUNI_ARRAY["22132"] = '22,静岡県,22132,浜松市　東区';
-GSI.MUNI_ARRAY["22133"] = '22,静岡県,22133,浜松市　西区';
-GSI.MUNI_ARRAY["22134"] = '22,静岡県,22134,浜松市　南区';
-GSI.MUNI_ARRAY["22135"] = '22,静岡県,22135,浜松市　北区';
-GSI.MUNI_ARRAY["22136"] = '22,静岡県,22136,浜松市　浜北区';
-GSI.MUNI_ARRAY["22137"] = '22,静岡県,22137,浜松市　天竜区';
-GSI.MUNI_ARRAY["22203"] = '22,静岡県,22203,沼津市';
-GSI.MUNI_ARRAY["22205"] = '22,静岡県,22205,熱海市';
-GSI.MUNI_ARRAY["22206"] = '22,静岡県,22206,三島市';
-GSI.MUNI_ARRAY["22207"] = '22,静岡県,22207,富士宮市';
-GSI.MUNI_ARRAY["22208"] = '22,静岡県,22208,伊東市';
-GSI.MUNI_ARRAY["22209"] = '22,静岡県,22209,島田市';
-GSI.MUNI_ARRAY["22210"] = '22,静岡県,22210,富士市';
-GSI.MUNI_ARRAY["22211"] = '22,静岡県,22211,磐田市';
-GSI.MUNI_ARRAY["22212"] = '22,静岡県,22212,焼津市';
-GSI.MUNI_ARRAY["22213"] = '22,静岡県,22213,掛川市';
-GSI.MUNI_ARRAY["22214"] = '22,静岡県,22214,藤枝市';
-GSI.MUNI_ARRAY["22215"] = '22,静岡県,22215,御殿場市';
-GSI.MUNI_ARRAY["22216"] = '22,静岡県,22216,袋井市';
-GSI.MUNI_ARRAY["22219"] = '22,静岡県,22219,下田市';
-GSI.MUNI_ARRAY["22220"] = '22,静岡県,22220,裾野市';
-GSI.MUNI_ARRAY["22221"] = '22,静岡県,22221,湖西市';
-GSI.MUNI_ARRAY["22222"] = '22,静岡県,22222,伊豆市';
-GSI.MUNI_ARRAY["22223"] = '22,静岡県,22223,御前崎市';
-GSI.MUNI_ARRAY["22224"] = '22,静岡県,22224,菊川市';
-GSI.MUNI_ARRAY["22225"] = '22,静岡県,22225,伊豆の国市';
-GSI.MUNI_ARRAY["22226"] = '22,静岡県,22226,牧之原市';
-GSI.MUNI_ARRAY["22301"] = '22,静岡県,22301,東伊豆町';
-GSI.MUNI_ARRAY["22302"] = '22,静岡県,22302,河津町';
-GSI.MUNI_ARRAY["22304"] = '22,静岡県,22304,南伊豆町';
-GSI.MUNI_ARRAY["22305"] = '22,静岡県,22305,松崎町';
-GSI.MUNI_ARRAY["22306"] = '22,静岡県,22306,西伊豆町';
-GSI.MUNI_ARRAY["22325"] = '22,静岡県,22325,函南町';
-GSI.MUNI_ARRAY["22341"] = '22,静岡県,22341,清水町';
-GSI.MUNI_ARRAY["22342"] = '22,静岡県,22342,長泉町';
-GSI.MUNI_ARRAY["22344"] = '22,静岡県,22344,小山町';
-GSI.MUNI_ARRAY["22424"] = '22,静岡県,22424,吉田町';
-GSI.MUNI_ARRAY["22429"] = '22,静岡県,22429,川根本町';
-GSI.MUNI_ARRAY["22461"] = '22,静岡県,22461,森町';
-GSI.MUNI_ARRAY["23100"] = '23,愛知県,23100,名古屋市';
-GSI.MUNI_ARRAY["23101"] = '23,愛知県,23101,名古屋市　千種区';
-GSI.MUNI_ARRAY["23102"] = '23,愛知県,23102,名古屋市　東区';
-GSI.MUNI_ARRAY["23103"] = '23,愛知県,23103,名古屋市　北区';
-GSI.MUNI_ARRAY["23104"] = '23,愛知県,23104,名古屋市　西区';
-GSI.MUNI_ARRAY["23105"] = '23,愛知県,23105,名古屋市　中村区';
-GSI.MUNI_ARRAY["23106"] = '23,愛知県,23106,名古屋市　中区';
-GSI.MUNI_ARRAY["23107"] = '23,愛知県,23107,名古屋市　昭和区';
-GSI.MUNI_ARRAY["23108"] = '23,愛知県,23108,名古屋市　瑞穂区';
-GSI.MUNI_ARRAY["23109"] = '23,愛知県,23109,名古屋市　熱田区';
-GSI.MUNI_ARRAY["23110"] = '23,愛知県,23110,名古屋市　中川区';
-GSI.MUNI_ARRAY["23111"] = '23,愛知県,23111,名古屋市　港区';
-GSI.MUNI_ARRAY["23112"] = '23,愛知県,23112,名古屋市　南区';
-GSI.MUNI_ARRAY["23113"] = '23,愛知県,23113,名古屋市　守山区';
-GSI.MUNI_ARRAY["23114"] = '23,愛知県,23114,名古屋市　緑区';
-GSI.MUNI_ARRAY["23115"] = '23,愛知県,23115,名古屋市　名東区';
-GSI.MUNI_ARRAY["23116"] = '23,愛知県,23116,名古屋市　天白区';
-GSI.MUNI_ARRAY["23201"] = '23,愛知県,23201,豊橋市';
-GSI.MUNI_ARRAY["23202"] = '23,愛知県,23202,岡崎市';
-GSI.MUNI_ARRAY["23203"] = '23,愛知県,23203,一宮市';
-GSI.MUNI_ARRAY["23204"] = '23,愛知県,23204,瀬戸市';
-GSI.MUNI_ARRAY["23205"] = '23,愛知県,23205,半田市';
-GSI.MUNI_ARRAY["23206"] = '23,愛知県,23206,春日井市';
-GSI.MUNI_ARRAY["23207"] = '23,愛知県,23207,豊川市';
-GSI.MUNI_ARRAY["23208"] = '23,愛知県,23208,津島市';
-GSI.MUNI_ARRAY["23209"] = '23,愛知県,23209,碧南市';
-GSI.MUNI_ARRAY["23210"] = '23,愛知県,23210,刈谷市';
-GSI.MUNI_ARRAY["23211"] = '23,愛知県,23211,豊田市';
-GSI.MUNI_ARRAY["23212"] = '23,愛知県,23212,安城市';
-GSI.MUNI_ARRAY["23213"] = '23,愛知県,23213,西尾市';
-GSI.MUNI_ARRAY["23214"] = '23,愛知県,23214,蒲郡市';
-GSI.MUNI_ARRAY["23215"] = '23,愛知県,23215,犬山市';
-GSI.MUNI_ARRAY["23216"] = '23,愛知県,23216,常滑市';
-GSI.MUNI_ARRAY["23217"] = '23,愛知県,23217,江南市';
-GSI.MUNI_ARRAY["23219"] = '23,愛知県,23219,小牧市';
-GSI.MUNI_ARRAY["23220"] = '23,愛知県,23220,稲沢市';
-GSI.MUNI_ARRAY["23221"] = '23,愛知県,23221,新城市';
-GSI.MUNI_ARRAY["23222"] = '23,愛知県,23222,東海市';
-GSI.MUNI_ARRAY["23223"] = '23,愛知県,23223,大府市';
-GSI.MUNI_ARRAY["23224"] = '23,愛知県,23224,知多市';
-GSI.MUNI_ARRAY["23225"] = '23,愛知県,23225,知立市';
-GSI.MUNI_ARRAY["23226"] = '23,愛知県,23226,尾張旭市';
-GSI.MUNI_ARRAY["23227"] = '23,愛知県,23227,高浜市';
-GSI.MUNI_ARRAY["23228"] = '23,愛知県,23228,岩倉市';
-GSI.MUNI_ARRAY["23229"] = '23,愛知県,23229,豊明市';
-GSI.MUNI_ARRAY["23230"] = '23,愛知県,23230,日進市';
-GSI.MUNI_ARRAY["23231"] = '23,愛知県,23231,田原市';
-GSI.MUNI_ARRAY["23232"] = '23,愛知県,23232,愛西市';
-GSI.MUNI_ARRAY["23233"] = '23,愛知県,23233,清須市';
-GSI.MUNI_ARRAY["23234"] = '23,愛知県,23234,北名古屋市';
-GSI.MUNI_ARRAY["23235"] = '23,愛知県,23235,弥富市';
-GSI.MUNI_ARRAY["23236"] = '23,愛知県,23236,みよし市';
-GSI.MUNI_ARRAY["23237"] = '23,愛知県,23237,あま市';
-GSI.MUNI_ARRAY["23238"] = '23,愛知県,23238,長久手市';
-GSI.MUNI_ARRAY["23302"] = '23,愛知県,23302,東郷町';
-GSI.MUNI_ARRAY["23342"] = '23,愛知県,23342,豊山町';
-GSI.MUNI_ARRAY["23361"] = '23,愛知県,23361,大口町';
-GSI.MUNI_ARRAY["23362"] = '23,愛知県,23362,扶桑町';
-GSI.MUNI_ARRAY["23424"] = '23,愛知県,23424,大治町';
-GSI.MUNI_ARRAY["23425"] = '23,愛知県,23425,蟹江町';
-GSI.MUNI_ARRAY["23427"] = '23,愛知県,23427,飛島村';
-GSI.MUNI_ARRAY["23441"] = '23,愛知県,23441,阿久比町';
-GSI.MUNI_ARRAY["23442"] = '23,愛知県,23442,東浦町';
-GSI.MUNI_ARRAY["23445"] = '23,愛知県,23445,南知多町';
-GSI.MUNI_ARRAY["23446"] = '23,愛知県,23446,美浜町';
-GSI.MUNI_ARRAY["23447"] = '23,愛知県,23447,武豊町';
-GSI.MUNI_ARRAY["23501"] = '23,愛知県,23501,幸田町';
-GSI.MUNI_ARRAY["23561"] = '23,愛知県,23561,設楽町';
-GSI.MUNI_ARRAY["23562"] = '23,愛知県,23562,東栄町';
-GSI.MUNI_ARRAY["23563"] = '23,愛知県,23563,豊根村';
-GSI.MUNI_ARRAY["24201"] = '24,三重県,24201,津市';
-GSI.MUNI_ARRAY["24202"] = '24,三重県,24202,四日市市';
-GSI.MUNI_ARRAY["24203"] = '24,三重県,24203,伊勢市';
-GSI.MUNI_ARRAY["24204"] = '24,三重県,24204,松阪市';
-GSI.MUNI_ARRAY["24205"] = '24,三重県,24205,桑名市';
-GSI.MUNI_ARRAY["24207"] = '24,三重県,24207,鈴鹿市';
-GSI.MUNI_ARRAY["24208"] = '24,三重県,24208,名張市';
-GSI.MUNI_ARRAY["24209"] = '24,三重県,24209,尾鷲市';
-GSI.MUNI_ARRAY["24210"] = '24,三重県,24210,亀山市';
-GSI.MUNI_ARRAY["24211"] = '24,三重県,24211,鳥羽市';
-GSI.MUNI_ARRAY["24212"] = '24,三重県,24212,熊野市';
-GSI.MUNI_ARRAY["24214"] = '24,三重県,24214,いなべ市';
-GSI.MUNI_ARRAY["24215"] = '24,三重県,24215,志摩市';
-GSI.MUNI_ARRAY["24216"] = '24,三重県,24216,伊賀市';
-GSI.MUNI_ARRAY["24303"] = '24,三重県,24303,木曽岬町';
-GSI.MUNI_ARRAY["24324"] = '24,三重県,24324,東員町';
-GSI.MUNI_ARRAY["24341"] = '24,三重県,24341,菰野町';
-GSI.MUNI_ARRAY["24343"] = '24,三重県,24343,朝日町';
-GSI.MUNI_ARRAY["24344"] = '24,三重県,24344,川越町';
-GSI.MUNI_ARRAY["24441"] = '24,三重県,24441,多気町';
-GSI.MUNI_ARRAY["24442"] = '24,三重県,24442,明和町';
-GSI.MUNI_ARRAY["24443"] = '24,三重県,24443,大台町';
-GSI.MUNI_ARRAY["24461"] = '24,三重県,24461,玉城町';
-GSI.MUNI_ARRAY["24470"] = '24,三重県,24470,度会町';
-GSI.MUNI_ARRAY["24471"] = '24,三重県,24471,大紀町';
-GSI.MUNI_ARRAY["24472"] = '24,三重県,24472,南伊勢町';
-GSI.MUNI_ARRAY["24543"] = '24,三重県,24543,紀北町';
-GSI.MUNI_ARRAY["24561"] = '24,三重県,24561,御浜町';
-GSI.MUNI_ARRAY["24562"] = '24,三重県,24562,紀宝町';
-GSI.MUNI_ARRAY["25201"] = '25,滋賀県,25201,大津市';
-GSI.MUNI_ARRAY["25202"] = '25,滋賀県,25202,彦根市';
-GSI.MUNI_ARRAY["25203"] = '25,滋賀県,25203,長浜市';
-GSI.MUNI_ARRAY["25204"] = '25,滋賀県,25204,近江八幡市';
-GSI.MUNI_ARRAY["25206"] = '25,滋賀県,25206,草津市';
-GSI.MUNI_ARRAY["25207"] = '25,滋賀県,25207,守山市';
-GSI.MUNI_ARRAY["25208"] = '25,滋賀県,25208,栗東市';
-GSI.MUNI_ARRAY["25209"] = '25,滋賀県,25209,甲賀市';
-GSI.MUNI_ARRAY["25210"] = '25,滋賀県,25210,野洲市';
-GSI.MUNI_ARRAY["25211"] = '25,滋賀県,25211,湖南市';
-GSI.MUNI_ARRAY["25212"] = '25,滋賀県,25212,高島市';
-GSI.MUNI_ARRAY["25213"] = '25,滋賀県,25213,東近江市';
-GSI.MUNI_ARRAY["25214"] = '25,滋賀県,25214,米原市';
-GSI.MUNI_ARRAY["25383"] = '25,滋賀県,25383,日野町';
-GSI.MUNI_ARRAY["25384"] = '25,滋賀県,25384,竜王町';
-GSI.MUNI_ARRAY["25425"] = '25,滋賀県,25425,愛荘町';
-GSI.MUNI_ARRAY["25441"] = '25,滋賀県,25441,豊郷町';
-GSI.MUNI_ARRAY["25442"] = '25,滋賀県,25442,甲良町';
-GSI.MUNI_ARRAY["25443"] = '25,滋賀県,25443,多賀町';
-GSI.MUNI_ARRAY["26100"] = '26,京都府,26100,京都市';
-GSI.MUNI_ARRAY["26101"] = '26,京都府,26101,京都市　北区';
-GSI.MUNI_ARRAY["26102"] = '26,京都府,26102,京都市　上京区';
-GSI.MUNI_ARRAY["26103"] = '26,京都府,26103,京都市　左京区';
-GSI.MUNI_ARRAY["26104"] = '26,京都府,26104,京都市　中京区';
-GSI.MUNI_ARRAY["26105"] = '26,京都府,26105,京都市　東山区';
-GSI.MUNI_ARRAY["26106"] = '26,京都府,26106,京都市　下京区';
-GSI.MUNI_ARRAY["26107"] = '26,京都府,26107,京都市　南区';
-GSI.MUNI_ARRAY["26108"] = '26,京都府,26108,京都市　右京区';
-GSI.MUNI_ARRAY["26109"] = '26,京都府,26109,京都市　伏見区';
-GSI.MUNI_ARRAY["26110"] = '26,京都府,26110,京都市　山科区';
-GSI.MUNI_ARRAY["26111"] = '26,京都府,26111,京都市　西京区';
-GSI.MUNI_ARRAY["26201"] = '26,京都府,26201,福知山市';
-GSI.MUNI_ARRAY["26202"] = '26,京都府,26202,舞鶴市';
-GSI.MUNI_ARRAY["26203"] = '26,京都府,26203,綾部市';
-GSI.MUNI_ARRAY["26204"] = '26,京都府,26204,宇治市';
-GSI.MUNI_ARRAY["26205"] = '26,京都府,26205,宮津市';
-GSI.MUNI_ARRAY["26206"] = '26,京都府,26206,亀岡市';
-GSI.MUNI_ARRAY["26207"] = '26,京都府,26207,城陽市';
-GSI.MUNI_ARRAY["26208"] = '26,京都府,26208,向日市';
-GSI.MUNI_ARRAY["26209"] = '26,京都府,26209,長岡京市';
-GSI.MUNI_ARRAY["26210"] = '26,京都府,26210,八幡市';
-GSI.MUNI_ARRAY["26211"] = '26,京都府,26211,京田辺市';
-GSI.MUNI_ARRAY["26212"] = '26,京都府,26212,京丹後市';
-GSI.MUNI_ARRAY["26213"] = '26,京都府,26213,南丹市';
-GSI.MUNI_ARRAY["26214"] = '26,京都府,26214,木津川市';
-GSI.MUNI_ARRAY["26303"] = '26,京都府,26303,大山崎町';
-GSI.MUNI_ARRAY["26322"] = '26,京都府,26322,久御山町';
-GSI.MUNI_ARRAY["26343"] = '26,京都府,26343,井手町';
-GSI.MUNI_ARRAY["26344"] = '26,京都府,26344,宇治田原町';
-GSI.MUNI_ARRAY["26364"] = '26,京都府,26364,笠置町';
-GSI.MUNI_ARRAY["26365"] = '26,京都府,26365,和束町';
-GSI.MUNI_ARRAY["26366"] = '26,京都府,26366,精華町';
-GSI.MUNI_ARRAY["26367"] = '26,京都府,26367,南山城村';
-GSI.MUNI_ARRAY["26407"] = '26,京都府,26407,京丹波町';
-GSI.MUNI_ARRAY["26463"] = '26,京都府,26463,伊根町';
-GSI.MUNI_ARRAY["26465"] = '26,京都府,26465,与謝野町';
-GSI.MUNI_ARRAY["27100"] = '27,大阪府,27100,大阪市';
-GSI.MUNI_ARRAY["27102"] = '27,大阪府,27102,大阪市　都島区';
-GSI.MUNI_ARRAY["27103"] = '27,大阪府,27103,大阪市　福島区';
-GSI.MUNI_ARRAY["27104"] = '27,大阪府,27104,大阪市　此花区';
-GSI.MUNI_ARRAY["27106"] = '27,大阪府,27106,大阪市　西区';
-GSI.MUNI_ARRAY["27107"] = '27,大阪府,27107,大阪市　港区';
-GSI.MUNI_ARRAY["27108"] = '27,大阪府,27108,大阪市　大正区';
-GSI.MUNI_ARRAY["27109"] = '27,大阪府,27109,大阪市　天王寺区';
-GSI.MUNI_ARRAY["27111"] = '27,大阪府,27111,大阪市　浪速区';
-GSI.MUNI_ARRAY["27113"] = '27,大阪府,27113,大阪市　西淀川区';
-GSI.MUNI_ARRAY["27114"] = '27,大阪府,27114,大阪市　東淀川区';
-GSI.MUNI_ARRAY["27115"] = '27,大阪府,27115,大阪市　東成区';
-GSI.MUNI_ARRAY["27116"] = '27,大阪府,27116,大阪市　生野区';
-GSI.MUNI_ARRAY["27117"] = '27,大阪府,27117,大阪市　旭区';
-GSI.MUNI_ARRAY["27118"] = '27,大阪府,27118,大阪市　城東区';
-GSI.MUNI_ARRAY["27119"] = '27,大阪府,27119,大阪市　阿倍野区';
-GSI.MUNI_ARRAY["27120"] = '27,大阪府,27120,大阪市　住吉区';
-GSI.MUNI_ARRAY["27121"] = '27,大阪府,27121,大阪市　東住吉区';
-GSI.MUNI_ARRAY["27122"] = '27,大阪府,27122,大阪市　西成区';
-GSI.MUNI_ARRAY["27123"] = '27,大阪府,27123,大阪市　淀川区';
-GSI.MUNI_ARRAY["27124"] = '27,大阪府,27124,大阪市　鶴見区';
-GSI.MUNI_ARRAY["27125"] = '27,大阪府,27125,大阪市　住之江区';
-GSI.MUNI_ARRAY["27126"] = '27,大阪府,27126,大阪市　平野区';
-GSI.MUNI_ARRAY["27127"] = '27,大阪府,27127,大阪市　北区';
-GSI.MUNI_ARRAY["27128"] = '27,大阪府,27128,大阪市　中央区';
-GSI.MUNI_ARRAY["27140"] = '27,大阪府,27140,堺市';
-GSI.MUNI_ARRAY["27141"] = '27,大阪府,27141,堺市　堺区';
-GSI.MUNI_ARRAY["27142"] = '27,大阪府,27142,堺市　中区';
-GSI.MUNI_ARRAY["27143"] = '27,大阪府,27143,堺市　東区';
-GSI.MUNI_ARRAY["27144"] = '27,大阪府,27144,堺市　西区';
-GSI.MUNI_ARRAY["27145"] = '27,大阪府,27145,堺市　南区';
-GSI.MUNI_ARRAY["27146"] = '27,大阪府,27146,堺市　北区';
-GSI.MUNI_ARRAY["27147"] = '27,大阪府,27147,堺市　美原区';
-GSI.MUNI_ARRAY["27202"] = '27,大阪府,27202,岸和田市';
-GSI.MUNI_ARRAY["27203"] = '27,大阪府,27203,豊中市';
-GSI.MUNI_ARRAY["27204"] = '27,大阪府,27204,池田市';
-GSI.MUNI_ARRAY["27205"] = '27,大阪府,27205,吹田市';
-GSI.MUNI_ARRAY["27206"] = '27,大阪府,27206,泉大津市';
-GSI.MUNI_ARRAY["27207"] = '27,大阪府,27207,高槻市';
-GSI.MUNI_ARRAY["27208"] = '27,大阪府,27208,貝塚市';
-GSI.MUNI_ARRAY["27209"] = '27,大阪府,27209,守口市';
-GSI.MUNI_ARRAY["27210"] = '27,大阪府,27210,枚方市';
-GSI.MUNI_ARRAY["27211"] = '27,大阪府,27211,茨木市';
-GSI.MUNI_ARRAY["27212"] = '27,大阪府,27212,八尾市';
-GSI.MUNI_ARRAY["27213"] = '27,大阪府,27213,泉佐野市';
-GSI.MUNI_ARRAY["27214"] = '27,大阪府,27214,富田林市';
-GSI.MUNI_ARRAY["27215"] = '27,大阪府,27215,寝屋川市';
-GSI.MUNI_ARRAY["27216"] = '27,大阪府,27216,河内長野市';
-GSI.MUNI_ARRAY["27217"] = '27,大阪府,27217,松原市';
-GSI.MUNI_ARRAY["27218"] = '27,大阪府,27218,大東市';
-GSI.MUNI_ARRAY["27219"] = '27,大阪府,27219,和泉市';
-GSI.MUNI_ARRAY["27220"] = '27,大阪府,27220,箕面市';
-GSI.MUNI_ARRAY["27221"] = '27,大阪府,27221,柏原市';
-GSI.MUNI_ARRAY["27222"] = '27,大阪府,27222,羽曳野市';
-GSI.MUNI_ARRAY["27223"] = '27,大阪府,27223,門真市';
-GSI.MUNI_ARRAY["27224"] = '27,大阪府,27224,摂津市';
-GSI.MUNI_ARRAY["27225"] = '27,大阪府,27225,高石市';
-GSI.MUNI_ARRAY["27226"] = '27,大阪府,27226,藤井寺市';
-GSI.MUNI_ARRAY["27227"] = '27,大阪府,27227,東大阪市';
-GSI.MUNI_ARRAY["27228"] = '27,大阪府,27228,泉南市';
-GSI.MUNI_ARRAY["27229"] = '27,大阪府,27229,四條畷市';
-GSI.MUNI_ARRAY["27230"] = '27,大阪府,27230,交野市';
-GSI.MUNI_ARRAY["27231"] = '27,大阪府,27231,大阪狭山市';
-GSI.MUNI_ARRAY["27232"] = '27,大阪府,27232,阪南市';
-GSI.MUNI_ARRAY["27301"] = '27,大阪府,27301,島本町';
-GSI.MUNI_ARRAY["27321"] = '27,大阪府,27321,豊能町';
-GSI.MUNI_ARRAY["27322"] = '27,大阪府,27322,能勢町';
-GSI.MUNI_ARRAY["27341"] = '27,大阪府,27341,忠岡町';
-GSI.MUNI_ARRAY["27361"] = '27,大阪府,27361,熊取町';
-GSI.MUNI_ARRAY["27362"] = '27,大阪府,27362,田尻町';
-GSI.MUNI_ARRAY["27366"] = '27,大阪府,27366,岬町';
-GSI.MUNI_ARRAY["27381"] = '27,大阪府,27381,太子町';
-GSI.MUNI_ARRAY["27382"] = '27,大阪府,27382,河南町';
-GSI.MUNI_ARRAY["27383"] = '27,大阪府,27383,千早赤阪村';
-GSI.MUNI_ARRAY["28100"] = '28,兵庫県,28100,神戸市';
-GSI.MUNI_ARRAY["28101"] = '28,兵庫県,28101,神戸市　東灘区';
-GSI.MUNI_ARRAY["28102"] = '28,兵庫県,28102,神戸市　灘区';
-GSI.MUNI_ARRAY["28105"] = '28,兵庫県,28105,神戸市　兵庫区';
-GSI.MUNI_ARRAY["28106"] = '28,兵庫県,28106,神戸市　長田区';
-GSI.MUNI_ARRAY["28107"] = '28,兵庫県,28107,神戸市　須磨区';
-GSI.MUNI_ARRAY["28108"] = '28,兵庫県,28108,神戸市　垂水区';
-GSI.MUNI_ARRAY["28109"] = '28,兵庫県,28109,神戸市　北区';
-GSI.MUNI_ARRAY["28110"] = '28,兵庫県,28110,神戸市　中央区';
-GSI.MUNI_ARRAY["28111"] = '28,兵庫県,28111,神戸市　西区';
-GSI.MUNI_ARRAY["28201"] = '28,兵庫県,28201,姫路市';
-GSI.MUNI_ARRAY["28202"] = '28,兵庫県,28202,尼崎市';
-GSI.MUNI_ARRAY["28203"] = '28,兵庫県,28203,明石市';
-GSI.MUNI_ARRAY["28204"] = '28,兵庫県,28204,西宮市';
-GSI.MUNI_ARRAY["28205"] = '28,兵庫県,28205,洲本市';
-GSI.MUNI_ARRAY["28206"] = '28,兵庫県,28206,芦屋市';
-GSI.MUNI_ARRAY["28207"] = '28,兵庫県,28207,伊丹市';
-GSI.MUNI_ARRAY["28208"] = '28,兵庫県,28208,相生市';
-GSI.MUNI_ARRAY["28209"] = '28,兵庫県,28209,豊岡市';
-GSI.MUNI_ARRAY["28210"] = '28,兵庫県,28210,加古川市';
-GSI.MUNI_ARRAY["28212"] = '28,兵庫県,28212,赤穂市';
-GSI.MUNI_ARRAY["28213"] = '28,兵庫県,28213,西脇市';
-GSI.MUNI_ARRAY["28214"] = '28,兵庫県,28214,宝塚市';
-GSI.MUNI_ARRAY["28215"] = '28,兵庫県,28215,三木市';
-GSI.MUNI_ARRAY["28216"] = '28,兵庫県,28216,高砂市';
-GSI.MUNI_ARRAY["28217"] = '28,兵庫県,28217,川西市';
-GSI.MUNI_ARRAY["28218"] = '28,兵庫県,28218,小野市';
-GSI.MUNI_ARRAY["28219"] = '28,兵庫県,28219,三田市';
-GSI.MUNI_ARRAY["28220"] = '28,兵庫県,28220,加西市';
-GSI.MUNI_ARRAY["28221"] = '28,兵庫県,28221,篠山市';
-GSI.MUNI_ARRAY["28222"] = '28,兵庫県,28222,養父市';
-GSI.MUNI_ARRAY["28223"] = '28,兵庫県,28223,丹波市';
-GSI.MUNI_ARRAY["28224"] = '28,兵庫県,28224,南あわじ市';
-GSI.MUNI_ARRAY["28225"] = '28,兵庫県,28225,朝来市';
-GSI.MUNI_ARRAY["28226"] = '28,兵庫県,28226,淡路市';
-GSI.MUNI_ARRAY["28227"] = '28,兵庫県,28227,宍粟市';
-GSI.MUNI_ARRAY["28228"] = '28,兵庫県,28228,加東市';
-GSI.MUNI_ARRAY["28229"] = '28,兵庫県,28229,たつの市';
-GSI.MUNI_ARRAY["28301"] = '28,兵庫県,28301,猪名川町';
-GSI.MUNI_ARRAY["28365"] = '28,兵庫県,28365,多可町';
-GSI.MUNI_ARRAY["28381"] = '28,兵庫県,28381,稲美町';
-GSI.MUNI_ARRAY["28382"] = '28,兵庫県,28382,播磨町';
-GSI.MUNI_ARRAY["28442"] = '28,兵庫県,28442,市川町';
-GSI.MUNI_ARRAY["28443"] = '28,兵庫県,28443,福崎町';
-GSI.MUNI_ARRAY["28446"] = '28,兵庫県,28446,神河町';
-GSI.MUNI_ARRAY["28464"] = '28,兵庫県,28464,太子町';
-GSI.MUNI_ARRAY["28481"] = '28,兵庫県,28481,上郡町';
-GSI.MUNI_ARRAY["28501"] = '28,兵庫県,28501,佐用町';
-GSI.MUNI_ARRAY["28585"] = '28,兵庫県,28585,香美町';
-GSI.MUNI_ARRAY["28586"] = '28,兵庫県,28586,新温泉町';
-GSI.MUNI_ARRAY["29201"] = '29,奈良県,29201,奈良市';
-GSI.MUNI_ARRAY["29202"] = '29,奈良県,29202,大和高田市';
-GSI.MUNI_ARRAY["29203"] = '29,奈良県,29203,大和郡山市';
-GSI.MUNI_ARRAY["29204"] = '29,奈良県,29204,天理市';
-GSI.MUNI_ARRAY["29205"] = '29,奈良県,29205,橿原市';
-GSI.MUNI_ARRAY["29206"] = '29,奈良県,29206,桜井市';
-GSI.MUNI_ARRAY["29207"] = '29,奈良県,29207,五條市';
-GSI.MUNI_ARRAY["29208"] = '29,奈良県,29208,御所市';
-GSI.MUNI_ARRAY["29209"] = '29,奈良県,29209,生駒市';
-GSI.MUNI_ARRAY["29210"] = '29,奈良県,29210,香芝市';
-GSI.MUNI_ARRAY["29211"] = '29,奈良県,29211,葛城市';
-GSI.MUNI_ARRAY["29212"] = '29,奈良県,29212,宇陀市';
-GSI.MUNI_ARRAY["29322"] = '29,奈良県,29322,山添村';
-GSI.MUNI_ARRAY["29342"] = '29,奈良県,29342,平群町';
-GSI.MUNI_ARRAY["29343"] = '29,奈良県,29343,三郷町';
-GSI.MUNI_ARRAY["29344"] = '29,奈良県,29344,斑鳩町';
-GSI.MUNI_ARRAY["29345"] = '29,奈良県,29345,安堵町';
-GSI.MUNI_ARRAY["29361"] = '29,奈良県,29361,川西町';
-GSI.MUNI_ARRAY["29362"] = '29,奈良県,29362,三宅町';
-GSI.MUNI_ARRAY["29363"] = '29,奈良県,29363,田原本町';
-GSI.MUNI_ARRAY["29385"] = '29,奈良県,29385,曽爾村';
-GSI.MUNI_ARRAY["29386"] = '29,奈良県,29386,御杖村';
-GSI.MUNI_ARRAY["29401"] = '29,奈良県,29401,高取町';
-GSI.MUNI_ARRAY["29402"] = '29,奈良県,29402,明日香村';
-GSI.MUNI_ARRAY["29424"] = '29,奈良県,29424,上牧町';
-GSI.MUNI_ARRAY["29425"] = '29,奈良県,29425,王寺町';
-GSI.MUNI_ARRAY["29426"] = '29,奈良県,29426,広陵町';
-GSI.MUNI_ARRAY["29427"] = '29,奈良県,29427,河合町';
-GSI.MUNI_ARRAY["29441"] = '29,奈良県,29441,吉野町';
-GSI.MUNI_ARRAY["29442"] = '29,奈良県,29442,大淀町';
-GSI.MUNI_ARRAY["29443"] = '29,奈良県,29443,下市町';
-GSI.MUNI_ARRAY["29444"] = '29,奈良県,29444,黒滝村';
-GSI.MUNI_ARRAY["29446"] = '29,奈良県,29446,天川村';
-GSI.MUNI_ARRAY["29447"] = '29,奈良県,29447,野迫川村';
-GSI.MUNI_ARRAY["29449"] = '29,奈良県,29449,十津川村';
-GSI.MUNI_ARRAY["29450"] = '29,奈良県,29450,下北山村';
-GSI.MUNI_ARRAY["29451"] = '29,奈良県,29451,上北山村';
-GSI.MUNI_ARRAY["29452"] = '29,奈良県,29452,川上村';
-GSI.MUNI_ARRAY["29453"] = '29,奈良県,29453,東吉野村';
-GSI.MUNI_ARRAY["30201"] = '30,和歌山県,30201,和歌山市';
-GSI.MUNI_ARRAY["30202"] = '30,和歌山県,30202,海南市';
-GSI.MUNI_ARRAY["30203"] = '30,和歌山県,30203,橋本市';
-GSI.MUNI_ARRAY["30204"] = '30,和歌山県,30204,有田市';
-GSI.MUNI_ARRAY["30205"] = '30,和歌山県,30205,御坊市';
-GSI.MUNI_ARRAY["30206"] = '30,和歌山県,30206,田辺市';
-GSI.MUNI_ARRAY["30207"] = '30,和歌山県,30207,新宮市';
-GSI.MUNI_ARRAY["30208"] = '30,和歌山県,30208,紀の川市';
-GSI.MUNI_ARRAY["30209"] = '30,和歌山県,30209,岩出市';
-GSI.MUNI_ARRAY["30304"] = '30,和歌山県,30304,紀美野町';
-GSI.MUNI_ARRAY["30341"] = '30,和歌山県,30341,かつらぎ町';
-GSI.MUNI_ARRAY["30343"] = '30,和歌山県,30343,九度山町';
-GSI.MUNI_ARRAY["30344"] = '30,和歌山県,30344,高野町';
-GSI.MUNI_ARRAY["30361"] = '30,和歌山県,30361,湯浅町';
-GSI.MUNI_ARRAY["30362"] = '30,和歌山県,30362,広川町';
-GSI.MUNI_ARRAY["30366"] = '30,和歌山県,30366,有田川町';
-GSI.MUNI_ARRAY["30381"] = '30,和歌山県,30381,美浜町';
-GSI.MUNI_ARRAY["30382"] = '30,和歌山県,30382,日高町';
-GSI.MUNI_ARRAY["30383"] = '30,和歌山県,30383,由良町';
-GSI.MUNI_ARRAY["30390"] = '30,和歌山県,30390,印南町';
-GSI.MUNI_ARRAY["30391"] = '30,和歌山県,30391,みなべ町';
-GSI.MUNI_ARRAY["30392"] = '30,和歌山県,30392,日高川町';
-GSI.MUNI_ARRAY["30401"] = '30,和歌山県,30401,白浜町';
-GSI.MUNI_ARRAY["30404"] = '30,和歌山県,30404,上富田町';
-GSI.MUNI_ARRAY["30406"] = '30,和歌山県,30406,すさみ町';
-GSI.MUNI_ARRAY["30421"] = '30,和歌山県,30421,那智勝浦町';
-GSI.MUNI_ARRAY["30422"] = '30,和歌山県,30422,太地町';
-GSI.MUNI_ARRAY["30424"] = '30,和歌山県,30424,古座川町';
-GSI.MUNI_ARRAY["30427"] = '30,和歌山県,30427,北山村';
-GSI.MUNI_ARRAY["30428"] = '30,和歌山県,30428,串本町';
-GSI.MUNI_ARRAY["31201"] = '31,鳥取県,31201,鳥取市';
-GSI.MUNI_ARRAY["31202"] = '31,鳥取県,31202,米子市';
-GSI.MUNI_ARRAY["31203"] = '31,鳥取県,31203,倉吉市';
-GSI.MUNI_ARRAY["31204"] = '31,鳥取県,31204,境港市';
-GSI.MUNI_ARRAY["31302"] = '31,鳥取県,31302,岩美町';
-GSI.MUNI_ARRAY["31325"] = '31,鳥取県,31325,若桜町';
-GSI.MUNI_ARRAY["31328"] = '31,鳥取県,31328,智頭町';
-GSI.MUNI_ARRAY["31329"] = '31,鳥取県,31329,八頭町';
-GSI.MUNI_ARRAY["31364"] = '31,鳥取県,31364,三朝町';
-GSI.MUNI_ARRAY["31370"] = '31,鳥取県,31370,湯梨浜町';
-GSI.MUNI_ARRAY["31371"] = '31,鳥取県,31371,琴浦町';
-GSI.MUNI_ARRAY["31372"] = '31,鳥取県,31372,北栄町';
-GSI.MUNI_ARRAY["31384"] = '31,鳥取県,31384,日吉津村';
-GSI.MUNI_ARRAY["31386"] = '31,鳥取県,31386,大山町';
-GSI.MUNI_ARRAY["31389"] = '31,鳥取県,31389,南部町';
-GSI.MUNI_ARRAY["31390"] = '31,鳥取県,31390,伯耆町';
-GSI.MUNI_ARRAY["31401"] = '31,鳥取県,31401,日南町';
-GSI.MUNI_ARRAY["31402"] = '31,鳥取県,31402,日野町';
-GSI.MUNI_ARRAY["31403"] = '31,鳥取県,31403,江府町';
-GSI.MUNI_ARRAY["32201"] = '32,島根県,32201,松江市';
-GSI.MUNI_ARRAY["32202"] = '32,島根県,32202,浜田市';
-GSI.MUNI_ARRAY["32203"] = '32,島根県,32203,出雲市';
-GSI.MUNI_ARRAY["32204"] = '32,島根県,32204,益田市';
-GSI.MUNI_ARRAY["32205"] = '32,島根県,32205,大田市';
-GSI.MUNI_ARRAY["32206"] = '32,島根県,32206,安来市';
-GSI.MUNI_ARRAY["32207"] = '32,島根県,32207,江津市';
-GSI.MUNI_ARRAY["32209"] = '32,島根県,32209,雲南市';
-GSI.MUNI_ARRAY["32343"] = '32,島根県,32343,奥出雲町';
-GSI.MUNI_ARRAY["32386"] = '32,島根県,32386,飯南町';
-GSI.MUNI_ARRAY["32441"] = '32,島根県,32441,川本町';
-GSI.MUNI_ARRAY["32448"] = '32,島根県,32448,美郷町';
-GSI.MUNI_ARRAY["32449"] = '32,島根県,32449,邑南町';
-GSI.MUNI_ARRAY["32501"] = '32,島根県,32501,津和野町';
-GSI.MUNI_ARRAY["32505"] = '32,島根県,32505,吉賀町';
-GSI.MUNI_ARRAY["32525"] = '32,島根県,32525,海士町';
-GSI.MUNI_ARRAY["32526"] = '32,島根県,32526,西ノ島町';
-GSI.MUNI_ARRAY["32527"] = '32,島根県,32527,知夫村';
-GSI.MUNI_ARRAY["32528"] = '32,島根県,32528,隠岐の島町';
-GSI.MUNI_ARRAY["33100"] = '33,岡山県,33100,岡山市';
-GSI.MUNI_ARRAY["33101"] = '33,岡山県,33101,岡山市　北区';
-GSI.MUNI_ARRAY["33102"] = '33,岡山県,33102,岡山市　中区';
-GSI.MUNI_ARRAY["33103"] = '33,岡山県,33103,岡山市　東区';
-GSI.MUNI_ARRAY["33104"] = '33,岡山県,33104,岡山市　南区';
-GSI.MUNI_ARRAY["33202"] = '33,岡山県,33202,倉敷市';
-GSI.MUNI_ARRAY["33203"] = '33,岡山県,33203,津山市';
-GSI.MUNI_ARRAY["33204"] = '33,岡山県,33204,玉野市';
-GSI.MUNI_ARRAY["33205"] = '33,岡山県,33205,笠岡市';
-GSI.MUNI_ARRAY["33207"] = '33,岡山県,33207,井原市';
-GSI.MUNI_ARRAY["33208"] = '33,岡山県,33208,総社市';
-GSI.MUNI_ARRAY["33209"] = '33,岡山県,33209,高梁市';
-GSI.MUNI_ARRAY["33210"] = '33,岡山県,33210,新見市';
-GSI.MUNI_ARRAY["33211"] = '33,岡山県,33211,備前市';
-GSI.MUNI_ARRAY["33212"] = '33,岡山県,33212,瀬戸内市';
-GSI.MUNI_ARRAY["33213"] = '33,岡山県,33213,赤磐市';
-GSI.MUNI_ARRAY["33214"] = '33,岡山県,33214,真庭市';
-GSI.MUNI_ARRAY["33215"] = '33,岡山県,33215,美作市';
-GSI.MUNI_ARRAY["33216"] = '33,岡山県,33216,浅口市';
-GSI.MUNI_ARRAY["33346"] = '33,岡山県,33346,和気町';
-GSI.MUNI_ARRAY["33423"] = '33,岡山県,33423,早島町';
-GSI.MUNI_ARRAY["33445"] = '33,岡山県,33445,里庄町';
-GSI.MUNI_ARRAY["33461"] = '33,岡山県,33461,矢掛町';
-GSI.MUNI_ARRAY["33586"] = '33,岡山県,33586,新庄村';
-GSI.MUNI_ARRAY["33606"] = '33,岡山県,33606,鏡野町';
-GSI.MUNI_ARRAY["33622"] = '33,岡山県,33622,勝央町';
-GSI.MUNI_ARRAY["33623"] = '33,岡山県,33623,奈義町';
-GSI.MUNI_ARRAY["33643"] = '33,岡山県,33643,西粟倉村';
-GSI.MUNI_ARRAY["33663"] = '33,岡山県,33663,久米南町';
-GSI.MUNI_ARRAY["33666"] = '33,岡山県,33666,美咲町';
-GSI.MUNI_ARRAY["33681"] = '33,岡山県,33681,吉備中央町';
-GSI.MUNI_ARRAY["34100"] = '34,広島県,34100,広島市';
-GSI.MUNI_ARRAY["34101"] = '34,広島県,34101,広島市　中区';
-GSI.MUNI_ARRAY["34102"] = '34,広島県,34102,広島市　東区';
-GSI.MUNI_ARRAY["34103"] = '34,広島県,34103,広島市　南区';
-GSI.MUNI_ARRAY["34104"] = '34,広島県,34104,広島市　西区';
-GSI.MUNI_ARRAY["34105"] = '34,広島県,34105,広島市　安佐南区';
-GSI.MUNI_ARRAY["34106"] = '34,広島県,34106,広島市　安佐北区';
-GSI.MUNI_ARRAY["34107"] = '34,広島県,34107,広島市　安芸区';
-GSI.MUNI_ARRAY["34108"] = '34,広島県,34108,広島市　佐伯区';
-GSI.MUNI_ARRAY["34202"] = '34,広島県,34202,呉市';
-GSI.MUNI_ARRAY["34203"] = '34,広島県,34203,竹原市';
-GSI.MUNI_ARRAY["34204"] = '34,広島県,34204,三原市';
-GSI.MUNI_ARRAY["34205"] = '34,広島県,34205,尾道市';
-GSI.MUNI_ARRAY["34207"] = '34,広島県,34207,福山市';
-GSI.MUNI_ARRAY["34208"] = '34,広島県,34208,府中市';
-GSI.MUNI_ARRAY["34209"] = '34,広島県,34209,三次市';
-GSI.MUNI_ARRAY["34210"] = '34,広島県,34210,庄原市';
-GSI.MUNI_ARRAY["34211"] = '34,広島県,34211,大竹市';
-GSI.MUNI_ARRAY["34212"] = '34,広島県,34212,東広島市';
-GSI.MUNI_ARRAY["34213"] = '34,広島県,34213,廿日市市';
-GSI.MUNI_ARRAY["34214"] = '34,広島県,34214,安芸高田市';
-GSI.MUNI_ARRAY["34215"] = '34,広島県,34215,江田島市';
-GSI.MUNI_ARRAY["34302"] = '34,広島県,34302,府中町';
-GSI.MUNI_ARRAY["34304"] = '34,広島県,34304,海田町';
-GSI.MUNI_ARRAY["34307"] = '34,広島県,34307,熊野町';
-GSI.MUNI_ARRAY["34309"] = '34,広島県,34309,坂町';
-GSI.MUNI_ARRAY["34368"] = '34,広島県,34368,安芸太田町';
-GSI.MUNI_ARRAY["34369"] = '34,広島県,34369,北広島町';
-GSI.MUNI_ARRAY["34431"] = '34,広島県,34431,大崎上島町';
-GSI.MUNI_ARRAY["34462"] = '34,広島県,34462,世羅町';
-GSI.MUNI_ARRAY["34545"] = '34,広島県,34545,神石高原町';
-GSI.MUNI_ARRAY["35201"] = '35,山口県,35201,下関市';
-GSI.MUNI_ARRAY["35202"] = '35,山口県,35202,宇部市';
-GSI.MUNI_ARRAY["35203"] = '35,山口県,35203,山口市';
-GSI.MUNI_ARRAY["35204"] = '35,山口県,35204,萩市';
-GSI.MUNI_ARRAY["35206"] = '35,山口県,35206,防府市';
-GSI.MUNI_ARRAY["35207"] = '35,山口県,35207,下松市';
-GSI.MUNI_ARRAY["35208"] = '35,山口県,35208,岩国市';
-GSI.MUNI_ARRAY["35210"] = '35,山口県,35210,光市';
-GSI.MUNI_ARRAY["35211"] = '35,山口県,35211,長門市';
-GSI.MUNI_ARRAY["35212"] = '35,山口県,35212,柳井市';
-GSI.MUNI_ARRAY["35213"] = '35,山口県,35213,美祢市';
-GSI.MUNI_ARRAY["35215"] = '35,山口県,35215,周南市';
-GSI.MUNI_ARRAY["35216"] = '35,山口県,35216,山陽小野田市';
-GSI.MUNI_ARRAY["35305"] = '35,山口県,35305,周防大島町';
-GSI.MUNI_ARRAY["35321"] = '35,山口県,35321,和木町';
-GSI.MUNI_ARRAY["35341"] = '35,山口県,35341,上関町';
-GSI.MUNI_ARRAY["35343"] = '35,山口県,35343,田布施町';
-GSI.MUNI_ARRAY["35344"] = '35,山口県,35344,平生町';
-GSI.MUNI_ARRAY["35502"] = '35,山口県,35502,阿武町';
-GSI.MUNI_ARRAY["36201"] = '36,徳島県,36201,徳島市';
-GSI.MUNI_ARRAY["36202"] = '36,徳島県,36202,鳴門市';
-GSI.MUNI_ARRAY["36203"] = '36,徳島県,36203,小松島市';
-GSI.MUNI_ARRAY["36204"] = '36,徳島県,36204,阿南市';
-GSI.MUNI_ARRAY["36205"] = '36,徳島県,36205,吉野川市';
-GSI.MUNI_ARRAY["36206"] = '36,徳島県,36206,阿波市';
-GSI.MUNI_ARRAY["36207"] = '36,徳島県,36207,美馬市';
-GSI.MUNI_ARRAY["36208"] = '36,徳島県,36208,三好市';
-GSI.MUNI_ARRAY["36301"] = '36,徳島県,36301,勝浦町';
-GSI.MUNI_ARRAY["36302"] = '36,徳島県,36302,上勝町';
-GSI.MUNI_ARRAY["36321"] = '36,徳島県,36321,佐那河内村';
-GSI.MUNI_ARRAY["36341"] = '36,徳島県,36341,石井町';
-GSI.MUNI_ARRAY["36342"] = '36,徳島県,36342,神山町';
-GSI.MUNI_ARRAY["36368"] = '36,徳島県,36368,那賀町';
-GSI.MUNI_ARRAY["36383"] = '36,徳島県,36383,牟岐町';
-GSI.MUNI_ARRAY["36387"] = '36,徳島県,36387,美波町';
-GSI.MUNI_ARRAY["36388"] = '36,徳島県,36388,海陽町';
-GSI.MUNI_ARRAY["36401"] = '36,徳島県,36401,松茂町';
-GSI.MUNI_ARRAY["36402"] = '36,徳島県,36402,北島町';
-GSI.MUNI_ARRAY["36403"] = '36,徳島県,36403,藍住町';
-GSI.MUNI_ARRAY["36404"] = '36,徳島県,36404,板野町';
-GSI.MUNI_ARRAY["36405"] = '36,徳島県,36405,上板町';
-GSI.MUNI_ARRAY["36468"] = '36,徳島県,36468,つるぎ町';
-GSI.MUNI_ARRAY["36489"] = '36,徳島県,36489,東みよし町';
-GSI.MUNI_ARRAY["37201"] = '37,香川県,37201,高松市';
-GSI.MUNI_ARRAY["37202"] = '37,香川県,37202,丸亀市';
-GSI.MUNI_ARRAY["37203"] = '37,香川県,37203,坂出市';
-GSI.MUNI_ARRAY["37204"] = '37,香川県,37204,善通寺市';
-GSI.MUNI_ARRAY["37205"] = '37,香川県,37205,観音寺市';
-GSI.MUNI_ARRAY["37206"] = '37,香川県,37206,さぬき市';
-GSI.MUNI_ARRAY["37207"] = '37,香川県,37207,東かがわ市';
-GSI.MUNI_ARRAY["37208"] = '37,香川県,37208,三豊市';
-GSI.MUNI_ARRAY["37322"] = '37,香川県,37322,土庄町';
-GSI.MUNI_ARRAY["37324"] = '37,香川県,37324,小豆島町';
-GSI.MUNI_ARRAY["37341"] = '37,香川県,37341,三木町';
-GSI.MUNI_ARRAY["37364"] = '37,香川県,37364,直島町';
-GSI.MUNI_ARRAY["37386"] = '37,香川県,37386,宇多津町';
-GSI.MUNI_ARRAY["37387"] = '37,香川県,37387,綾川町';
-GSI.MUNI_ARRAY["37403"] = '37,香川県,37403,琴平町';
-GSI.MUNI_ARRAY["37404"] = '37,香川県,37404,多度津町';
-GSI.MUNI_ARRAY["37406"] = '37,香川県,37406,まんのう町';
-GSI.MUNI_ARRAY["38201"] = '38,愛媛県,38201,松山市';
-GSI.MUNI_ARRAY["38202"] = '38,愛媛県,38202,今治市';
-GSI.MUNI_ARRAY["38203"] = '38,愛媛県,38203,宇和島市';
-GSI.MUNI_ARRAY["38204"] = '38,愛媛県,38204,八幡浜市';
-GSI.MUNI_ARRAY["38205"] = '38,愛媛県,38205,新居浜市';
-GSI.MUNI_ARRAY["38206"] = '38,愛媛県,38206,西条市';
-GSI.MUNI_ARRAY["38207"] = '38,愛媛県,38207,大洲市';
-GSI.MUNI_ARRAY["38210"] = '38,愛媛県,38210,伊予市';
-GSI.MUNI_ARRAY["38213"] = '38,愛媛県,38213,四国中央市';
-GSI.MUNI_ARRAY["38214"] = '38,愛媛県,38214,西予市';
-GSI.MUNI_ARRAY["38215"] = '38,愛媛県,38215,東温市';
-GSI.MUNI_ARRAY["38356"] = '38,愛媛県,38356,上島町';
-GSI.MUNI_ARRAY["38386"] = '38,愛媛県,38386,久万高原町';
-GSI.MUNI_ARRAY["38401"] = '38,愛媛県,38401,松前町';
-GSI.MUNI_ARRAY["38402"] = '38,愛媛県,38402,砥部町';
-GSI.MUNI_ARRAY["38422"] = '38,愛媛県,38422,内子町';
-GSI.MUNI_ARRAY["38442"] = '38,愛媛県,38442,伊方町';
-GSI.MUNI_ARRAY["38484"] = '38,愛媛県,38484,松野町';
-GSI.MUNI_ARRAY["38488"] = '38,愛媛県,38488,鬼北町';
-GSI.MUNI_ARRAY["38506"] = '38,愛媛県,38506,愛南町';
-GSI.MUNI_ARRAY["39201"] = '39,高知県,39201,高知市';
-GSI.MUNI_ARRAY["39202"] = '39,高知県,39202,室戸市';
-GSI.MUNI_ARRAY["39203"] = '39,高知県,39203,安芸市';
-GSI.MUNI_ARRAY["39204"] = '39,高知県,39204,南国市';
-GSI.MUNI_ARRAY["39205"] = '39,高知県,39205,土佐市';
-GSI.MUNI_ARRAY["39206"] = '39,高知県,39206,須崎市';
-GSI.MUNI_ARRAY["39208"] = '39,高知県,39208,宿毛市';
-GSI.MUNI_ARRAY["39209"] = '39,高知県,39209,土佐清水市';
-GSI.MUNI_ARRAY["39210"] = '39,高知県,39210,四万十市';
-GSI.MUNI_ARRAY["39211"] = '39,高知県,39211,香南市';
-GSI.MUNI_ARRAY["39212"] = '39,高知県,39212,香美市';
-GSI.MUNI_ARRAY["39301"] = '39,高知県,39301,東洋町';
-GSI.MUNI_ARRAY["39302"] = '39,高知県,39302,奈半利町';
-GSI.MUNI_ARRAY["39303"] = '39,高知県,39303,田野町';
-GSI.MUNI_ARRAY["39304"] = '39,高知県,39304,安田町';
-GSI.MUNI_ARRAY["39305"] = '39,高知県,39305,北川村';
-GSI.MUNI_ARRAY["39306"] = '39,高知県,39306,馬路村';
-GSI.MUNI_ARRAY["39307"] = '39,高知県,39307,芸西村';
-GSI.MUNI_ARRAY["39341"] = '39,高知県,39341,本山町';
-GSI.MUNI_ARRAY["39344"] = '39,高知県,39344,大豊町';
-GSI.MUNI_ARRAY["39363"] = '39,高知県,39363,土佐町';
-GSI.MUNI_ARRAY["39364"] = '39,高知県,39364,大川村';
-GSI.MUNI_ARRAY["39386"] = '39,高知県,39386,いの町';
-GSI.MUNI_ARRAY["39387"] = '39,高知県,39387,仁淀川町';
-GSI.MUNI_ARRAY["39401"] = '39,高知県,39401,中土佐町';
-GSI.MUNI_ARRAY["39402"] = '39,高知県,39402,佐川町';
-GSI.MUNI_ARRAY["39403"] = '39,高知県,39403,越知町';
-GSI.MUNI_ARRAY["39405"] = '39,高知県,39405,梼原町';
-GSI.MUNI_ARRAY["39410"] = '39,高知県,39410,日高村';
-GSI.MUNI_ARRAY["39411"] = '39,高知県,39411,津野町';
-GSI.MUNI_ARRAY["39412"] = '39,高知県,39412,四万十町';
-GSI.MUNI_ARRAY["39424"] = '39,高知県,39424,大月町';
-GSI.MUNI_ARRAY["39427"] = '39,高知県,39427,三原村';
-GSI.MUNI_ARRAY["39428"] = '39,高知県,39428,黒潮町';
-GSI.MUNI_ARRAY["40100"] = '40,福岡県,40100,北九州市';
-GSI.MUNI_ARRAY["40101"] = '40,福岡県,40101,北九州市　門司区';
-GSI.MUNI_ARRAY["40103"] = '40,福岡県,40103,北九州市　若松区';
-GSI.MUNI_ARRAY["40105"] = '40,福岡県,40105,北九州市　戸畑区';
-GSI.MUNI_ARRAY["40106"] = '40,福岡県,40106,北九州市　小倉北区';
-GSI.MUNI_ARRAY["40107"] = '40,福岡県,40107,北九州市　小倉南区';
-GSI.MUNI_ARRAY["40108"] = '40,福岡県,40108,北九州市　八幡東区';
-GSI.MUNI_ARRAY["40109"] = '40,福岡県,40109,北九州市　八幡西区';
-GSI.MUNI_ARRAY["40130"] = '40,福岡県,40130,福岡市';
-GSI.MUNI_ARRAY["40131"] = '40,福岡県,40131,福岡市　東区';
-GSI.MUNI_ARRAY["40132"] = '40,福岡県,40132,福岡市　博多区';
-GSI.MUNI_ARRAY["40133"] = '40,福岡県,40133,福岡市　中央区';
-GSI.MUNI_ARRAY["40134"] = '40,福岡県,40134,福岡市　南区';
-GSI.MUNI_ARRAY["40135"] = '40,福岡県,40135,福岡市　西区';
-GSI.MUNI_ARRAY["40136"] = '40,福岡県,40136,福岡市　城南区';
-GSI.MUNI_ARRAY["40137"] = '40,福岡県,40137,福岡市　早良区';
-GSI.MUNI_ARRAY["40202"] = '40,福岡県,40202,大牟田市';
-GSI.MUNI_ARRAY["40203"] = '40,福岡県,40203,久留米市';
-GSI.MUNI_ARRAY["40204"] = '40,福岡県,40204,直方市';
-GSI.MUNI_ARRAY["40205"] = '40,福岡県,40205,飯塚市';
-GSI.MUNI_ARRAY["40206"] = '40,福岡県,40206,田川市';
-GSI.MUNI_ARRAY["40207"] = '40,福岡県,40207,柳川市';
-GSI.MUNI_ARRAY["40210"] = '40,福岡県,40210,八女市';
-GSI.MUNI_ARRAY["40211"] = '40,福岡県,40211,筑後市';
-GSI.MUNI_ARRAY["40212"] = '40,福岡県,40212,大川市';
-GSI.MUNI_ARRAY["40213"] = '40,福岡県,40213,行橋市';
-GSI.MUNI_ARRAY["40214"] = '40,福岡県,40214,豊前市';
-GSI.MUNI_ARRAY["40215"] = '40,福岡県,40215,中間市';
-GSI.MUNI_ARRAY["40216"] = '40,福岡県,40216,小郡市';
-GSI.MUNI_ARRAY["40217"] = '40,福岡県,40217,筑紫野市';
-GSI.MUNI_ARRAY["40218"] = '40,福岡県,40218,春日市';
-GSI.MUNI_ARRAY["40219"] = '40,福岡県,40219,大野城市';
-GSI.MUNI_ARRAY["40220"] = '40,福岡県,40220,宗像市';
-GSI.MUNI_ARRAY["40221"] = '40,福岡県,40221,太宰府市';
-GSI.MUNI_ARRAY["40223"] = '40,福岡県,40223,古賀市';
-GSI.MUNI_ARRAY["40224"] = '40,福岡県,40224,福津市';
-GSI.MUNI_ARRAY["40225"] = '40,福岡県,40225,うきは市';
-GSI.MUNI_ARRAY["40226"] = '40,福岡県,40226,宮若市';
-GSI.MUNI_ARRAY["40227"] = '40,福岡県,40227,嘉麻市';
-GSI.MUNI_ARRAY["40228"] = '40,福岡県,40228,朝倉市';
-GSI.MUNI_ARRAY["40229"] = '40,福岡県,40229,みやま市';
-GSI.MUNI_ARRAY["40230"] = '40,福岡県,40230,糸島市';
-GSI.MUNI_ARRAY["40305"] = '40,福岡県,40305,那珂川町';
-GSI.MUNI_ARRAY["40341"] = '40,福岡県,40341,宇美町';
-GSI.MUNI_ARRAY["40342"] = '40,福岡県,40342,篠栗町';
-GSI.MUNI_ARRAY["40343"] = '40,福岡県,40343,志免町';
-GSI.MUNI_ARRAY["40344"] = '40,福岡県,40344,須恵町';
-GSI.MUNI_ARRAY["40345"] = '40,福岡県,40345,新宮町';
-GSI.MUNI_ARRAY["40348"] = '40,福岡県,40348,久山町';
-GSI.MUNI_ARRAY["40349"] = '40,福岡県,40349,粕屋町';
-GSI.MUNI_ARRAY["40381"] = '40,福岡県,40381,芦屋町';
-GSI.MUNI_ARRAY["40382"] = '40,福岡県,40382,水巻町';
-GSI.MUNI_ARRAY["40383"] = '40,福岡県,40383,岡垣町';
-GSI.MUNI_ARRAY["40384"] = '40,福岡県,40384,遠賀町';
-GSI.MUNI_ARRAY["40401"] = '40,福岡県,40401,小竹町';
-GSI.MUNI_ARRAY["40402"] = '40,福岡県,40402,鞍手町';
-GSI.MUNI_ARRAY["40421"] = '40,福岡県,40421,桂川町';
-GSI.MUNI_ARRAY["40447"] = '40,福岡県,40447,筑前町';
-GSI.MUNI_ARRAY["40448"] = '40,福岡県,40448,東峰村';
-GSI.MUNI_ARRAY["40503"] = '40,福岡県,40503,大刀洗町';
-GSI.MUNI_ARRAY["40522"] = '40,福岡県,40522,大木町';
-GSI.MUNI_ARRAY["40544"] = '40,福岡県,40544,広川町';
-GSI.MUNI_ARRAY["40601"] = '40,福岡県,40601,香春町';
-GSI.MUNI_ARRAY["40602"] = '40,福岡県,40602,添田町';
-GSI.MUNI_ARRAY["40604"] = '40,福岡県,40604,糸田町';
-GSI.MUNI_ARRAY["40605"] = '40,福岡県,40605,川崎町';
-GSI.MUNI_ARRAY["40608"] = '40,福岡県,40608,大任町';
-GSI.MUNI_ARRAY["40609"] = '40,福岡県,40609,赤村';
-GSI.MUNI_ARRAY["40610"] = '40,福岡県,40610,福智町';
-GSI.MUNI_ARRAY["40621"] = '40,福岡県,40621,苅田町';
-GSI.MUNI_ARRAY["40625"] = '40,福岡県,40625,みやこ町';
-GSI.MUNI_ARRAY["40642"] = '40,福岡県,40642,吉富町';
-GSI.MUNI_ARRAY["40646"] = '40,福岡県,40646,上毛町';
-GSI.MUNI_ARRAY["40647"] = '40,福岡県,40647,築上町';
-GSI.MUNI_ARRAY["41201"] = '41,佐賀県,41201,佐賀市';
-GSI.MUNI_ARRAY["41202"] = '41,佐賀県,41202,唐津市';
-GSI.MUNI_ARRAY["41203"] = '41,佐賀県,41203,鳥栖市';
-GSI.MUNI_ARRAY["41204"] = '41,佐賀県,41204,多久市';
-GSI.MUNI_ARRAY["41205"] = '41,佐賀県,41205,伊万里市';
-GSI.MUNI_ARRAY["41206"] = '41,佐賀県,41206,武雄市';
-GSI.MUNI_ARRAY["41207"] = '41,佐賀県,41207,鹿島市';
-GSI.MUNI_ARRAY["41208"] = '41,佐賀県,41208,小城市';
-GSI.MUNI_ARRAY["41209"] = '41,佐賀県,41209,嬉野市';
-GSI.MUNI_ARRAY["41210"] = '41,佐賀県,41210,神埼市';
-GSI.MUNI_ARRAY["41327"] = '41,佐賀県,41327,吉野ヶ里町';
-GSI.MUNI_ARRAY["41341"] = '41,佐賀県,41341,基山町';
-GSI.MUNI_ARRAY["41345"] = '41,佐賀県,41345,上峰町';
-GSI.MUNI_ARRAY["41346"] = '41,佐賀県,41346,みやき町';
-GSI.MUNI_ARRAY["41387"] = '41,佐賀県,41387,玄海町';
-GSI.MUNI_ARRAY["41401"] = '41,佐賀県,41401,有田町';
-GSI.MUNI_ARRAY["41423"] = '41,佐賀県,41423,大町町';
-GSI.MUNI_ARRAY["41424"] = '41,佐賀県,41424,江北町';
-GSI.MUNI_ARRAY["41425"] = '41,佐賀県,41425,白石町';
-GSI.MUNI_ARRAY["41441"] = '41,佐賀県,41441,太良町';
-GSI.MUNI_ARRAY["42201"] = '42,長崎県,42201,長崎市';
-GSI.MUNI_ARRAY["42202"] = '42,長崎県,42202,佐世保市';
-GSI.MUNI_ARRAY["42203"] = '42,長崎県,42203,島原市';
-GSI.MUNI_ARRAY["42204"] = '42,長崎県,42204,諫早市';
-GSI.MUNI_ARRAY["42205"] = '42,長崎県,42205,大村市';
-GSI.MUNI_ARRAY["42207"] = '42,長崎県,42207,平戸市';
-GSI.MUNI_ARRAY["42208"] = '42,長崎県,42208,松浦市';
-GSI.MUNI_ARRAY["42209"] = '42,長崎県,42209,対馬市';
-GSI.MUNI_ARRAY["42210"] = '42,長崎県,42210,壱岐市';
-GSI.MUNI_ARRAY["42211"] = '42,長崎県,42211,五島市';
-GSI.MUNI_ARRAY["42212"] = '42,長崎県,42212,西海市';
-GSI.MUNI_ARRAY["42213"] = '42,長崎県,42213,雲仙市';
-GSI.MUNI_ARRAY["42214"] = '42,長崎県,42214,南島原市';
-GSI.MUNI_ARRAY["42307"] = '42,長崎県,42307,長与町';
-GSI.MUNI_ARRAY["42308"] = '42,長崎県,42308,時津町';
-GSI.MUNI_ARRAY["42321"] = '42,長崎県,42321,東彼杵町';
-GSI.MUNI_ARRAY["42322"] = '42,長崎県,42322,川棚町';
-GSI.MUNI_ARRAY["42323"] = '42,長崎県,42323,波佐見町';
-GSI.MUNI_ARRAY["42383"] = '42,長崎県,42383,小値賀町';
-GSI.MUNI_ARRAY["42391"] = '42,長崎県,42391,佐々町';
-GSI.MUNI_ARRAY["42411"] = '42,長崎県,42411,新上五島町';
-GSI.MUNI_ARRAY["43100"] = '43,熊本県,43100,熊本市';
-GSI.MUNI_ARRAY["43101"] = '43,熊本県,43101,熊本市　中央区';
-GSI.MUNI_ARRAY["43102"] = '43,熊本県,43102,熊本市　東区';
-GSI.MUNI_ARRAY["43103"] = '43,熊本県,43103,熊本市　西区';
-GSI.MUNI_ARRAY["43104"] = '43,熊本県,43104,熊本市　南区';
-GSI.MUNI_ARRAY["43105"] = '43,熊本県,43105,熊本市　北区';
-GSI.MUNI_ARRAY["43202"] = '43,熊本県,43202,八代市';
-GSI.MUNI_ARRAY["43203"] = '43,熊本県,43203,人吉市';
-GSI.MUNI_ARRAY["43204"] = '43,熊本県,43204,荒尾市';
-GSI.MUNI_ARRAY["43205"] = '43,熊本県,43205,水俣市';
-GSI.MUNI_ARRAY["43206"] = '43,熊本県,43206,玉名市';
-GSI.MUNI_ARRAY["43208"] = '43,熊本県,43208,山鹿市';
-GSI.MUNI_ARRAY["43210"] = '43,熊本県,43210,菊池市';
-GSI.MUNI_ARRAY["43211"] = '43,熊本県,43211,宇土市';
-GSI.MUNI_ARRAY["43212"] = '43,熊本県,43212,上天草市';
-GSI.MUNI_ARRAY["43213"] = '43,熊本県,43213,宇城市';
-GSI.MUNI_ARRAY["43214"] = '43,熊本県,43214,阿蘇市';
-GSI.MUNI_ARRAY["43215"] = '43,熊本県,43215,天草市';
-GSI.MUNI_ARRAY["43216"] = '43,熊本県,43216,合志市';
-GSI.MUNI_ARRAY["43348"] = '43,熊本県,43348,美里町';
-GSI.MUNI_ARRAY["43364"] = '43,熊本県,43364,玉東町';
-GSI.MUNI_ARRAY["43367"] = '43,熊本県,43367,南関町';
-GSI.MUNI_ARRAY["43368"] = '43,熊本県,43368,長洲町';
-GSI.MUNI_ARRAY["43369"] = '43,熊本県,43369,和水町';
-GSI.MUNI_ARRAY["43403"] = '43,熊本県,43403,大津町';
-GSI.MUNI_ARRAY["43404"] = '43,熊本県,43404,菊陽町';
-GSI.MUNI_ARRAY["43423"] = '43,熊本県,43423,南小国町';
-GSI.MUNI_ARRAY["43424"] = '43,熊本県,43424,小国町';
-GSI.MUNI_ARRAY["43425"] = '43,熊本県,43425,産山村';
-GSI.MUNI_ARRAY["43428"] = '43,熊本県,43428,高森町';
-GSI.MUNI_ARRAY["43432"] = '43,熊本県,43432,西原村';
-GSI.MUNI_ARRAY["43433"] = '43,熊本県,43433,南阿蘇村';
-GSI.MUNI_ARRAY["43441"] = '43,熊本県,43441,御船町';
-GSI.MUNI_ARRAY["43442"] = '43,熊本県,43442,嘉島町';
-GSI.MUNI_ARRAY["43443"] = '43,熊本県,43443,益城町';
-GSI.MUNI_ARRAY["43444"] = '43,熊本県,43444,甲佐町';
-GSI.MUNI_ARRAY["43447"] = '43,熊本県,43447,山都町';
-GSI.MUNI_ARRAY["43468"] = '43,熊本県,43468,氷川町';
-GSI.MUNI_ARRAY["43482"] = '43,熊本県,43482,芦北町';
-GSI.MUNI_ARRAY["43484"] = '43,熊本県,43484,津奈木町';
-GSI.MUNI_ARRAY["43501"] = '43,熊本県,43501,錦町';
-GSI.MUNI_ARRAY["43505"] = '43,熊本県,43505,多良木町';
-GSI.MUNI_ARRAY["43506"] = '43,熊本県,43506,湯前町';
-GSI.MUNI_ARRAY["43507"] = '43,熊本県,43507,水上村';
-GSI.MUNI_ARRAY["43510"] = '43,熊本県,43510,相良村';
-GSI.MUNI_ARRAY["43511"] = '43,熊本県,43511,五木村';
-GSI.MUNI_ARRAY["43512"] = '43,熊本県,43512,山江村';
-GSI.MUNI_ARRAY["43513"] = '43,熊本県,43513,球磨村';
-GSI.MUNI_ARRAY["43514"] = '43,熊本県,43514,あさぎり町';
-GSI.MUNI_ARRAY["43531"] = '43,熊本県,43531,苓北町';
-GSI.MUNI_ARRAY["44201"] = '44,大分県,44201,大分市';
-GSI.MUNI_ARRAY["44202"] = '44,大分県,44202,別府市';
-GSI.MUNI_ARRAY["44203"] = '44,大分県,44203,中津市';
-GSI.MUNI_ARRAY["44204"] = '44,大分県,44204,日田市';
-GSI.MUNI_ARRAY["44205"] = '44,大分県,44205,佐伯市';
-GSI.MUNI_ARRAY["44206"] = '44,大分県,44206,臼杵市';
-GSI.MUNI_ARRAY["44207"] = '44,大分県,44207,津久見市';
-GSI.MUNI_ARRAY["44208"] = '44,大分県,44208,竹田市';
-GSI.MUNI_ARRAY["44209"] = '44,大分県,44209,豊後高田市';
-GSI.MUNI_ARRAY["44210"] = '44,大分県,44210,杵築市';
-GSI.MUNI_ARRAY["44211"] = '44,大分県,44211,宇佐市';
-GSI.MUNI_ARRAY["44212"] = '44,大分県,44212,豊後大野市';
-GSI.MUNI_ARRAY["44213"] = '44,大分県,44213,由布市';
-GSI.MUNI_ARRAY["44214"] = '44,大分県,44214,国東市';
-GSI.MUNI_ARRAY["44322"] = '44,大分県,44322,姫島村';
-GSI.MUNI_ARRAY["44341"] = '44,大分県,44341,日出町';
-GSI.MUNI_ARRAY["44461"] = '44,大分県,44461,九重町';
-GSI.MUNI_ARRAY["44462"] = '44,大分県,44462,玖珠町';
-GSI.MUNI_ARRAY["45201"] = '45,宮崎県,45201,宮崎市';
-GSI.MUNI_ARRAY["45202"] = '45,宮崎県,45202,都城市';
-GSI.MUNI_ARRAY["45203"] = '45,宮崎県,45203,延岡市';
-GSI.MUNI_ARRAY["45204"] = '45,宮崎県,45204,日南市';
-GSI.MUNI_ARRAY["45205"] = '45,宮崎県,45205,小林市';
-GSI.MUNI_ARRAY["45206"] = '45,宮崎県,45206,日向市';
-GSI.MUNI_ARRAY["45207"] = '45,宮崎県,45207,串間市';
-GSI.MUNI_ARRAY["45208"] = '45,宮崎県,45208,西都市';
-GSI.MUNI_ARRAY["45209"] = '45,宮崎県,45209,えびの市';
-GSI.MUNI_ARRAY["45341"] = '45,宮崎県,45341,三股町';
-GSI.MUNI_ARRAY["45361"] = '45,宮崎県,45361,高原町';
-GSI.MUNI_ARRAY["45382"] = '45,宮崎県,45382,国富町';
-GSI.MUNI_ARRAY["45383"] = '45,宮崎県,45383,綾町';
-GSI.MUNI_ARRAY["45401"] = '45,宮崎県,45401,高鍋町';
-GSI.MUNI_ARRAY["45402"] = '45,宮崎県,45402,新富町';
-GSI.MUNI_ARRAY["45403"] = '45,宮崎県,45403,西米良村';
-GSI.MUNI_ARRAY["45404"] = '45,宮崎県,45404,木城町';
-GSI.MUNI_ARRAY["45405"] = '45,宮崎県,45405,川南町';
-GSI.MUNI_ARRAY["45406"] = '45,宮崎県,45406,都農町';
-GSI.MUNI_ARRAY["45421"] = '45,宮崎県,45421,門川町';
-GSI.MUNI_ARRAY["45429"] = '45,宮崎県,45429,諸塚村';
-GSI.MUNI_ARRAY["45430"] = '45,宮崎県,45430,椎葉村';
-GSI.MUNI_ARRAY["45431"] = '45,宮崎県,45431,美郷町';
-GSI.MUNI_ARRAY["45441"] = '45,宮崎県,45441,高千穂町';
-GSI.MUNI_ARRAY["45442"] = '45,宮崎県,45442,日之影町';
-GSI.MUNI_ARRAY["45443"] = '45,宮崎県,45443,五ヶ瀬町';
-GSI.MUNI_ARRAY["46201"] = '46,鹿児島県,46201,鹿児島市';
-GSI.MUNI_ARRAY["46203"] = '46,鹿児島県,46203,鹿屋市';
-GSI.MUNI_ARRAY["46204"] = '46,鹿児島県,46204,枕崎市';
-GSI.MUNI_ARRAY["46206"] = '46,鹿児島県,46206,阿久根市';
-GSI.MUNI_ARRAY["46208"] = '46,鹿児島県,46208,出水市';
-GSI.MUNI_ARRAY["46210"] = '46,鹿児島県,46210,指宿市';
-GSI.MUNI_ARRAY["46213"] = '46,鹿児島県,46213,西之表市';
-GSI.MUNI_ARRAY["46214"] = '46,鹿児島県,46214,垂水市';
-GSI.MUNI_ARRAY["46215"] = '46,鹿児島県,46215,薩摩川内市';
-GSI.MUNI_ARRAY["46216"] = '46,鹿児島県,46216,日置市';
-GSI.MUNI_ARRAY["46217"] = '46,鹿児島県,46217,曽於市';
-GSI.MUNI_ARRAY["46218"] = '46,鹿児島県,46218,霧島市';
-GSI.MUNI_ARRAY["46219"] = '46,鹿児島県,46219,いちき串木野市';
-GSI.MUNI_ARRAY["46220"] = '46,鹿児島県,46220,南さつま市';
-GSI.MUNI_ARRAY["46221"] = '46,鹿児島県,46221,志布志市';
-GSI.MUNI_ARRAY["46222"] = '46,鹿児島県,46222,奄美市';
-GSI.MUNI_ARRAY["46223"] = '46,鹿児島県,46223,南九州市';
-GSI.MUNI_ARRAY["46224"] = '46,鹿児島県,46224,伊佐市';
-GSI.MUNI_ARRAY["46225"] = '46,鹿児島県,46225,姶良市';
-GSI.MUNI_ARRAY["46303"] = '46,鹿児島県,46303,三島村';
-GSI.MUNI_ARRAY["46304"] = '46,鹿児島県,46304,十島村';
-GSI.MUNI_ARRAY["46392"] = '46,鹿児島県,46392,さつま町';
-GSI.MUNI_ARRAY["46404"] = '46,鹿児島県,46404,長島町';
-GSI.MUNI_ARRAY["46452"] = '46,鹿児島県,46452,湧水町';
-GSI.MUNI_ARRAY["46468"] = '46,鹿児島県,46468,大崎町';
-GSI.MUNI_ARRAY["46482"] = '46,鹿児島県,46482,東串良町';
-GSI.MUNI_ARRAY["46490"] = '46,鹿児島県,46490,錦江町';
-GSI.MUNI_ARRAY["46491"] = '46,鹿児島県,46491,南大隅町';
-GSI.MUNI_ARRAY["46492"] = '46,鹿児島県,46492,肝付町';
-GSI.MUNI_ARRAY["46501"] = '46,鹿児島県,46501,中種子町';
-GSI.MUNI_ARRAY["46502"] = '46,鹿児島県,46502,南種子町';
-GSI.MUNI_ARRAY["46505"] = '46,鹿児島県,46505,屋久島町';
-GSI.MUNI_ARRAY["46523"] = '46,鹿児島県,46523,大和村';
-GSI.MUNI_ARRAY["46524"] = '46,鹿児島県,46524,宇検村';
-GSI.MUNI_ARRAY["46525"] = '46,鹿児島県,46525,瀬戸内町';
-GSI.MUNI_ARRAY["46527"] = '46,鹿児島県,46527,龍郷町';
-GSI.MUNI_ARRAY["46529"] = '46,鹿児島県,46529,喜界町';
-GSI.MUNI_ARRAY["46530"] = '46,鹿児島県,46530,徳之島町';
-GSI.MUNI_ARRAY["46531"] = '46,鹿児島県,46531,天城町';
-GSI.MUNI_ARRAY["46532"] = '46,鹿児島県,46532,伊仙町';
-GSI.MUNI_ARRAY["46533"] = '46,鹿児島県,46533,和泊町';
-GSI.MUNI_ARRAY["46534"] = '46,鹿児島県,46534,知名町';
-GSI.MUNI_ARRAY["46535"] = '46,鹿児島県,46535,与論町';
-GSI.MUNI_ARRAY["47201"] = '47,沖縄県,47201,那覇市';
-GSI.MUNI_ARRAY["47205"] = '47,沖縄県,47205,宜野湾市';
-GSI.MUNI_ARRAY["47207"] = '47,沖縄県,47207,石垣市';
-GSI.MUNI_ARRAY["47208"] = '47,沖縄県,47208,浦添市';
-GSI.MUNI_ARRAY["47209"] = '47,沖縄県,47209,名護市';
-GSI.MUNI_ARRAY["47210"] = '47,沖縄県,47210,糸満市';
-GSI.MUNI_ARRAY["47211"] = '47,沖縄県,47211,沖縄市';
-GSI.MUNI_ARRAY["47212"] = '47,沖縄県,47212,豊見城市';
-GSI.MUNI_ARRAY["47213"] = '47,沖縄県,47213,うるま市';
-GSI.MUNI_ARRAY["47214"] = '47,沖縄県,47214,宮古島市';
-GSI.MUNI_ARRAY["47215"] = '47,沖縄県,47215,南城市';
-GSI.MUNI_ARRAY["47301"] = '47,沖縄県,47301,国頭村';
-GSI.MUNI_ARRAY["47302"] = '47,沖縄県,47302,大宜味村';
-GSI.MUNI_ARRAY["47303"] = '47,沖縄県,47303,東村';
-GSI.MUNI_ARRAY["47306"] = '47,沖縄県,47306,今帰仁村';
-GSI.MUNI_ARRAY["47308"] = '47,沖縄県,47308,本部町';
-GSI.MUNI_ARRAY["47311"] = '47,沖縄県,47311,恩納村';
-GSI.MUNI_ARRAY["47313"] = '47,沖縄県,47313,宜野座村';
-GSI.MUNI_ARRAY["47314"] = '47,沖縄県,47314,金武町';
-GSI.MUNI_ARRAY["47315"] = '47,沖縄県,47315,伊江村';
-GSI.MUNI_ARRAY["47324"] = '47,沖縄県,47324,読谷村';
-GSI.MUNI_ARRAY["47325"] = '47,沖縄県,47325,嘉手納町';
-GSI.MUNI_ARRAY["47326"] = '47,沖縄県,47326,北谷町';
-GSI.MUNI_ARRAY["47327"] = '47,沖縄県,47327,北中城村';
-GSI.MUNI_ARRAY["47328"] = '47,沖縄県,47328,中城村';
-GSI.MUNI_ARRAY["47329"] = '47,沖縄県,47329,西原町';
-GSI.MUNI_ARRAY["47348"] = '47,沖縄県,47348,与那原町';
-GSI.MUNI_ARRAY["47350"] = '47,沖縄県,47350,南風原町';
-GSI.MUNI_ARRAY["47353"] = '47,沖縄県,47353,渡嘉敷村';
-GSI.MUNI_ARRAY["47354"] = '47,沖縄県,47354,座間味村';
-GSI.MUNI_ARRAY["47355"] = '47,沖縄県,47355,粟国村';
-GSI.MUNI_ARRAY["47356"] = '47,沖縄県,47356,渡名喜村';
-GSI.MUNI_ARRAY["47357"] = '47,沖縄県,47357,南大東村';
-GSI.MUNI_ARRAY["47358"] = '47,沖縄県,47358,北大東村';
-GSI.MUNI_ARRAY["47359"] = '47,沖縄県,47359,伊平屋村';
-GSI.MUNI_ARRAY["47360"] = '47,沖縄県,47360,伊是名村';
-GSI.MUNI_ARRAY["47361"] = '47,沖縄県,47361,久米島町';
-GSI.MUNI_ARRAY["47362"] = '47,沖縄県,47362,八重瀬町';
-GSI.MUNI_ARRAY["47375"] = '47,沖縄県,47375,多良間村';
-GSI.MUNI_ARRAY["47381"] = '47,沖縄県,47381,竹富町';
-GSI.MUNI_ARRAY["47382"] = '47,沖縄県,47382,与那国町';
+// 3D Custom area
+GSI.TEXT.THREEDAREA = {};
+GSI.TEXT.THREEDAREA.DIALOG_TITLE = 'Select 3D range';
+GSI.TEXT.THREEDAREA.DIALOG_OKBTN = 'OK';
+GSI.TEXT.THREEDAREA.DIALOG_CANCELBTN = 'Cancel';
+
+// Save Images
+GSI.TEXT.MAPTOIMAGE = {};
+GSI.TEXT.MAPTOIMAGE.WINDOW_MSG ="Ready to save the file";
+GSI.TEXT.MAPTOIMAGE.WINDOW_SAVEIMGBTN = 'Save PNG file';
+GSI.TEXT.MAPTOIMAGE.WINDOW_SAVEPGWBTN = 'Save World file';
+GSI.TEXT.MAPTOIMAGE.WINDOW_MSG2 ='※Please use the saved files in accordance with Geospatial Information Authority of Japan Website Terms of Use.<br>' + 
+'<a href="http://maps.gsi.go.jp/help/use.html" target="_blank">Use GSI Tiles</a><br>' +
+'<a href="http://maps.gsi.go.jp/help/howtouse.html" target="_blank">About World File</a>';
+
+/*
+GSI.TEXT.EVAC = {};
+GSI.TEXT.EVAC.KIYAKU = '最新の状況などは当該市町村にご確認ください。';
+GSI.TEXT.EVAC.KIYAKULINK = '<a href="http://www.gsi.go.jp/bousaichiri/hinanbasho.html" target="blank">「指定緊急避難場所」について</a>　<a href="http://disaportal.gsi.go.jp/hinanbasho/koukaidate.html" target="blank">市町村別公開日・更新日一覧</a>';
+GSI.TEXT.EVAC.CONFIRMTOP = '地理院地図に掲載されている指定緊急避難場所データ（以下、「本データ」といいます）を利用される場合は、<a href="http://www.gsi.go.jp/kikakuchousei/kikakuchousei40182.html" target="blank">国土地理院コンテンツ利用規約</a>のほか、以下のご利用上の注意をご確認いただき、内容に同意された場合のみご利用ください。';
+GSI.TEXT.EVAC.ATTENTION = '【ご利用上の注意】';
+GSI.TEXT.EVAC.CONFIRMITEM1 = '本データは、災害対策基本法第49条の4に基づき市町村長が指定した指定緊急避難場所の情報を各市町村に提供いただき、当該市町村に確認の上、地図上に表示したものです。最新の状況などは当該市町村にご確認ください。';
+GSI.TEXT.EVAC.CONFIRMITEM2 = '本データを、ダウンロードや印刷等を行い国土地理院サーバ外で利用される場合は、本データの更新にあわせて最新の情報をご利用ください（参照：<a href="http://disaportal.gsi.go.jp/hinanbasho/koukaidate.html" target="blank">市町村別公開日・更新日一覧</a>）。';
+GSI.TEXT.EVAC.CONFIRMITEM3 = '指定緊急避難場所は、災害種別ごとに指定されています。本データをダウンロードや印刷等を行い国土地理院サーバ外で利用される場合、指定された災害種別を利用者が正確に理解できるよう、十分にご留意ください。';
+GSI.TEXT.EVAC.ATTENTIONDATA = '【データについて】';
+GSI.TEXT.EVAC.DATAITEM1 = '<a href="http://www.gsi.go.jp/bousaichiri/hinanbasho.html" target="blank">「指定緊急避難場所」について</a>';
+GSI.TEXT.EVAC.DATAITEM2 = '<a href="http://www.gsi.go.jp/bousaichiri/hinanbasho-help.html" target="blank">利用方法</a>';
+GSI.TEXT.EVAC.DATAITEM3 = '<a href="http://disaportal.gsi.go.jp/hinanbasho/koukaidate.html" target="blank">市町村別公開日・更新日一覧</a>';
+GSI.TEXT.EVAC.DATAITEM5 = '<a href="https://geoinfo2.gsi.go.jp/contact/Inquiry2.aspx?pcode=1004&bcode=100411&mcode=10041101" target="blank">お問い合わせ</a>';
+*/
+
 
 /************************************************************************
  Setting: Draw
@@ -2486,7 +727,7 @@ GSI.MUNI_ARRAY["47382"] = '47,沖縄県,47382,与那国町';
 CONFIG.SAKUZU = {
 
 	SYMBOL : {
-		URL: "//cyberjapandata.gsi.go.jp/portal/sys/v4/symbols/",
+		URL: "https://maps.gsi.go.jp/portal/sys/v4/symbols/",
 		FILES:[
 			'001.png', '002.png', '003.png', '004.png', '005.png', '006.png', '007.png', '008.png', '009.png', '010.png',
 			'011.png', '012.png', '013.png', '014.png', '015.png', '016.png', '017.png', '018.png', '019.png', '020.png',
@@ -2516,9 +757,10 @@ CONFIG.SAKUZU = {
 			'331.png', '332.png', '333.png', '334.png', '335.png', '336.png', '337.png', '338.png', '339.png', '340.png',
 			'341.png', '342.png', '343.png', '344.png', '345.png', '346.png', '347.png', '348.png', '349.png', '350.png',
 			'351.png', '352.png', '353.png', '354.png', '355.png', '356.png', '357.png', '358.png', '359.png', '360.png',
-			'361.png', '362.png', '436.png', '437.png', '438.png', '445.png', '446.png', '447.png', '449.png',
-			'457.png', '458.png', '459.png', '460.png', '461.png', '462.png', '463.png', '464.png', '465.png', '466.png',
-			'476.png', '700.png',
+			'361.png', '362.png', '371.png', '372.png', '373.png', '374.png', '375.png', '376.png', '377.png', '378.png',
+			'379.png', '380.png', '381.png', '382.png', '436.png', '437.png', '438.png', '445.png', '446.png', '447.png',
+			'449.png', '457.png', '458.png', '459.png', '460.png', '461.png', '462.png', '463.png', '464.png', '465.png',
+			'466.png', '476.png', '700.png',
 			'701.png', '702.png', '703.png', '704.png', '705.png', '706.png', '707.png', '708.png', '709.png', '710.png',
 			'dot.png',
 			'1101.png', '1102.png', '1103.png', '1104.png', '1105.png', '1106.png', '1107.png', '1108.png'
@@ -2529,7 +771,14 @@ CONFIG.SAKUZU = {
 		INIT_DEFAULTICON : '080.png',
 		ICON_SCALE : 1,
 		INIT_ICON_SCALE : 1
-	}
+	},
+	
+	
+	
+	FONTSIZELIST : [
+		8,9,10,11,12,15,18,19,20,24,32,48,64,92
+	]
+	
 };
 
 
@@ -2648,6 +897,206 @@ L.FeatureGroup.include({
 	}
 } );
 
+
+GSI.Circle = L.Circle.extend( { 
+	initialize: function (latlng, radius, options) {
+		L.Circle.prototype.initialize.call(this, latlng, radius, options);
+	},
+	_getPathPartStr: function (points) {
+		var round = L.Path.VML;
+
+		for (var j = 0, len2 = points.length, str = '', p; j < len2; j++) {
+			p = points[j];
+			if (round) {
+				p._round();
+			}
+			str += (j ? 'L' : 'M') + p.x + ' ' + p.y;
+		}
+		return str + (L.Browser.svg ? 'z' : 'x');
+	},
+	_projectLatlngs: function () {
+		this._originalPoints = [];
+		for (var i = 0, len = this._latlngs.length; i < len; i++) {
+			this._originalPoints[i] = this._map.latLngToLayerPoint(this._latlngs[i]);
+		}
+		// project polygon holes points
+		// TODO move this logic to Polyline to get rid of duplication
+		this._holePoints = [];
+
+		if (!this._holes) { return; }
+
+		var i, j, len, len2;
+
+		for (i = 0, len = this._holes.length; i < len; i++) {
+			this._holePoints[i] = [];
+
+			for (j = 0, len2 = this._holes[i].length; j < len2; j++) {
+				this._holePoints[i][j] = this._map.latLngToLayerPoint(this._holes[i][j]);
+			}
+		}
+	},
+	
+	_clipPoints: function () {
+		var points = this._originalPoints,
+		    newParts = [];
+
+		this._parts = [points].concat(this._holePoints);
+		if (this.options.noClip) { return; }
+		
+		for (var i = 0, len = this._parts.length; i < len; i++) {
+			var clipped = L.PolyUtil.clipPolygon(this._parts[i], this._map._pathViewport);
+			if (clipped.length) {
+				newParts.push(clipped);
+			}
+		}
+		this._parts = newParts;
+	},
+	_convertLatLngs: function (latlngs, overwrite) {
+		var i, len, target = overwrite ? latlngs : [];
+
+		for (i = 0, len = latlngs.length; i < len; i++) {
+			if (L.Util.isArray(latlngs[i]) && typeof latlngs[i][0] !== 'number') {
+				return;
+			}
+			target[i] = L.latLng(latlngs[i]);
+		}
+		return target;
+	},
+	_initWithHoles: function (latlngs) {
+		var i, len, hole;
+		if (latlngs && L.Util.isArray(latlngs[0]) && (typeof latlngs[0][0] !== 'number')) {
+			this._latlngs = this._convertLatLngs(latlngs[0]);
+			this._holes = latlngs.slice(1);
+
+			for (i = 0, len = this._holes.length; i < len; i++) {
+				hole = this._holes[i] = this._convertLatLngs(this._holes[i]);
+				if (hole[0].equals(hole[hole.length - 1])) {
+					hole.pop();
+				}
+			}
+		}
+
+		// filter out last point if its equal to the first one
+		latlngs = this._latlngs;
+
+		if (latlngs.length >= 2 && latlngs[0].equals(latlngs[latlngs.length - 1])) {
+			latlngs.pop();
+		}
+	},
+
+	getPathString: function () {
+		this._originalPoints = [];
+		var latlngs = [];
+		var numSides = CONFIG.CIRCLETOPOLYGONNUMSIDES;
+		var center = this.getLatLng();
+		var center_lat_rad = center.lat * Math.PI/180;
+		var center_lng_rad = center.lng * Math.PI/180;
+		var dmax_lat = this._mRadius / 6378137;
+		var xys=[];
+		xys.push([dmax_lat,0]);
+		for(var i = 1; i < numSides; i++)
+		{
+			var y = dmax_lat - 2 * dmax_lat/numSides * i;
+			var x =   2 * Math.asin(Math.sqrt((Math.pow(Math.sin(dmax_lat/2),2) - Math.pow(Math.sin((y)/2),2)) / (Math.cos(center_lat_rad+y)*Math.cos(center_lat_rad))));
+			if(x !== x){
+			 return;
+			}else{
+			 xys.push([y, x]);
+			}
+		}
+		xys.push([-dmax_lat,0]);
+		for(var i = 1; i < numSides; i++)
+		{
+			xys.push([xys[numSides-i][0],-xys[numSides-i][1]]);
+		}
+		xys.push([dmax_lat,0]);
+		for(var i = 0; i < xys.length; i++)
+		{
+			latlngs.push(L.latLng((center_lat_rad+xys[i][0]) / (Math.PI/180), (center_lng_rad+xys[i][1]) / (Math.PI/180)));
+		}
+		
+		this._latlngs = this._convertLatLngs(latlngs);
+		this._initWithHoles(latlngs);
+		this._projectLatlngs();
+		this._clipPoints();
+		var parts = this._parts,
+		    lu = L.LineUtil;
+
+		for (var i = 0, len = parts.length; i < len; i++) {
+			parts[i] = lu.simplify(parts[i], this.options.smoothFactor);
+		}
+		
+		
+		for (var i = 0, len = this._parts.length, str = ''; i < len; i++) {
+			str += this._getPathPartStr(this._parts[i]);
+		}
+		return str;
+	}
+	/*
+	getPathString: function () {
+		
+		var p = this._point,
+		    r = this._radius;
+
+		if (this._checkIfEmpty()) {
+			return '';
+		}
+		if (L.Browser.svg) {
+			return 'M' + p.x + ',' + (p.y - r) +
+			       'A' + r + ',' + r + ',0,1,1,' +
+			       (p.x - 0.1) + ',' + (p.y - r) + ' z';
+		} else {
+			p._round();
+			r = Math.round(r);
+			return 'AL ' + p.x + ',' + p.y + ' ' + r + ',' + r + ' 0,' + (65535 * 360);
+		}
+	}
+	*/
+});
+
+/*
+L.Draw.Circle.prototype._drawShape = function (latlng) {
+	
+	if (!this._shape) {
+		this._shape = new GSI.Circle(this._startLatLng, this._startLatLng.distanceTo(latlng), this.options.shapeOptions);
+		this._map.addLayer(this._shape);
+	} else {
+		this._shape.setRadius(this._startLatLng.distanceTo(latlng));
+	}
+};
+
+L.Draw.Circle.prototype._fireCreatedEvent = function () {
+	var circle = new GSI.Circle(this._startLatLng, this._shape.getRadius(), this.options.shapeOptions);
+	L.Draw.SimpleShape.prototype._fireCreatedEvent.call(this, circle);
+};
+*/
+
+GSI.Circle.addInitHook(function () {
+	if (L.Edit.Circle) {
+		this.editing = new L.Edit.Circle(this);
+
+		if (this.options.editable) {
+			this.editing.enable();
+		}
+	}
+
+	this.on('add', function () {
+		if (this.editing && this.editing.enabled()) {
+			this.editing.addHooks();
+		}
+	});
+
+	this.on('remove', function () {
+		if (this.editing && this.editing.enabled()) {
+			this.editing.removeHooks();
+		}
+	});
+});
+
+L.circle = function (latlng, radius, options) {
+	return new GSI.Circle(latlng,radius, options);
+};
+
 GSI.Draw.convertRadius = function(radius, latlng, unit)
 {
 	var result = {
@@ -2734,7 +1183,7 @@ GSI.Draw.Circle = L.Draw.Circle.extend( {
 		if (this._isDrawing) {
 			this._drawShape(latlng);
 
-			// Get the new radius. (rounded to 1 dp)
+			// Get the new radius (rounded to 1 dp)
 			radius = this._shape.getRadius().toFixed(1);
 
 			this._tooltip.updateContent({
@@ -2747,6 +1196,20 @@ GSI.Draw.Circle = L.Draw.Circle.extend( {
 		{
 			this.fire( "change",GSI.Draw.convertRadius(this._shape.getRadius(), latlng, "m") );
 		}
+	},
+	
+	_drawShape : function (latlng) {
+		if (!this._shape) {
+			this._shape = new GSI.Circle(this._startLatLng, this._startLatLng.distanceTo(latlng), this.options.shapeOptions);
+			this._map.addLayer(this._shape);
+		} else {
+			this._shape.setRadius(this._startLatLng.distanceTo(latlng));
+		}
+	},
+
+	_fireCreatedEvent : function () {
+		var circle = new GSI.Circle(this._startLatLng, this._shape.getRadius(), this.options.shapeOptions);
+		L.Draw.SimpleShape.prototype._fireCreatedEvent.call(this, circle);
 	}
 } );
 
@@ -2762,7 +1225,7 @@ GSI.Draw.CircleMarker = L.Draw.Circle.extend( {
 		if (this._isDrawing) {
 			this._drawShape(latlng);
 
-			// Get the new radius. (rounded to 1 dp)
+			// Get the new radius (rounded to 1 dp)
 			radius = this._shape.getRadius().toFixed(1);
 
 			this._tooltip.updateContent({
@@ -2794,7 +1257,7 @@ GSI.Draw.Polyline = L.Draw.Polyline.extend( {
 	_vertexChanged : function(latlng, added)
 	{
 		this._currentLatLng = latlng;
-
+		
 		L.Draw.Polyline.prototype._vertexChanged.call(this,latlng,added);
 
 		var currentLatLng = this._currentLatLng,
@@ -2829,7 +1292,7 @@ GSI.Draw.Polygon = L.Draw.Polygon.extend( {
 	{
 		L.Draw.Polygon.prototype._vertexChanged.call(this,latlng,added);
 		this.fire( 'measurechange', {
-			distance : this._area2MeasurementString( L.GeometryUtil.geodesicArea(this._poly.getLatLngs() ) )
+			distance : this._area2MeasurementString( L.GeometryUtil.calc_area(this._poly.getLatLngs() ) )
 		} );
 	},
 	_area2MeasurementString : function( area )
@@ -2861,15 +1324,15 @@ GSI.Draw.Polygon = L.Draw.Polygon.extend( {
 	_updateFinishHandler: function () {
 		var markerCount = this._markers.length;
 
-		// The first marker should have a click handler to close the polygon.
+		// The first marker should have a click handler to close the polygon
 		if (markerCount === 1) {
 			this._markers[0].on('click', this._finishShape, this);
 		}
 
-		// Add and update the double click handler.
+		// Add and update the double click handler
 		if (markerCount > 2) {
 			this._markers[markerCount - 1].on('click', this._finishShape, this);
-			// Only need to remove handler if has been added before.
+			// Only need to remove handler if has been added before
 			if (markerCount > 3) {
 				this._markers[markerCount - 2].off('click', this._finishShape, this);
 			}
@@ -2907,7 +1370,7 @@ GSI.Draw.FreehandPolyline = L.Draw.SimpleShape.extend({
 GSI.Links ={};
 
 GSI.Links.getURL = function( id, center, z, bounds){
-	if ( id == "gsi3d" )
+	if ( id == "gsi3d_l" )
 	{
 		if(GSI.Utils.Browser.ie && ( GSI.Utils.Browser.version <= 10 )){
 			alert( 'Your Web browser is not compatible with GSI Maps 3D.\nPlease use Chrome、Firefox、IE11.' );
@@ -2922,17 +1385,79 @@ GSI.Links.getURL = function( id, center, z, bounds){
 
         return "./index_3d.html" + args;
 	}
+	else if ( id == "gsi3d_s" )
+	{
+		if(GSI.Utils.Browser.ie && ( GSI.Utils.Browser.version <= 10 )){
+			alert( 'Your Web browser is not compatible with GSI Maps 3D.\nPlease use Chrome、Firefox、IE11.' );
+			return null;
+		}
+        var args = "";
+        args += "?z="   + z;
+        args += "&lat=" + center.lat;
+        args += "&lon=" + center.lng;
+        args += "&pxsize=1024";
+        args += "&"     + GSI.GLOBALS.pageStateManager.getLayersQueryString({visibleOnly:true})
+
+        return "./index_3d.html" + args;
+	}
+	else if ( id == "gsi3d_view" )
+	{
+		if(GSI.Utils.Browser.ie && ( GSI.Utils.Browser.version <= 10 )){
+			alert( 'Your Web browser is not compatible with GSI Maps 3D.\nPlease use Chrome、Firefox、IE11.' );
+			return null;
+		}
+		
+		var size = GSI.GLOBALS.map.getSize();
+		if ( size.x > 2048 ) size.x = 2048;
+		if ( size.y > 2048 ) size.y = 2048;
+		
+		if( size.x % 2 == 1 ) size.x-=1;
+		if( size.y % 2 == 1 ) size.y-=1;
+		
+        var args = "";
+        args += "?z="   + z;
+        args += "&lat=" + center.lat;
+        args += "&lon=" + center.lng;
+        args += "&w=" + size.x;
+        args += "&h=" + size.y;
+        args += "&"     + GSI.GLOBALS.pageStateManager.getLayersQueryString({visibleOnly:true})
+
+        return "./index_3d.html" + args;
+	}
+	
 	else if ( id == 'gsiglobe' )
 	{
 		if(GSI.Utils.Browser.ie && ( GSI.Utils.Browser.version <= 10 )){
 			alert( 'Your Web browser is not compatible with GSI Maps Globe.\nPlease use Chrome、Firefox、IE11.' );
 			return null;
 		}
-		return '//maps.gsi.go.jp/globe/index_globe.html';
+		
+		var url = CONFIG.GLOBEURL;
+		
+		// Globe URL creation
+		var queryString = GSI.GLOBALS.pageStateManager.getPositionQueryString();
+		if(queryString != "") queryString += "/1/";
+		
+		var base = GSI.GLOBALS.pageStateManager.getBaseLayerQueryString();
+		var hasBase = (base != '');
+		if( base != '' )
+			queryString += ( queryString != '' ? '&' : '#' ) + base;
+		var ls = GSI.GLOBALS.pageStateManager.getLayersQueryString();
+		var disp = GSI.GLOBALS.pageStateManager.getTileViewSetting();
+		
+		if ( ls != '' )
+			queryString += ( queryString != '' ? '&' : '#' ) + ls;
+		if ( disp != '' )
+			queryString += ( queryString != '' ? '&' : '#' ) + disp;
+		
+		url += queryString;
+		
+		
+		return url; //'http://maps.gsi.go.jp/globe/index_globe.html';
 	}
 	else if ( id == 'ucodehref' )
 	{
-		return '//ucopendb.gsi.go.jp/ucode_app/logical_code/ucode_disp.php?lat=' + center.lat +'&lng=' + center.lng + '&zoom=' + z;
+		return 'http://ucopendb.gsi.go.jp/ucode_app/logical_code/ucode_disp.php?lat=' + center.lat +'&lng=' + center.lng + '&zoom=' + z;
 	}
 	else
 	{
@@ -3005,6 +1530,7 @@ GSI.Utils.Browser.isiOS = (GSI.Utils.Browser.isiPhone || GSI.Utils.Browser.isiPo
 GSI.Utils.Browser.isAndroid = GSI.Utils.Browser.userAgent.indexOf('android') >= 0;
 GSI.Utils.Browser.isSmartMobile = ( GSI.Utils.Browser.isiOS || GSI.Utils.Browser.isAndroid );
 GSI.Utils.Browser.isChrome = GSI.Utils.Browser.userAgent.indexOf('chrome') != -1;
+GSI.Utils.Browser.isMac = !!GSI.Utils.Browser.userAgent.match(/mac|ppc/);
 
 GSI.Utils.hasFileAPI =( window.File && window.FileReader && window.FileList && window.Blob );
 
@@ -3164,6 +1690,39 @@ GSI.Utils.latLngToDMS = function(latLng) {
 	};
 };
 
+GSI.Utils.dotLineTo = function (texture, p1x, p1y, p2x, p2y, dashArray)
+{
+	if ( texture.setLineDash !== undefined )
+	{
+		texture.setLineDash(dashArray);
+		texture.lineTo( p2x, p2y );
+	}
+	else if ( texture.mozDash !== undefined )
+	{
+		texture.mozDash = dashArray;
+		texture.lineTo( p2x, p2y );
+	}
+	else
+	{
+		var d = Math.sqrt(Math.pow(p2x - p1x, 2) + Math.pow(p2y - p1y, 2));
+		var rad = Math.atan2(p2y - p1y, p2x - p1x);
+		var space = ( dashArray && dashArray.length>= 2 && dashArray[0]>0 ? dashArray[0] : 5 );
+		var dotted = Math.round(d / space / 2);
+
+		for (var i = 0; i < dotted; i++) {
+			var p3x = Math.cos(rad) * space * (i * 2) + p1x;
+			var p3y = Math.sin(rad) * space * (i * 2) + p1y;
+			var p4x = Math.cos(rad) * space * (i * 2 + 1) + p1x;
+			var p4y = Math.sin(rad) * space * (i * 2 + 1) + p1y;
+
+			texture.moveTo(p3x, p3y);
+			texture.lineTo(p4x, p4y);
+			
+		}
+	}
+}
+
+
 // Returns whether or not within the range can display the magnetic north line.
 GSI.Utils.isVaridVariation = function(latLng)
 {
@@ -3319,7 +1878,6 @@ GSI.Utils.sendSelectedLayer = function(id){
         cache : false,
     });
 };
-
 GSI.Utils.get2ndMesh = function( lat, lon ){
 
 	//1st mesh code
@@ -3334,6 +1892,77 @@ GSI.Utils.get2ndMesh = function( lat, lon ){
 	var m2lon = Math.floor( ( lon2 * 60 )  / 7.5);
 
 	return "" + lat1 + lon1 + m2lat + m2lon; 
+};
+GSI.Utils.rpad = function(src, letter, num)
+{
+	var dst = src;
+	var len = num - src.length;
+	if (dst) dst="";
+	for(var i=0; i < len; i++)
+	{
+		dst+=letter;
+	}
+	return dst;
+};
+GSI.Utils.lpad = function(src, letter, num)
+{
+	var dst = "";
+	var len = num - src.length;
+	for(var i=0; i<len; i++)
+	{
+		dst+=letter;
+	}
+	return dst + src;
+};
+
+L.LatLng.prototype._originalDistanceTo = L.LatLng.prototype.distanceTo;
+L.LatLng.prototype.distanceTo = function (other) {
+	other = L.latLng(other);
+	var ret = null;
+	
+	if ( CONFIG.USEGSIDISTANCE )
+		return GSI.Utils.DistanceCalculator.calc(this, other);
+	else
+		return L.LatLng.prototype._originalDistanceTo.call( this,other );
+	
+};
+GSI.Utils.setMixBlendMode = function( item, flg )
+{
+	if ( item._visibleInfo.layer._container == null )
+	{
+		return;
+	}
+	if ( GSI.Utils.Browser.ie )
+	{
+		return;
+	}
+	if ( (flg === undefined) || (flg == null) )
+	{
+		//flg = false;
+		return;
+	}
+	if ( ( flg != true ) && ( flg != "1" ) )
+	{
+		flg = false;
+	}
+	if ( flg == "1" )
+	{
+		flg = true;
+	}
+	var el = item._visibleInfo.layer._container.getAttribute('style');
+	if ( el )
+	{
+	    el = el.replace("mix-blend-mode: multiply; ", "");
+	}
+	else
+	{
+	    el = "";
+	}
+	if ( flg == true )
+	{
+		el = "mix-blend-mode: multiply; " + el;
+	}
+    item._visibleInfo.layer._container.setAttribute('style', el);
 };
 
 /************************************************************************
@@ -3440,10 +2069,10 @@ GSI.UTM.Utils = {
 	{ 
 		var result = {};
 		
-		// starts of N-S zones in millons of meters  (southern edge) 
+		//Starts (southern edge) of N-S zones in millons of meters
 		var zoneBase = [1.1,2.0,2.9,3.8,4.7,5.6,6.5,7.3,8.2,9.1,   0, 0.8, 1.7, 2.6, 3.5, 4.4, 5.3, 6.2, 7.0, 7.9];
 
-		var segBase = [0,2,2,2,4,4,6,6,8,8,   0,0,0,2,2,4,4,6,6,6];  // starts of 2 million meter segments, indexed by zone 
+		var segBase = [0,2,2,2,4,4,6,6,8,8,   0,0,0,2,2,4,4,6,6,6];  //Starts of 2 million meter segments, indexed by zone 
 		
 		// convert easting to UTM
 		var eSqrs="ABCDEFGHJKLMNPQRSTUVWXYZ".indexOf(sq1);          
@@ -3487,7 +2116,7 @@ GSI.UTM.Utils = {
 		// origin longitude for the zone (+3 puts origin in zone center) 
 		var lonOrigin = (zoneNumber - 1) * 6 - 180 + 3; 
 
-		// M is the "true distance" along the central meridian from the Equator to phi
+		// M is the "true distance along the central meridian from the Equator to phi
 		// (latitude)
 		var M = yUTM / k0;
 		var mu = M / ( EQUATORIAL_RADIUS * (1 - ECC_SQUARED / 4 - 3 * ECC_SQUARED * 
@@ -3578,13 +2207,13 @@ GSI.UTM.Utils = {
 				zero += '0';
 			}
 
-			x10mNumber = zero + Math.round( x /10 );
+			x10mNumber = zero + Math.floor( x /10 );
 			x10mNumber = x10mNumber.substr(x10mNumber.length - num, num);
-			y10mNumber = zero + Math.round( y /10 );
+			y10mNumber = zero + Math.floor( y /10 );
 			y10mNumber = y10mNumber.substr(y10mNumber.length - num, num);
 		}
 		
-		var letters = GSI.UTM.Utils.findGridLetters(zone, Math.round( y /10 ) * 10, Math.round( x /10 ) * 10);
+		var letters = GSI.UTM.Utils.findGridLetters(zone, Math.floor( y /10 ) * 10, Math.floor( x /10 ) * 10);
 		return zone + mark + letters + x10mNumber + y10mNumber;
 	},
 	findSet : function(zoneNum)
@@ -3807,6 +2436,121 @@ GSI.UTM.Grid = L.Class.extend( {
 			}
 		}
 	},
+	
+	
+	drawPath : function(texture)
+	{
+		if ( !this._lines ) return;
+		texture.beginPath();
+		for( var i=0; i< this._lines.length; i++ )
+		{
+			var from = null;
+			
+			for( var j=0; j<this._lines[i]._latlngs.length; j ++ )
+			{
+				var point = this._map.latLngToContainerPoint(this._lines[i]._latlngs[j]);
+				
+				if( j == 0 ) texture.moveTo( point.x, point.y );
+				else {
+					GSI.Utils.dotLineTo( texture, from.x, from.y, point.x, point.y, [3,3] );
+				}
+				
+				from = point;
+			}
+			//this._drawPath( texture, this._lines[i] );
+		}
+		
+		texture.save();
+		
+		texture.lineWidth = this.options.lineStyle.weight;
+		texture.strokeStyle = this.options.lineStyle.color;
+			
+		
+		var opacity = 1;
+		texture.globalAlpha = opacity;
+		texture.stroke();
+
+		texture.restore();
+		
+	},
+	
+	_lineToDot : function (texture, p1x, p1y, p2x, p2y)
+	{
+		var d = Math.sqrt(Math.pow(p2x - p1x, 2) + Math.pow(p2y - p1y, 2));
+		var rad = Math.atan2(p2y - p1y, p2x - p1x);
+		var space = 3;
+		var dotted = Math.round(d / space / 2);
+
+		for (var i = 0; i < dotted; i++) {
+			var p3x = Math.cos(rad) * space * (i * 2) + p1x;
+			var p3y = Math.sin(rad) * space * (i * 2) + p1y;
+			var p4x = Math.cos(rad) * space * (i * 2 + 1) + p1x;
+			var p4y = Math.sin(rad) * space * (i * 2 + 1) + p1y;
+
+			texture.moveTo(p3x, p3y);
+			texture.lineTo(p4x, p4y);
+			
+		}
+	},
+	
+	_updateStyle: function (texture, layer) {
+		if ( !layer._parts ) return;
+		
+		var options = layer.options;
+		if (options.stroke) {
+			texture.lineWidth = options.weight;
+			texture.strokeStyle = options.color;
+		}
+		if (options.fill) {
+			texture.fillStyle = options.fillColor || options.color;
+		}
+	},
+	
+	_drawPath: function (texture, layer) {
+		if ( !layer._parts ) return;
+		
+		var i, j, len, len2, point, drawMethod;
+		var vp = this._map._pathViewport;
+		
+		
+		var origin = this._map.getPixelOrigin();
+		var pixelBounds = this._map.getPixelBounds();
+		texture.beginPath();
+		
+		var parts = layer._parts;
+		
+		for (i = 0, len = parts.length; i < len; i++) {
+			
+			for (j = 0, len2 = parts[i].length; j < len2; j++) {
+				point = parts[i][j];
+				drawMethod = (j === 0 ? 'move' : 'line') + 'To';
+				
+				texture[drawMethod](point.x + ( origin.x - pixelBounds.min.x ), point.y + ( origin.y - pixelBounds.min.y ));
+			}
+			// TODO refactor ugly hack
+			if (layer instanceof L.Polygon || layer instanceof L.Circle) {
+				texture.closePath();
+			}
+		}
+		
+		texture.save();
+		this._updateStyle(texture, layer);
+		
+		var opacity = 1;
+		//console.log( this.options.opacity );
+		if (layer.options.fill) {
+			
+			texture.globalAlpha = ( layer.options.fillOpacity ?layer.options.fillOpacity : 1 ) * opacity;
+			texture.fill();          
+		}
+		if (layer.options.stroke) {
+			texture.globalAlpha = opacity;
+			texture.stroke();
+		}
+
+		texture.restore();
+	},
+	
 	drawGrid : function( bounds, zoom, meter )
 	{
 		// grid
@@ -4508,7 +3252,7 @@ GSI.COCOTileLayer = L.Class.extend({
 			    se = this._map.unproject(sePoint);
 
 			// TODO temporary hack, will be removed after refactoring projections
-			// //github.com/Leaflet/Leaflet/issues/1618
+			// https://github.com/Leaflet/Leaflet/issues/1618
 			if (!options.continuousWorld && !options.noWrap) {
 				nw = nw.wrap();
 				se = se.wrap();
@@ -4770,9 +3514,9 @@ GSI.Dialog = L.Class.extend( {
 		if ( left == 'center' )
 		{
 			var screenSize = GSI.Utils.getScreenSize();
-			left = Math.floor( (screenSize.w/2)-( this.options.width / 2 ) );
+			left = Math.floor( (screenSize.w/2)-( parseInt(this.options.width) / 2 ) );
 		}
-
+		
 		this.container .css( {
 			left : left + 'px' ,
 			top : this.options.top + 'px',
@@ -4805,11 +3549,11 @@ GSI.Dialog = L.Class.extend( {
 	{
 		if ( this.container ) this.container.removeClass( className );
 	},
-	show : function()
+	show : function(noActivate)
 	{
 		if ( !this.container ) this.create();
-
-		GSI.Dialog._dialogManager.appendVisibleList( this );
+		
+		GSI.Dialog._dialogManager.appendVisibleList( this, noActivate );
 		if ( this.options.effect )
 		{
 			this.container.show(this.options.effect.animation, this.options.effect.option,this.options.effect.speed,
@@ -4855,10 +3599,13 @@ GSI.LayerTreeDialog = GSI.Dialog.extend( {
 	options : {
 		title : 'Layer list'
 	},
-	initialize : function(mapLayerList,cocoTileLayer, options)
+	_activeTabIndex : -1,
+	
+	initialize : function(mapLayerList,cocoTileLayer, layersTab, options)
 	{
 		this.mapLayerList = mapLayerList;
 		this.cocoTileLayer = cocoTileLayer;
+		this.layersTab = layersTab;
 		this.mapLayerList.on( 'change', L.bind( this.onMapLayerListChange, this ) );
 		GSI.Dialog.prototype.initialize.call(this, options);
 
@@ -4866,14 +3613,118 @@ GSI.LayerTreeDialog = GSI.Dialog.extend( {
 
 		cocoTileLayer.on( 'load', L.bind( this.onCOCOTileLoad, this ) );
 		cocoTileLayer.on( 'hide', L.bind( this.onCOCOTileHide, this ) );
+		
+		
 	},
 	createHeader : function()
 	{
+		this.headerFrame.addClass( "tab");
 		this._titleFrame = $( '<div>' );
-		this._titleTextFrame = $( '<div>' ).append( $('<span>').html(this.options.title ) );
-		this._titleFrame.append( this._titleTextFrame);//.append(this._titleControlFrame);
+		this._tabFrame = $( '<div>' ).addClass("layertreedialog_tab_frame");
+		
+		for( var i=0; i<this.layersTab.length; i++ )
+		{
+			var  tabInfo = this.layersTab[i];
+			/*
+			var a = $("<a>").css({"font-size":"90%"})
+			.attr( {"href":"javascript:void(0);"} )
+			.html(tabInfo.caption)
+			.data ({"tabInfo":tabInfo, "idx" : i})
+			.click(L.bind(this._onTabClick, this ) );//function(){alert("");});
+			*/
+			
+			var a = $("<a>").css({"font-size":"90%"})
+			.attr( {"href":"javascript:void(0);"} )
+			.data ({"tabInfo":tabInfo, "idx" : i})
+			.click(L.bind(this._onTabClick, this ) )
+			.css( {"z-index": this.layersTab.length - i} );
+			
+			var leftTriangle = $("<div>").html("").addClass("left_triangle").append("<div>");
+			var centerTitle = $("<div>").html(tabInfo.caption).addClass("center_text");
+			var rightTriangle = $("<div>").html("").addClass("right_triangle").append("<div>");
+			
+			a.append( leftTriangle ).append( centerTitle ).append( rightTriangle );
+			
+			this._tabFrame.append( a );
+		}
+		
+		this._tabFrame.append( $("<div>").css({"clear":"both"}) );
+		this._titleTextFrame = $( '<div>' ).append( $('<span>').html(this.options.title ) ).addClass("title_frame");
+		//this._titleFrame.append( this._titleTextFrame);//.append(this._titleControlFrame);
+		this._titleFrame.append(this._tabFrame).append( this._titleTextFrame);//.append(this._titleControlFrame);
+		//this._activeTabIndex = 0;
+		
+		
+		this._tabScrollLeftBtn = $( "<a>" ).hide()
+			.addClass("tab_scroll_btn")
+			.addClass("tab_scroll_left")
+			.attr({"href":"javascript:void(0);"})
+			.on( "mousedown", L.bind(this._onTabScrollLeftMouseDown, this) )
+			.on( "mouseup", L.bind(this._onTabScrollLeftMouseUp, this) );
+			
+		this._tabScrollRightBtn = $( "<a>" ).hide()
+			.addClass("tab_scroll_btn")
+			.addClass("tab_scroll_right")
+			.on( "mousedown", L.bind(this._onTabScrollRightMouseDown, this) )
+			.on( "mouseup", L.bind(this._onTabScrollRightMouseUp, this) );
+			
+		this._titleFrame.append(this._tabScrollLeftBtn).append(this._tabScrollRightBtn);
+		this.activateTab(0);
+		
 		return this._titleFrame;
+		
 	},
+	
+	_onTabClick : function(event)
+	{
+		var a = $(event.currentTarget );
+		var newidx = a.data("idx");
+
+		if (this._activeTabIndex != newidx)
+		{
+			if (this._checkEvacuationLayer() == false)
+			{
+				CONFIG.layerEvacuationIsConfirmOK = false;
+				GSI.GLOBALS.evacDialog.hide();
+			}
+		}
+		
+
+		this.activateTab(newidx);
+	},
+	
+	activateTab : function(idx)
+	{
+		this._tabFrame.find("a").removeClass("active");
+		this._tabFrame.find("a").eq(idx).addClass("active");
+		
+		var tabArr = this._tabFrame.find("a");
+		for( var i=0; i<tabArr.length; i++ )
+		{
+			var zIndex = tabArr.length -i;
+			if ( idx == i ) zIndex = 99;
+			
+			$( tabArr[i]).css( {"z-index":zIndex} );
+		}
+		
+		if ( this._activeTabIndex != idx )
+		{
+			this._activeTabIndex = idx;
+
+			if ( this.tree )
+			{
+				this.onFolderClick_Proc(this.tree[this._activeTabIndex]);
+
+				//this._current = this.tree[idx].entries;
+				//this._initializeList( this.tree[idx].entries );
+			}
+		}
+		
+		
+		this._initializeTabScrollBtns();
+		
+	},
+	
 	_onResize : function()
 	{
 		GSI.Dialog.prototype._onResize.call(this);
@@ -4883,7 +3734,182 @@ GSI.LayerTreeDialog = GSI.Dialog.extend( {
 			- this._controlFrame.outerHeight( true ) - 11;
 
 		this.listFrame.css( { "max-height": 'none', height: height + 'px'} );
+		
+		
+		this._initializeTabScrollBtns();
+		
 	},
+	
+	_initializeTabScrollBtns : function()
+	{
+		var scrollLeft = this._tabFrame.scrollLeft();
+		
+		var scrollContainerWidth = this._tabFrame.outerWidth();
+		var scrollInnerWidth = this._tabFrame.find("a").last().position().left-10 +
+			this._tabFrame.find("a").last().outerWidth(true) + scrollLeft;
+		
+		
+		if ( scrollContainerWidth < scrollInnerWidth )
+		{
+			var scrollMax = scrollInnerWidth - scrollContainerWidth;
+			if ( scrollMax <= scrollLeft )
+			{
+				this._tabFrame.scrollLeft(scrollMax);
+				this._tabScrollRightBtn.addClass("deactive");
+			}
+			else
+				this._tabScrollRightBtn.removeClass("deactive");
+				
+			if ( scrollLeft > 0 )
+				this._tabScrollLeftBtn.removeClass("deactive");
+			else
+				this._tabScrollLeftBtn.addClass("deactive");
+		}
+		else
+		{
+			this._tabScrollLeftBtn.addClass("deactive");
+			this._tabScrollRightBtn.addClass("deactive");
+			this._tabFrame.scrollLeft(0);
+		}
+		
+		if ( scrollContainerWidth >= scrollInnerWidth)
+		{
+			this._tabScrollLeftBtn.hide();
+			this._tabScrollRightBtn.hide();
+		}
+		else
+		{
+			this._tabScrollLeftBtn.show();
+			this._tabScrollRightBtn.show();
+		}
+		
+	},
+	
+	_onTabScrollLeftMouseDown : function()
+	{
+		if ( this._tabScrollLeftTimer )
+			clearTimeout(  this._tabScrollLeftTimer );
+		this._tabScrollLeftTimer = setTimeout( L.bind( function(){
+			this._tabScrollLeft();
+		}, this ), 10 );
+	},
+	
+	_onTabScrollLeftMouseUp : function()
+	{
+		if ( this._tabScrollLeftTimer )
+			clearTimeout(  this._tabScrollLeftTimer );
+		this._tabScrollLeftTimer = null;
+	},
+	
+	
+	_tabScrollLeft : function()
+	{
+		var scrollLeft = this._tabFrame.scrollLeft();
+		var scrollContainerWidth = this._tabFrame.outerWidth();
+		var scrollInnerWidth = this._tabFrame.find("a").last().position().left-10 +
+			this._tabFrame.find("a").last().outerWidth(true) + scrollLeft;
+		
+		var scrollMax = scrollInnerWidth - scrollContainerWidth;
+		scrollLeft-=2;
+		if ( scrollLeft < 0 ) scrollLeft = 0;
+		this._tabFrame.scrollLeft(scrollLeft);
+		
+		
+		if ( scrollLeft > 0 )
+		{
+			this._tabScrollLeftBtn.removeClass("deactive");
+		}
+		else
+			this._tabScrollLeftBtn.addClass("deactive");
+		
+		
+		if ( scrollMax <= scrollLeft )
+			this._tabScrollRightBtn.addClass("deactive");
+		else
+			this._tabScrollRightBtn.removeClass("deactive");
+			
+		if ( scrollContainerWidth >= scrollInnerWidth)
+		{
+			this._tabScrollLeftBtn.hide();
+			this._tabScrollRightBtn.hide();
+		}
+		else
+		{
+			this._tabScrollLeftBtn.show();
+			this._tabScrollRightBtn.show();
+		}
+		
+		if ( !this._tabScrollLeftBtn.hasClass("deactive") )
+		{
+			this._tabScrollLeftTimer = setTimeout( L.bind( function(){
+				this._tabScrollLeft();
+			}, this ), 10 );
+		}
+	},
+	
+	
+	_onTabScrollRightMouseDown : function()
+	{
+		if ( this._tabScrollRightTimer )
+			clearTimeout(  this._tabScrollRightTimer );
+		this._tabScrollRightTimer = setTimeout( L.bind( function(){
+			this._tabScrollRight();
+		}, this ), 10 );
+	},
+	
+	_onTabScrollRightMouseUp : function()
+	{
+		if ( this._tabScrollRightTimer )
+			clearTimeout(  this._tabScrollRightTimer );
+		this._tabScrollRightTimer = null;
+	},
+	
+	_tabScrollRight : function()
+	{
+		var scrollLeft = this._tabFrame.scrollLeft();
+		var scrollContainerWidth = this._tabFrame.outerWidth();
+		var scrollInnerWidth = this._tabFrame.find("a").last().position().left-10 +
+			this._tabFrame.find("a").last().outerWidth(true) + scrollLeft;
+		
+		var scrollMax = scrollInnerWidth - scrollContainerWidth;
+		scrollLeft+=2;
+		if ( scrollLeft> scrollMax ) scrollLeft = scrollMax;
+		this._tabFrame.scrollLeft(scrollLeft);
+		
+		
+		
+		if ( scrollLeft > 0 )
+			this._tabScrollLeftBtn.removeClass("deactive");
+		else
+			this._tabScrollLeftBtn.addClass("deactive");
+		
+		
+		if ( scrollMax <= scrollLeft )
+			this._tabScrollRightBtn.addClass("deactive");
+		else
+			this._tabScrollRightBtn.removeClass("deactive");
+			
+		if ( scrollContainerWidth >= scrollInnerWidth)
+		{
+			this._tabScrollLeftBtn.hide();
+			this._tabScrollRightBtn.hide();
+		}
+		else
+		{
+			this._tabScrollLeftBtn.show();
+			this._tabScrollRightBtn.show();
+		}
+		
+		
+		if ( !this._tabScrollRightBtn.hasClass("deactive") )
+		{
+			this._tabScrollRightTimer = setTimeout( L.bind( function(){
+				this._tabScrollRight();
+			}, this ), 10 );
+		}
+	},
+	
+	
 	createContent : function()
 	{
 		this._contentFrame = $('<div>');
@@ -4907,7 +3933,7 @@ GSI.LayerTreeDialog = GSI.Dialog.extend( {
 		this.onOffSwitch = new GSI.OnOffSwitch( {className:'onoff', checked:this.cocoTileLayer.getVisible(), title: ""} );
 
 		var onoffFrame = $( '<div>' );
-		var label = $( '<label>' ).css({"padding-left":"5px"}).attr({'for':this.onOffSwitch.getId()}).html( 'Narrow down the display range.' );
+		var label = $( '<label>' ).css({"padding-left":"5px"}).attr({'for':this.onOffSwitch.getId()}).html( 'Hide layers out of the view.' );
 
 		this.onOffSwitch.on( 'change' , L.bind( this._onCocoTileCheckChange, this, this.onOffSwitch ) );
 
@@ -4943,7 +3969,6 @@ GSI.LayerTreeDialog = GSI.Dialog.extend( {
                 var path = "";
                 this._CurrentData_SRC    = new Array();
                 this._CurrentData_SRC_ID = "";
-
                 this._initializeList_ID_Mode = "cocoTileLayer";
                 this._initializeList_IDProc_Data(this.tree, path);
                 this._CurrentData_SRC_ID  = path;
@@ -4997,6 +4022,7 @@ GSI.LayerTreeDialog = GSI.Dialog.extend( {
 	show : function()
 	{
 		GSI.Dialog.prototype.show.call(this);
+		
 	},
 	hide : function()
 	{
@@ -5006,24 +4032,28 @@ GSI.LayerTreeDialog = GSI.Dialog.extend( {
 			this.current = null;
 			this.initializeList();
 		}
+		if ( this._checkEvacuationLayer() == false )
+		{
+			GSI.GLOBALS.evacDialog.hide();
+		}
 
 		GSI.Dialog.prototype.hide.call(this);
 	},
 	onCOCOTileLoad : function(e)
 	{
 		if ( !this.tree ) return;
-
-		this._initializeList( this.current ? this.current.entries : this.tree, true );
+		this._initializeList( this.current ? this.current.entries : ( this.tree ? this.tree[this._activeTabIndex].entries : true), true );
+		//this._initializeList( this.current ? this.current.entries : this.tree, true );
 	},
 	onCOCOTileHide : function(e )
 	{
 		if ( !this.tree ) return;
-		this._initializeList( this.current ? this.current.entries : this.tree, true );
+		this._initializeList( this.current ? this.current.entries : ( this.tree ? this.tree[this._activeTabIndex].entries : true), true );
+		//this._initializeList( this.current ? this.current.entries : this.tree, true );
 	},
 	initializeList : function()
 	{
 		if ( !this.contentFrame ) return;
-
 		this._hideItemTooltip();
 
 		if ( !this.listContainer )
@@ -5033,10 +4063,10 @@ GSI.LayerTreeDialog = GSI.Dialog.extend( {
 		}
 		this.contentFrame.scrollTop( 0 );
 		this.listContainer.empty();
-
 		if ( this.options.currentPath )
 		{
             this._initializeList_CurrentPath( this.options.currentPath );
+			this.activateTab( this._activeTabIndex );
 		}
         else{
             this._initializeListProc();
@@ -5055,7 +4085,6 @@ GSI.LayerTreeDialog = GSI.Dialog.extend( {
 	},
 	_initializeList : function( list, liRefresh )
 	{
-
 		this._hideItemTooltip();
 
 		if ( !list || list.length <= 0  )
@@ -5078,7 +4107,7 @@ GSI.LayerTreeDialog = GSI.Dialog.extend( {
 			var a = $( '<a>' ).attr( { 'href':'javascript:void(0);' } );
 			a.data( { 'data' : item } );
 
-			if ( item.entries || item.src)
+			if ( ( item.entries && !item.isMultiLayer ) || item.src)
 			{
 				this._makeFolder(li, a, item );
 			}
@@ -5130,17 +4159,17 @@ GSI.LayerTreeDialog = GSI.Dialog.extend( {
 		        for(var i = 0; i < this.visibleLayers.length; i++){
 			        var l = this.visibleLayers[i];
                     if(l.info != null){
-			            this.mapLayerList.append(l.info, true, l.hidden);
+			            this.mapLayerList.append(l.info, true, l.hidden,null,l.blend);
+			            //this.mapLayerList.append(l.info, true, l.hidden);
                     }
                 }
                 this.visibleLayers.length = 0;
-
                 this._initializeListProc();
             }
         }
         else{
 		    this.refreshTitle();
-		    this._initializeList( this.current ? this.current.entries : this.tree );
+		    this._initializeList( this.current ? this.current.entries : this.tree[this._activeTabIndex].entries);
 		    if ( this._userResized ) this._onResize();
         }
     },
@@ -5163,7 +4192,6 @@ GSI.LayerTreeDialog = GSI.Dialog.extend( {
 
         this._CurrentData_SRC    = new Array();
         this._CurrentData_SRC_ID = "";
-
         current = this._initializeList_IDProc_Data(this.tree, path);
         if(current == null && this._CurrentData_SRC.length > 0){
             this._CurrentData_SRC_ID  = path;
@@ -5172,7 +4200,6 @@ GSI.LayerTreeDialog = GSI.Dialog.extend( {
         else{
             this._initializeList_IDProc(current);
         }
-
 		return current;
 	},
 	_initializeList_IDProc : function(current)
@@ -5191,6 +4218,37 @@ GSI.LayerTreeDialog = GSI.Dialog.extend( {
         }
         if(this._initializeList_ID_Mode == "current"){
 		    this.current             = current;
+			var target = this.current ;
+			if ( target )
+			{
+
+				while( target.parent )
+				{
+					target = target.parent;
+				}
+				if ( this.tree )
+				{
+					for( var i=0; i<this.tree.length; i++)
+					{
+						if ( target == this.tree[i])
+						{
+							this._tabFrame.find("a").removeClass("active");
+							this._tabFrame.find("a").eq(i).addClass("active");
+							
+							var tabArr = this._tabFrame.find("a");
+							for( var j=0; j<tabArr.length; j++ )
+							{
+								var zIndex = tabArr.length -j;
+								if ( i == j ) zIndex = 99;
+								
+								$( tabArr[j]).css( {"z-index":zIndex} );
+							}
+							this._activeTabIndex = i;
+							break;
+						}
+					}
+				}
+			}
 		    this.options.currentPath = null;
         }
         if(this._initializeList_ID_Mode == "cocoTileLayer"){
@@ -5217,7 +4275,7 @@ GSI.LayerTreeDialog = GSI.Dialog.extend( {
                 }
                 this._CurrentData_SRC.push(tree[i]);
             }
-            else if(tree[i].entries){
+            else if(tree[i].entries && !tree[i].isMultiLayer){
                 current = this._initializeList_IDProc_Data(tree[i].entries, id);
                 if(current != null){
                     break;
@@ -5227,7 +4285,7 @@ GSI.LayerTreeDialog = GSI.Dialog.extend( {
                 if(tree[i].id == id){
                     if(tree[i].parent){
                         current = tree[i].parent;
-
+						
                         this._CurrentData_SRC.length = 0;
                     }
                     else{
@@ -5254,6 +4312,7 @@ GSI.LayerTreeDialog = GSI.Dialog.extend( {
 		    });
         }
         else{
+			
             this._initializeList_IDProc(null);
         }
     },
@@ -5272,6 +4331,7 @@ GSI.LayerTreeDialog = GSI.Dialog.extend( {
             GSI.GLOBALS.layersJSON._initializeTree(this._CurrentData_SRC[0].entries, this._CurrentData_SRC[0]);
 
             current = this._initializeList_IDProc_Data(this._CurrentData_SRC[0].entries, this._CurrentData_SRC_ID);
+            
             if(current == null){
                 this._initializeList_IDProc_DataSrc_Error();
             }
@@ -5326,9 +4386,9 @@ GSI.LayerTreeDialog = GSI.Dialog.extend( {
 			num++;
 			target = target.parent;
 		}
-
 		if ( num > 0 )
 		{
+			/*
 			var span = $( '<span>' ).html( "&nbsp;&gt;&nbsp;" );
 			this._titleTextFrame.prepend( span );
 			var a = $( '<a>' ).html( this.options.title ).attr( { 'href' : 'javascript:void(0);' } );
@@ -5336,15 +4396,19 @@ GSI.LayerTreeDialog = GSI.Dialog.extend( {
 				L.bind( this.onFolderClick, this, a )
 			).data( { 'data' : null } );
 			this._titleTextFrame.prepend( a );
+			*/
 		}
 		else
+		
 		{
-			var span = $( '<span>' ).html( this.options.title ); //.attr( { 'href' : 'javascript:void(0);' } );
+			var title = ( !this.tree || this.tree.length <= this._activeTabIndex ? this.options.title : this.tree[this._activeTabIndex ].title );
+			var span = $( '<span>' ).html( title ); //.attr( { 'href' : 'javascript:void(0);' } );
 			this._titleTextFrame.prepend( span );
 		}
 	},
 	_makeFolder : function(li, a, item)
 	{
+		
 		var cocoVisible = this.cocoTileLayer.getVisible();
         if(item.title_sys && item.title_sys == CONFIG.layerBaseFolderSYS){
             cocoVisible = false;
@@ -5570,7 +4634,7 @@ GSI.LayerTreeDialog = GSI.Dialog.extend( {
 			    }
 		    );
         }
-		if ( item._visibleInfo )
+		if ( item._visibleInfo || this.mapLayerList.exists( item )  )
 		{
 			a.addClass( 'view' );
 		}
@@ -5650,10 +4714,8 @@ GSI.LayerTreeDialog = GSI.Dialog.extend( {
 			}
 		}
 	},
-	onFolderClick : function( a )
+	_expandFolder : function( item )
 	{
-		var item = a.data( 'data' );
-
         var f = true;
         if(item){
             if(item.src){
@@ -5669,7 +4731,8 @@ GSI.LayerTreeDialog = GSI.Dialog.extend( {
 					    type     : "GET",
 					    url      : item.src,
 					    dataType : "text",
-					    cache    : true,
+					    //cache    : true,
+					    cache    : CONFIG.LOADLAYERSTXTCACHE,
 					    success  : L.bind(this._onFolderClickLoad     , this),
 					    error    : L.bind(this._onFolderClickLoadError, this)
 				    });
@@ -5681,6 +4744,40 @@ GSI.LayerTreeDialog = GSI.Dialog.extend( {
 
         if(f){
             this.onFolderClick_Proc(item);
+        }
+	},
+	onConfirmOkClick : function ( item )
+	{
+		GSI.GLOBALS.confirmDlg.hide();
+		GSI.GLOBALS.evacDialog.show();
+
+		CONFIG.layerEvacuationIsConfirmOK = true;
+		this._expandFolder( item );
+	},
+	onFolderClick : function( a )
+	{
+		var item = a.data( 'data' );
+		
+		if (( item ) && ( item.title_evac && item.title_evac == CONFIG.layerEvacuationFolderSYS ))
+		{
+			if ( this._checkEvacuationLayer() == false )
+			{
+				GSI.GLOBALS.confirmDlg.onPositiveButtonClick = L.bind(this.onConfirmOkClick, this, item);
+				GSI.GLOBALS.confirmDlg.show();			
+			}
+			else
+			{
+				this._expandFolder( item );
+			}
+		}
+		else
+		{
+			this._expandFolder( item );
+			if (this._checkEvacuationLayer() == false)
+			{
+				CONFIG.layerEvacuationIsConfirmOK = false;
+				GSI.GLOBALS.evacDialog.hide();
+			}
         }
 	},
 	onFolderClick_Proc : function( item )
@@ -5721,14 +4818,31 @@ GSI.LayerTreeDialog = GSI.Dialog.extend( {
 		var item = a.data( 'data' );
 
         this._current_id = item.id;
-
-        if(target.title_sys && target.title_sys == CONFIG.layerBaseFolderSYS){
+		
+		var baseLayerTarget = null;
+		
+		for( var i=0; i<GSI.GLOBALS.baseLayer.baseLayerList.length; i++ )
+		{
+			if ( item.id == GSI.GLOBALS.baseLayer.baseLayerList[i].id )
+			{
+				baseLayerTarget = GSI.GLOBALS.baseLayer.baseLayerList[i];
+				break;
+			}
+		}
+		
+        if(baseLayerTarget || ( target && target.title_sys && target.title_sys == CONFIG.layerBaseFolderSYS ) ){
             var f = false;
             if(this.mapLayerList.exists(item)){
                 f = true;
             }
-
-            this._onHideAllClick();
+            for( var i=0; i<GSI.GLOBALS.baseLayer.baseLayerList.length; i++ )
+			{
+				var baseLayer = GSI.GLOBALS.baseLayer.baseLayerList[i];
+				if ( this.mapLayerList.exists( baseLayer ) )
+				{
+					this.mapLayerList.remove( baseLayer );
+				}
+			}
             if(f){
                 GSI.GLOBALS.map.removeLayer(GSI.GLOBALS.baseLayer);
             }
@@ -5738,20 +4852,68 @@ GSI.LayerTreeDialog = GSI.Dialog.extend( {
 			    GSI.Utils.sendSelectedLayer(this._current_id);
             }
         }
-        else{
-		    if(!this.mapLayerList.exists(item))
-		    { 
-		    	this.mapLayerList.append(item);
-    		    GSI.Utils.sendSelectedLayer(this._current_id);
+        else if ( target && target.title_evac && target.title_evac == CONFIG.layerEvacuationFolderSYS )
+        {		
+            var f = false;
+            if(this.mapLayerList.exists(item)){
+                f = true;
+            }
 
-		    }
-		    else                               { this.mapLayerList.remove(item); }
+            this._onHideAllClick();
+            if(f == false){
+                this.mapLayerList.append(item);
+				if (GSI.Dialog._dialogManager.isVisibleDialog(GSI.GLOBALS.evacDialog) == false)
+				{
+					GSI.GLOBALS.evacDialog.show();
+				}
+    		    GSI.Utils.sendSelectedLayer(this._current_id);
+            }
+        }
+        else
+        {
+			if(!this.mapLayerList.exists(item))
+			{ 
+				if ( item.id.indexOf("relief") >= 0 )
+					this.mapLayerList.append(item, null, null, null, true);
+				else
+					this.mapLayerList.append(item);
+				GSI.Utils.sendSelectedLayer(this._current_id);
+
+			}
+			else
+			{
+				this.mapLayerList.remove(item); 
+			}
         }
 	},
 	onMapLayerListChange : function()
 	{
-		this._initializeList( this.current ? this.current.entries : this.tree, true );
+		this._initializeList( this.current ? this.current.entries : ( this.tree ? this.tree[this._activeTabIndex].entries : true), true );
 		this._toolTipViewCounter = 0;
+	},
+	_checkEvacuationLayer : function()
+	{
+	    if ( this.mapLayerList )
+	    {
+	    	var l = this.mapLayerList.getList();
+	    	for(i = 0 ; i < l.length; i++ )
+	    	{
+	    		if ( l[i].id.indexOf(CONFIG.layerEvacuationHeader) >= 0 )
+	    		{
+	    			return true;
+	    		}
+	    	}
+	    	var tl = this.mapLayerList.getTileList();
+
+	    	for(i = 0 ; i < tl.length; i++ )
+	    	{
+	    		if ( tl[i].id.indexOf(CONFIG.layerEvacuationHeader) >= 0 )
+	    		{
+	    			return true;
+	    		}
+	    	}
+	    }
+	    return false;
 	}
 });
 
@@ -5760,6 +4922,7 @@ GSI.LayerTreeDialog = GSI.Dialog.extend( {
  - GSI.Dialog
    - GSI.HelpDialog (Help dialog management)
  ************************************************************************/
+/*
 GSI.HelpDialog = GSI.Dialog.extend( {
 	options : {
 		title: '<span id="title_help_dialog">？</span>Menu (link)',
@@ -5807,8 +4970,8 @@ GSI.HelpDialog = GSI.Dialog.extend( {
 			this.LinkImg = $( '<img>' ).attr( {
 				'src'	: CONFIG.HELPMENU[i].Img,
 				'border': '0',
-				'width'	: '24px',
-				'height': '24px',
+				'width'	: '20px',
+				'height': '20px',
 				'style'	: 'vertical-align:middle',
 				'alt'	: CONFIG.HELPMENU[i].Moji
 			} );
@@ -5827,7 +4990,185 @@ GSI.HelpDialog = GSI.Dialog.extend( {
 		return this.frame;
 	}
 });
+*/
 
+GSI.HelpDialog = L.Class.extend( {
+	options : {
+	},
+	initialize : function(map,mapMouse, options)
+	{
+		this.map = map;
+		this.mapMouse = mapMouse;
+		this._blind = $( "<div>" )
+			.click( L.bind( function(){this.hide();}, this) )
+			.addClass( "help_window_blind" );
+		
+		this._frame = $( "<div>" ).addClass("help_window_frame");
+		
+		this._titleFrame = $("<div>").addClass( "help_window_content_title" );
+		
+		this._contentFrame = $("<div>").addClass("help_window_content_frame");
+		
+		
+		this._contentFrame.on({
+			/* At the start of flick */
+			'touchstart': L.bind( function(e) {
+				this._touchX = e.originalEvent.changedTouches[0].pageX;
+				this._touchStartX = this._touchX;
+				this._accel = 0;
+				//this._slideX = parseFloat($(this).position().left);
+				this._touchY = e.originalEvent.changedTouches[0].pageY; //←GET the touch position in the vertical direction
+			}, this ),
+			/* Flicking */
+			'touchmove': L.bind( function(e) {
+				var moveX = this.touchX - e.originalEvent.changedTouches[0].pageX,
+					moveY = this.touchY - e.originalEvent.changedTouches[0].pageY, //←GET the touch position in the vertical direction
+					moveRate = moveX / moveY; //←Calculate the ratio of flicked vertical and horizontal movement amounts.
+
+				//↓Cancel page scrolling only when flicking in the direction of 15 degrees or more from the vertical direction.
+				if(moveRate > Math.tan(15 * Math.PI/180)) {
+					e.preventDefault();
+				}
+
+				//this._slideX = this._slideX - (this._touchX - event.changedTouches[0].pageX );
+				//$(this).css({left:this.slideX});
+				this._accel = (e.originalEvent.changedTouches[0].pageX - this._touchX) * 5;
+				this._touchX = e.originalEvent.changedTouches[0].pageX;
+				this._touchEndX = this._touchX;
+				
+			}, this ),
+			/* At the end of flick */
+			'touchend': L.bind( function(e) {
+				//this._slideX += this._accel;
+				
+				if ( Math.abs( this._touchEndX - this._touchStartX ) > 50 )
+				{
+					if ( this._accel > 1 )
+						this.prev();
+					else if ( this._accel < -1)
+						this.next();
+				}
+				//console.log( this._slideX, this._accel, this._touchX );
+				//$("#query").val(this._slideX + "/" + this._accel + "/" + this._touchX );
+			}, this )
+		});
+		
+		this._closeButton = $( "<a>")
+			.attr({"href":"javascript:void(0);"})
+			.click( L.bind( function(){this.hide();}, this) )
+			.addClass("help_window_closebtn").html("×");
+		
+		this._titleFrame.append( $("<span>") );
+		this._titleFrame.append( this._closeButton );
+		this._frame.append( this._titleFrame);
+		this._frame.append( this._contentFrame);
+		
+		
+		this._nextButton = $("<a>")
+			.attr( {
+				"href":"javascript:void(0);"
+			} )
+			.addClass( "help_window_frame_button")
+			.addClass( "help_window_frame_next_button")
+			.html( "" )
+			.click( L.bind( function(){this._nextButton.blur();this.next();}, this ) );
+		
+		
+		this._prevButton = $("<a>")
+			.attr( {
+				"href":"javascript:void(0);"
+			} )
+			.addClass( "help_window_frame_button")
+			.addClass( "help_window_frame_prev_button")
+			.html( "" )
+			.click( L.bind( function(){this._prevButton.blur();this.prev();}, this ) );
+		
+		
+		this._frame.append( this._prevButton);
+		this._frame.append( this._nextButton);
+		
+		
+		this._contentList = [];
+		this._selectedIndex = -1;
+		
+		$("#help .help_content").each( L.bind(function(index, elem) {
+			this._contentList.push( {
+				content : $( elem ).clone(),
+				title : $( elem ).attr( "title" )
+			});
+		}, this )  );
+		
+		this.select(0);
+		
+		$( "body").append( this._blind);
+		$( "body").append( this._frame);
+		//GSI.Dialog.prototype.initialize.call(this, options);
+	},
+	
+	next : function()
+	{
+		if ( this._contentList.length > this._selectedIndex+1)
+			this.select(this._selectedIndex+1);
+		else
+			this.select(0);	
+	},
+	
+	prev : function()
+	{
+		if ( 0 <= this._selectedIndex-1)
+			this.select(this._selectedIndex-1);
+		else
+			this.select(this._contentList.length -1);	
+			
+	},
+	
+	select : function( index )
+	{
+		if ( this._contentList && this._contentList.length > index && index >= 0 )
+		{
+			if ( this._selectedIndex >= 0 )
+			{
+				this._contentFrame.fadeOut( 100, L.bind( function(){
+					this._titleFrame.find("span").empty().append( this._contentList[index].title ); 
+					this._contentFrame.empty().append( this._contentList[index].content );
+					this._contentFrame.fadeIn( 100 );
+				}, this));
+			}
+			else
+			{
+				this._titleFrame.find("span").empty().append( this._contentList[index].title ); 
+				this._contentFrame.empty().append( this._contentList[index].content );
+			}
+			this._selectedIndex = index;
+		}
+		
+	},
+	getVisible : function()
+	{
+		return ( this._blind ? this._blind.is( ":visible" ) : false );
+	},
+	
+	show : function ()
+	{
+		this._blind.fadeIn(200);
+		this._frame.fadeIn(200);
+	},
+	hide : function ()
+	{
+		this._blind.fadeOut(200);
+		this._frame.fadeOut(200);
+	},
+	create : function()
+	{
+		this.title = $( '<div>' ).html( this.options.title );
+
+		return $( '<div>' ).append( this.title );
+	}
+});
+
+GSI.HelpDialog.hide = function() {
+	if ( GSI.GLOBALS.HelpDialog ) GSI.GLOBALS.HelpDialog.hide();
+};
 
 /************************************************************************
  L.Class
@@ -5916,7 +5257,7 @@ GSI.MeasureDialog = GSI.Dialog.extend( {
 		if ( this.polyLin ) return;
 		L.drawLocal.draw.handlers.polyline.tooltip.start = 'Select the starting position.';
 		L.drawLocal.draw.handlers.polyline.tooltip.cont = 'Click the next position (Exit by clicking twice on the end point).';
-		L.drawLocal.draw.handlers.polyline.tooltip.end = ' Click the next position (Exit by clicking twice on the end point).';
+		L.drawLocal.draw.handlers.polyline.tooltip.end = 'Click the next position (Exit by clicking twice on the end point).';
 
 		this.polyLine =  new GSI.Draw.Polyline(this.map,{
 			shapeOptions: {
@@ -5987,7 +5328,7 @@ GSI.MeasureDialog = GSI.Dialog.extend( {
 		if ( isPolygon )
 		{
 			// Area
-			area = L.GeometryUtil.geodesicArea(latLngs);
+			area = L.GeometryUtil.calc_area(latLngs);
 
 			var areaStr = '';
 
@@ -6153,6 +5494,10 @@ GSI.MeasureDialog = GSI.Dialog.extend( {
 
 		this.frame.append( this.radioFrame ).append( this.distance );
 
+		//Measurement description
+        this.infoBtn = $("<a>").attr({"href":"http://maps.gsi.go.jp/help/howtouse.html","target":"_blank"}).addClass('gsi_measuredialog_infobtn').html("description");
+        this.frame.append(this.infoBtn);
+        
 		return this.frame;
 	}
 });
@@ -6334,7 +5679,23 @@ GSI.SakuzuDialog = GSI.Dialog.extend( {
 			td = $( '<td>' ).append( clearBtn );
 			tr.append( td );
 			this._listTBody.append( tr );
-
+			
+			// Icon label
+			tr = $( '<tr>' );
+			id = 'GSI_SakuzuDialog_label_check' + GSI.Utils.getCurrentID() ;
+			var checkbox2 = $( '<input>' ).attr( { 'id': id, 'type' : 'checkbox', 'checked' : item.getIconLabelVisible()} ).addClass( 'normalcheck' );
+			
+			checkbox2.click( L.bind( function(checkBox2,item){
+				item.setIconLabelVisible(checkBox2.is( ':checked' ) );
+				
+			}, this, checkbox2, item ) );
+			
+			label = $( '<label>' ).attr( {'for': id} ).html( GSI.TEXT.SAKUZU.DIALOG_LIST_VISIBLEICONLABELBTN );
+			td = $( '<td>' ).attr({"colspan":4, "align":"right"}).append(checkbox2).append( label );
+			tr.append( td );
+			this._listTBody.append( tr );
+			
+			
 			editBtn.click( L.bind( this._onEditSakuzuItemClick, this, item ) );
 			clearBtn.click( L.bind( this._clearLayer, this, item ) );
 		}, this ) );
@@ -6373,7 +5734,14 @@ GSI.SakuzuDialog = GSI.Dialog.extend( {
 
 		if ( !GSI.Utils.hasFileAPI )
 		{
-			frame.append( $('<div>').addClass( 'message' ).html( GSI.TEXT.SAKUZU.DIALOG_LOAD_COMMENT_IE8) );
+			if ( (GSI.Utils.Browser.ie) && (GSI.Utils.Browser.version == 9) )
+			{
+				frame.append( $('<div>').addClass( 'message' ).html( GSI.TEXT.SAKUZU.DIALOG_LOAD_COMMENT_IE9 ) );
+			}
+			else
+			{
+				frame.append( $('<div>').addClass( 'message' ).html( GSI.TEXT.SAKUZU.DIALOG_LOAD_COMMENT_IE8) );
+			}
 			var fileNameFrame = $( '<div>' );
 
 			this._fileLoadNameInput = $( '<input>' ).attr( {'type':'text'} );
@@ -6394,7 +5762,7 @@ GSI.SakuzuDialog = GSI.Dialog.extend( {
 
 		this._fileLoadPanel.append( frame );
 
-		// OK Cancel
+		// OKCancel
 		this._fileLoadOkCancelFrame = this._createFileLoadOkCancel();
 		this._fileLoadPanel.append( this._fileLoadOkCancelFrame  );
 
@@ -6502,7 +5870,7 @@ GSI.SakuzuDialog = GSI.Dialog.extend( {
 
 		this._fileSavePanel.append( frame );
 
-		// OK Cancel
+		// OKCancel
 		this._fileSaveOkCancelFrame = this._createFileSaveOkCancel();
 		this._fileSavePanel.append( this._fileSaveOkCancelFrame  );
 
@@ -6542,7 +5910,7 @@ GSI.SakuzuDialog = GSI.Dialog.extend( {
 
 				this._zeroClipboard.on( 'beforecopy', L.bind( function() {
 					this._zeroClipboard.setText(this._fileSaveTextarea.val());
-					alert( 'It was copied to the clipboard' );
+					alert( 'It was copied to the clipboard.' );
 				},this ) );
 
 				this._zeroClipboard.on( 'aftercopy', L.bind( function() {
@@ -6643,7 +6011,7 @@ GSI.SakuzuDialog = GSI.Dialog.extend( {
 		frame.append( this._editRemoveBtnFrame );
 		this._editPanel.append( frame );
 
-		// OK Cancel
+		// OKCancel
 		this._editOkCancelFrame = this._createEditOkCancel();
 		this._editPanel.append( this._editOkCancelFrame  );
 
@@ -6657,6 +6025,7 @@ GSI.SakuzuDialog = GSI.Dialog.extend( {
 		var cancelBtn = $( '<a>' ).attr( {'href':'javascript:void(0);'} ).html( GSI.TEXT.SAKUZU.DIALOG_EDIT_CANCELBTN  ).addClass( 'normalbutton' );
 
 		this._editOkBtn = okBtn;
+		this._editCancelBtn = cancelBtn;
 		okBtn.click( L.bind( this._onEditOkClick, this ) );
 		cancelBtn.click( L.bind( this.onEditCancelClick, this ) );
 
@@ -6697,8 +6066,19 @@ GSI.SakuzuDialog = GSI.Dialog.extend( {
 	_onEditOkClick :function() {
 		this._clearPointEditTextareaCheckTimer();
 
-		if ( this._editingTarget && !this._editingTarget.isReady() ) return;
-
+		if ( this._editingTarget && !this._editingTarget.isReady() ) 
+		{
+			if ( this._editingTarget._editingPathList )
+			{
+				for( var i= 0; i<this._editingTarget._editingPathList.length; i++ )
+				{
+					if ( this._editingTarget._editingPathList[i].completeShape )
+						this._editingTarget._editingPathList[i].completeShape();
+				}
+			}
+			
+			return;
+		}
 		var editMode = GSI.SakuzuListItem.NONE;
 		if ( this._editingTarget )
 		{
@@ -6809,13 +6189,26 @@ GSI.SakuzuDialog = GSI.Dialog.extend( {
 		this._pointEditMarkerFrame .append( table );
 		frame.append( this._pointEditMarkerFrame  );
 
-		this._pointEditTextFrame  = $( '<div>' );
-		this._pointEditTextFrame .append( $( '<div>' ).addClass( "gsi_sakuzu_dialog_pointedit_textmessage" )
+		this._pointEditTextFrame  = $( '<div>' ).css({position:"relative"});
+		var messageFrame = $( "<div>" ).addClass("gsi_sakuzu_dialog_pointedit_textmessage_frame" ).css({position:"relative"});
+		messageFrame .append( $( '<div>' ).addClass( "gsi_sakuzu_dialog_pointedit_textmessage" )
 				.html( GSI.TEXT.SAKUZU.DIALOG_EDIT_POINTTEXT_MSG ));
-
+		this._pointEditTextModeButton = $( "<a>" ).addClass("gsi_sakuzu_dialog_pointedit_textmode_btn").attr({href:"javascript:void(0);"}).html( "Switch to HTML input" );
+		messageFrame .append( this._pointEditTextModeButton);
+		
+		this._pointEditTextFrame.append( messageFrame );
+		
+		this._pointEditTextModeButton.click( L.bind( function(){
+			if ( this._pointEditTextArea.val() != "" && !this._pointEditTextArea.hasClass("textmode") )
+			{
+				if ( !confirm( 'Style information may be lost. Is it OK?' ) ) return;
+			}
+			this._setPointTextMode( !this._pointEditTextArea.hasClass("textmode"), this._pointEditTextArea.val() );
+		}, this ) );
+		
 		this._pointEditTextArea = $( '<textarea>' )
 			.attr( { 'placeholder': GSI.TEXT.SAKUZU.DIALOG_EDIT_POINTTEXT_HINT} )
-			.addClass( 'gsi_sakuzu_dialog_pointedit_textarea' );
+			.addClass( 'gsi_sakuzu_dialog_pointedit_textarea' ).addClass( 'textmode' );
 		this._pointEditTextFrame .append( this._pointEditTextArea);
 		frame.append( this._pointEditTextFrame  );
 
@@ -6834,7 +6227,161 @@ GSI.SakuzuDialog = GSI.Dialog.extend( {
 				this._clearPointEditTextareaCheckTimer();
 				this._onPointIconHTMLChange();
 			}, this ) );
-
+		
+		this._pointEditTextStyleFrame = $( '<div>' ).addClass( 'gsi_sakuzu_dialog_pointedit_text_style_frame' );
+		
+		// font-family
+		/*
+		var fontFamilyFrame = $( '<div>' ).addClass('font_family_select_frame');
+		this._pointEditTextFontFamilySelect = $( '<select>' ).addClass( 'font_family_select' );
+		fontFamilyFrame.append( this._pointEditTextFontFamilySelect );
+		this._pointEditTextStyleFrame.append( fontFamilyFrame );
+		
+		this._pointEditTextFontFamilySelect
+				.append($('<option>')
+				.html("Select font")
+				.val(""));
+		
+		for ( var i=0; i<CONFIG.SAKUZU.FONTFAMILYLIST.length; i++ )
+		{
+			this._pointEditTextFontFamilySelect
+				.append($('<option>')
+				.html(CONFIG.SAKUZU.FONTFAMILYLIST[i])
+				.val(CONFIG.SAKUZU.FONTFAMILYLIST[i]));
+		}
+		
+		this._pointEditTextFontFamilySelect
+			.on( 'change', L.bind( function(){
+				this._onPointIconHTMLChange();
+			}, this ) );
+			
+		*/
+		// font-size
+		this._pointEditTextFontSizeSelect = $( '<select>' ).addClass( 'font_size_select' );
+		this._pointEditTextStyleFrame.append( this._pointEditTextFontSizeSelect );
+		
+		this._pointEditTextFontSizeSelect
+				.append($('<option>')
+				.html("Font size")
+				.val(""));
+				
+		for ( var i=0; i<CONFIG.SAKUZU.FONTSIZELIST.length; i++ )
+		{
+			this._pointEditTextFontSizeSelect
+				.append($('<option>')
+				.html(CONFIG.SAKUZU.FONTSIZELIST[i])
+				.val(CONFIG.SAKUZU.FONTSIZELIST[i]));
+		}
+		
+		
+		
+		this._pointEditTextFontSizeSelect
+			.on( 'change', L.bind( function(){
+				this._onPointIconHTMLChange();
+			}, this ) );
+		
+		// bold
+		this._pointEditTextFontBoldButton = $( '<a>' ).addClass( 'font_bold_btn' ).attr({href:"javascript:void(0);"}).html("");
+		this._pointEditTextStyleFrame.append( this._pointEditTextFontBoldButton );
+		this._pointEditTextFontBoldButton
+			.on( 'click', L.bind( function(){
+				this._pointEditTextFontBoldButton.data({ '_bold' : this._pointEditTextFontBoldButton.data('_bold') ? false: true } );
+				if ( this._pointEditTextFontBoldButton.data('_bold') )
+					this._pointEditTextFontBoldButton.addClass( 'enabled' );
+				else
+					this._pointEditTextFontBoldButton.removeClass( 'enabled' );
+				this._onPointIconHTMLChange();
+			}, this ) );
+			
+			
+		
+		// italic
+		this._pointEditTextFontItalicButton = $( '<a>' ).addClass( 'font_italic_btn' ).attr({href:"javascript:void(0);"}).html("");
+		this._pointEditTextStyleFrame.append( this._pointEditTextFontItalicButton );
+		this._pointEditTextFontItalicButton
+			.on( 'click', L.bind( function(){
+				this._pointEditTextFontItalicButton.data({ '_italic' : this._pointEditTextFontItalicButton.data('_italic') ? false: true } );
+				
+				if ( this._pointEditTextFontItalicButton.data('_italic') )
+					this._pointEditTextFontItalicButton.addClass( 'enabled' );
+				else
+					this._pointEditTextFontItalicButton.removeClass( 'enabled' );
+				this._onPointIconHTMLChange();
+			}, this ) );
+		
+		// underline
+		this._pointEditTextFontUnderlineButton = $( '<a>' ).addClass( 'font_underline_btn' ).attr({href:"javascript:void(0);"}).html("");
+		this._pointEditTextStyleFrame.append( this._pointEditTextFontUnderlineButton );
+		this._pointEditTextFontUnderlineButton
+			.on( 'click', L.bind( function(){
+				this._pointEditTextFontUnderlineButton.data({ '_underline' : this._pointEditTextFontUnderlineButton.data('_underline') ? false: true } );
+				if ( this._pointEditTextFontUnderlineButton.data('_underline') )
+					this._pointEditTextFontUnderlineButton.addClass( 'enabled' );
+				else
+					this._pointEditTextFontUnderlineButton.removeClass( 'enabled' );
+				
+				this._onPointIconHTMLChange();
+			}, this ) );
+		
+		
+		
+			
+		// color
+		var id = 'GSI_SakuzuDialog_lineColor_' + GSI.Utils.getCurrentID() ;
+		this._pointEditTextFontColorButton = $( '<a>' ).addClass( 'color_btn' ).attr({id:id,href:"javascript:void(0);"}).html("");
+		this._pointEditTextStyleFrame.append( this._pointEditTextFontColorButton );
+		this._pointEditTextFontColorButton.simpleColorPicker({
+			showEffect: 'slide',
+			hideEffect: 'slide',
+			clearButton : true,
+			onChangeColor: L.bind( function( color ){
+				if ( color && color != '' )
+				{
+					this._pointEditTextFontColorButton.find("div").css( {"background-color":color} );
+					this._pointEditTextFontColorButton.addClass( 'enabled' );
+				}
+				else
+				{
+					this._pointEditTextFontColorButton.find("div").css( {"background-color":""} );
+					this._pointEditTextFontColorButton.removeClass( 'enabled' );
+				}
+				this._pointEditTextFontColorButton.data({ '_color' : color } );
+				this._onPointIconHTMLChange();
+			}, this )
+		});
+		
+		this._pointEditTextFontColorButton .append( $("<div>") );
+		
+		// background-color
+		id = 'GSI_SakuzuDialog_lineColor_' + GSI.Utils.getCurrentID() ;
+		this._pointEditTextFontBGColorButton = $( '<a>' ).addClass( 'background_color_btn' ).attr({id:id,href:"javascript:void(0);"}).html("");
+		this._pointEditTextStyleFrame.append( this._pointEditTextFontBGColorButton );
+		
+		this._pointEditTextFrame.append( this._pointEditTextStyleFrame );
+		this._pointEditTextFontBGColorButton.simpleColorPicker({
+			showEffect: 'slide',
+			hideEffect: 'slide',
+			clearButton : true,
+			onChangeColor: L.bind( function( color ){
+				if ( color && color != '' )
+				{
+					this._pointEditTextFontBGColorButton.find("div").css( {"background-color":color} );
+					this._pointEditTextFontBGColorButton.addClass( 'enabled' );
+				}
+				else
+				{
+					this._pointEditTextFontBGColorButton.find("div").css( {"background-color":""} );
+					this._pointEditTextFontBGColorButton.removeClass( 'enabled' );
+				}
+				this._pointEditTextFontBGColorButton.data({ '_bgcolor' : color } );
+				this._onPointIconHTMLChange();
+			}, this )
+		});
+		this._pointEditTextFontBGColorButton .append( $("<div>") );
+		
+		
+		
+		
 		var iconList = [];
 
 		for ( var i=0; i<CONFIG.SAKUZU.SYMBOL.FILES.length; i++ )
@@ -6848,7 +6395,7 @@ GSI.SakuzuDialog = GSI.Dialog.extend( {
 
 		this._pointIconSelector = new GSI.IconSelector( this._pointIconImage, iconList );
 		this._pointIconSelector.on( 'select', L.bind( this._onPointIconSelect, this ) );
-
+		this._setPointTextMode( true );
 		return frame;
 	},
 	_clearPointEditTextareaCheckTimer : function()
@@ -6901,9 +6448,53 @@ GSI.SakuzuDialog = GSI.Dialog.extend( {
 	{
 		this._refreshEditing( { _iconInfo: { html : html } });
 	},
+	
+	_pointEditTextToHTML : function(text)
+	{
+		
+		
+		// TEXT Mode
+		var fontSize = this._pointEditTextFontSizeSelect.val();
+		var style = '';
+		if ( fontSize && fontSize != '' )
+			style += "font-size:" + fontSize + 'pt;'
+		
+		if ( this._pointEditTextFontBoldButton.data('_bold') )
+			style += "font-weight:bold;";
+		if ( this._pointEditTextFontItalicButton.data('_italic') )
+			style += "font-style:italic;";
+		if ( this._pointEditTextFontUnderlineButton.data('_underline') )
+			style += "text-decoration:underline;";
+		if ( this._pointEditTextFontColorButton.data( '_color' ) && this._pointEditTextFontColorButton.data( '_color' ) != '' )
+			style += "color:" + this._pointEditTextFontColorButton.data( '_color' ) + ";";
+		if ( this._pointEditTextFontBGColorButton.data( '_bgcolor' ) && this._pointEditTextFontBGColorButton.data( '_bgcolor' ) != '' )
+			style += "background-color:" + this._pointEditTextFontBGColorButton.data( '_bgcolor' ) + ";";
+		
+		
+		if ( style != '' )
+			text = '<div style="' + style + '">' + text.replace(/\n/g, '<br>') + '</div>';
+		
+		return text;
+	},
+	
+	
 	_onPointIconHTMLChange : function()
 	{
-		this._refreshEditingIconHTML( this._pointEditTextArea.val() );
+		if ( this._pointEditTextArea.hasClass( "textmode" ) )
+		{
+			var text =  this._pointEditTextToHTML(this._pointEditTextArea.val());
+			
+			if ( this._pointEditTextArea.data("start_text") == text )
+			{
+				this._refreshEditingIconHTML( this._pointEditTextArea.data("html_text") );
+			}
+			else
+				this._refreshEditingIconHTML(  text);
+		}
+		else
+		{
+			this._refreshEditingIconHTML( this._pointEditTextArea.val() );
+		}
 	},
 	_onPointIconSizeChange : function()
 	{
@@ -7299,6 +6890,8 @@ GSI.SakuzuDialog = GSI.Dialog.extend( {
 	},
 	_initEditFrame : function( id )
 	{
+		
+		
         this.id = id;
 		this._pointEditFrame[ id== GSI.SakuzuListItem.POINT || id== GSI.SakuzuListItem.POINT_TEXT || id == GSI.SakuzuListItem.MULTIPOINT ? 'show' : 'hide' ]();
 		this._lineEditFrame[ id == GSI.SakuzuListItem.MULTILINESTRING || id == GSI.SakuzuListItem.MULTIPOLYGON || id== GSI.SakuzuListItem.LINESTRING || id== GSI.SakuzuListItem.POLYGON || id== GSI.SakuzuListItem.CIRCLE || id== GSI.SakuzuListItem.POINT_CIRCLE || id== GSI.SakuzuListItem.FREEHAND ? 'show' : 'hide' ]();
@@ -7342,6 +6935,104 @@ GSI.SakuzuDialog = GSI.Dialog.extend( {
 			}, this, event ) );
 		}
 	},
+	
+	_setPointTextMode : function(textMode, text)
+	{
+		if ( textMode )
+		{
+			
+			this._pointEditTextFrame .find( "div.gsi_sakuzu_dialog_pointedit_textmessage" )
+				.html( GSI.TEXT.SAKUZU.DIALOG_EDIT_POINTTEXT_TEXTMODE_MSG );
+			this._pointEditTextArea.attr( { 'placeholder': GSI.TEXT.SAKUZU.DIALOG_EDIT_POINTTEXT_TEXTMODE_HINT } );
+			var fontFamily = "";
+			var fontSize = "";
+			var bold = false;
+			var italic = false;
+			var underline = false;
+			var color = "";
+			var bordering = "";
+			var backgroundColor = "";
+			
+			if ( !text || text == "" )
+			{
+				
+				this._pointEditTextArea.data( {"start_text":"", "html_text" : ""} );
+				this._pointEditTextArea.val("");
+			}
+			else
+			{
+				var a = $( "<div>" ).html( text );
+				var children = a.children();
+				if ( children.length > 0 )
+				{
+					fontSize = parseInt( $(children[0]).css( "font-size" ) );
+					
+					var fontWeight = $(children[0]).css( "font-weight" );
+					if ( fontWeight && fontWeight != 'normal' )
+						bold = true;
+					
+					var fontStyle = $(children[0]).css( "font-style" );
+					if ( fontStyle && fontStyle == 'italic' )
+						italic = true;
+					
+					var fontUnderline = $(children[0]).css( "text-decoration" );
+					if ( fontUnderline && fontUnderline == 'underline' )
+						underline = true;
+					color =  $(children[0]).css( "color" );
+					backgroundColor =  $(children[0]).css( "background-color" );
+					
+					//text-shadow
+					bordering = "";
+					
+					this._pointEditTextArea.val(a.text());
+				}
+			}
+			
+			this._pointEditTextFontSizeSelect.val(fontSize );
+			this._pointEditTextFontBoldButton.data({"_bold":bold})[ ( bold ? "add" : "remove" ) + "Class"]( 'enabled' );
+			this._pointEditTextFontItalicButton.data({"_italic":italic})[ ( italic ? "add" : "remove" ) + "Class"]( 'enabled' );
+			this._pointEditTextFontUnderlineButton.data({"_underline":underline})[ ( underline ? "add" : "remove" ) + "Class"]( 'enabled' );
+			this._pointEditTextFontColorButton.data({"_color":color})[ ( color && color != '' ? "add" : "remove" ) + "Class"]( 'enabled' );
+			this._pointEditTextFontColorButton.find("div").css( {"background-color" : color && color != '' ? color : ""} );
+			this._pointEditTextFontBGColorButton.data({"_bgcolor":backgroundColor})[ ( backgroundColor && backgroundColor != ''  ? "add" : "remove" ) + "Class"]( 'enabled' );
+			this._pointEditTextFontBGColorButton.find("div").css( {"background-color" : backgroundColor && backgroundColor != '' ? backgroundColor : ""} );
+			
+			this._pointEditTextArea.data( {"start_text":this._pointEditTextToHTML(this._pointEditTextArea.val()), "html_text" : text} );
+			
+			
+			this._pointEditTextModeButton.html( 'Switch to HTML input' );
+			this._pointEditTextArea.addClass( "textmode" );
+			this._pointEditTextStyleFrame.show();
+		}
+		else
+		{
+			if ( this._pointEditTextArea.data("start_text") == this._pointEditTextToHTML(text) )
+			{
+				text = this._pointEditTextArea.data("html_text")
+			}
+			else
+			{
+				text = this._pointEditTextToHTML(text);
+				
+			}
+			this._pointEditTextArea.data( {"start_text":"", "html_text" : ""} );
+			
+			
+			this._pointEditTextFrame .find( "div.gsi_sakuzu_dialog_pointedit_textmessage" )
+				.html( GSI.TEXT.SAKUZU.DIALOG_EDIT_POINTTEXT_MSG );
+			
+			this._pointEditTextArea.attr( { 'placeholder': GSI.TEXT.SAKUZU.DIALOG_EDIT_POINTTEXT_HINT } );
+			if ( !text )
+				this._pointEditTextArea.val("");
+			else
+				this._pointEditTextArea.val(text);
+			this._pointEditTextModeButton.html( 'Switch to text input' );
+			this._pointEditTextArea.removeClass( "textmode" );
+			this._pointEditTextStyleFrame.hide();
+			
+		}
+	},
+	
 	_setControlStyle : function( style )
 	{
 		if ( !style ) return;
@@ -7349,9 +7040,21 @@ GSI.SakuzuDialog = GSI.Dialog.extend( {
 		// Point
 		if ( style.icon )
 		{
-			if ( style.icon.options.html || style.icon.options.html == '' )
+			if ( !style.icon.options.iconUrl && ( style.icon.options.html || style.icon.options.html == '' ) )
 			{
-				this._pointEditTextArea.val( style.icon.options.html );
+				var text = style.icon.options.html ;
+				/*
+				if ( !style.icon.options.html || style.icon.options.html == '' )
+				{
+					this._setPointTextMode( true, text );
+				}
+				else
+				{
+					this._setPointTextMode( false,text );
+				}
+				*/
+				this._setPointTextMode( true, text );
+				
 				this._pointEditMarkerFrame.hide();
 				this._pointEditTextFrame.show();
 			}
@@ -7448,7 +7151,7 @@ GSI.SakuzuDialog = GSI.Dialog.extend( {
 		td = $( '<td>' ).css( { width:"24px","text-align":"center"} );
 
 		var btn = $( '<a>' ).attr( { 'href' : 'javascript:void(0);'} ).addClass( "btn" )
-			.html( '<img title="Delete this line" src="image/sakuzu/icon_remove.png">' )
+			.html( '<img title="こDelete this line" src="image/sakuzu/icon_remove.png">' )
 			.click( L.bind(
 				function(tr){
 					var no = 0;
@@ -7571,26 +7274,84 @@ GSI.SakuzuDialog = GSI.Dialog.extend( {
 	},
 	_onSakuzuItemReady : function()
 	{
-		this._editOkBtn.removeClass('disabled' );
+		this._editOkBtn.html( GSI.TEXT.SAKUZU.DIALOG_EDIT_OKBTN ).removeClass('disabled' );
+		this._editCancelBtn.html( GSI.TEXT.SAKUZU.DIALOG_EDIT_CANCEL2BTN );
 	},
 	_startEdit : function(itemType, layer)
 	{
 		this._editRemoveBtnFrame.show(); //removeClass('disabled' );
-		this._editOkBtn.removeClass('disabled' );
+		this._editOkBtn.html( GSI.TEXT.SAKUZU.DIALOG_EDIT_OKBTN ).removeClass('disabled' );
+		this._editCancelBtn.html( GSI.TEXT.SAKUZU.DIALOG_EDIT_CANCEL2BTN );
+		
 		this._editingTarget.startEdit(itemType, layer);
 		this._setControlStyle( this._editingTarget.getEditingStyle() );
 		this._initEditInfo( this._editingTarget.getEditingInfo() );
 	},
 	_startCreate : function( id )
 	{
-		this._editOkBtn.addClass('disabled' );
+		switch(id)
+		{
+		case GSI.SakuzuListItem.POLYGON:
+		case GSI.SakuzuListItem.MULTIPOLYGON:
+		case GSI.SakuzuListItem.LINESTRING:
+		case GSI.SakuzuListItem.MULTILINESTRING:
+			this._editOkBtn.html( GSI.TEXT.SAKUZU.DIALOG_EDIT_OK2BTN ).addClass('disabled' );
+			this._editCancelBtn.html( GSI.TEXT.SAKUZU.DIALOG_EDIT_CANCELBTN );
+			break;
+		default:
+			this._editOkBtn.html( GSI.TEXT.SAKUZU.DIALOG_EDIT_OKBTN ).addClass('disabled' );
+			this._editCancelBtn.html( GSI.TEXT.SAKUZU.DIALOG_EDIT_CANCELBTN );
+			break;
+		}
 		this._editRemoveBtnFrame.hide(); //.addClass('disabled' );
-
+	
 		this._editingTarget =this._sakuzuList.getSakuzuItem();
 		this._editingTarget.startCreate(id);
 		this._currentCreateId = id;
+		
 		this._setControlStyle( this._editingTarget.getEditingStyle() );
 		this._initEditInfo( this._editingTarget.getEditingInfo() );
+		
+		if ( this._editingTarget._editingPathList )
+		{
+			for( var i=0; i<this._editingTarget._editingPathList.length; i++ )
+			{
+				if ( 
+					this._editingTarget._editingPathList[i] instanceof GSI.Draw.Polygon ||
+					this._editingTarget._editingPathList[i] instanceof GSI.Draw.Polyline )
+				{
+				
+					this._editingTarget._editingPathList[i].on( "measurechange", L.bind( function(path) {
+						if ( path._markers )
+						{
+							if ( path instanceof GSI.Draw.Polygon )
+							{
+								if ( path._markers.length < 3 ) 
+									this._editOkBtn.addClass('disabled' );
+								else
+									this._editOkBtn.removeClass('disabled' );
+								if ( path._markers.length >= 1 )
+									this._editCancelBtn.html( GSI.TEXT.SAKUZU.DIALOG_EDIT_CANCEL2BTN );
+								else
+									this._editCancelBtn.html( GSI.TEXT.SAKUZU.DIALOG_EDIT_CANCELBTN );
+								
+							}
+							else if (path instanceof GSI.Draw.Polyline)
+							{
+								if ( path._markers.length < 2 ) 
+									this._editOkBtn.addClass('disabled' );
+								else
+									this._editOkBtn.removeClass('disabled' );
+								if ( path._markers.length >= 1 )
+									this._editCancelBtn.html( GSI.TEXT.SAKUZU.DIALOG_EDIT_CANCEL2BTN );
+								else
+									this._editCancelBtn.html( GSI.TEXT.SAKUZU.DIALOG_EDIT_CANCELBTN );
+							}
+						}
+					}, this, this._editingTarget._editingPathList[i] ) );
+				}
+			}
+		}
 	},
 	_refreshEditing : function( style )
 	{
@@ -7645,7 +7406,7 @@ GSI.SearchResultDialog = GSI.Dialog.extend( {
 	setTitle : function( title )
 	{
 		var subTitle = $( '<a>' ).html( "Cooperation:CSIS, University of Tokyo" ).addClass( 'searchresultdialog_subtitle' )
-			.css( {'font-size':'7pt'} ).attr('href', '//newspat.csis.u-tokyo.ac.jp/geocode/')
+			.css( {'font-size':'7pt'} ).attr('href', 'http://newspat.csis.u-tokyo.ac.jp/geocode/')
 			.attr('target', '_blank');
 
 		this.title.html( title ).append( subTitle );
@@ -7769,10 +7530,10 @@ GSI.SearchResultDialog = GSI.Dialog.extend( {
 		if (result)
 		{
 			for(var i = result.length - 1; i >= 0; i--)
+			{
+				if (result[i].geometry.coordinates[0] <= 0)
 				{
-					if (result[i].geometry.coordinates[0] <= 0)
-					{
-						if (result[i].geometry.coordinates[1] <= 0)
+					if (result[i].geometry.coordinates[1] <= 0)
 					{
 						result.splice(i, 1);
 					}
@@ -7899,6 +7660,7 @@ GSI.SearchResultDialog = GSI.Dialog.extend( {
 					li.append( a );
 					ul.append( li );
 					// Get a place name from the latitude and longitude by calling the reverse geocoder function.
+					
 					$.ajax({
 						url : CONFIG.SERVERAPI.GETADDR,
 						dataType : "json",
@@ -8106,6 +7868,9 @@ GSI.ShareDialog = GSI.Dialog.extend( {
 		this._setCheckdState( this._centerCrossCheck, this.pageStateManager.getViewSettingVisible(CONFIG.PARAMETERNAMES.CENTERCROSS) );
 		this._setCheckdState( this._latLngGridCheck, false );
 		this._setCheckdState( this._utmGridCheck, false );
+		this._setCheckdState( this._tileGridCheck, false );
+		this._setCheckdState( this._chiikiMeshCheck, false );
+		this._setCheckdState( this._t25000Check, false );
 		this._setCheckdState( this._jihokuLineCheck, false );
 	},
 	_initializeLinkMode : function()
@@ -8368,6 +8133,9 @@ GSI.ShareDialog = GSI.Dialog.extend( {
 		visibles[ CONFIG.PARAMETERNAMES.JIHOKULINE] = this._jihokuLineCheck.is( ':checked' );
 		visibles[ CONFIG.PARAMETERNAMES.LATLNGGRID] = this._latLngGridCheck.is( ':checked' );
 		visibles[ CONFIG.PARAMETERNAMES.UTMGRID] = this._utmGridCheck.is( ':checked' );
+		visibles[ CONFIG.PARAMETERNAMES.TILEGRID] = this._tileGridCheck.is( ':checked' );
+		visibles[ CONFIG.PARAMETERNAMES.CHIIKIMESH] = this._chiikiMeshCheck.is( ':checked' );
+		visibles[ CONFIG.PARAMETERNAMES.T25000GRID] = this._t25000Check.is( ':checked' );
         visibles[ CONFIG.PARAMETERNAMES.FOOTER ] = GSI.GLOBALS.footer.isVisible();
 
 		var visibleDialogs = {};
@@ -8421,7 +8189,7 @@ GSI.ShareDialog = GSI.Dialog.extend( {
 
 				this._zeroClipboard.on( 'beforecopy', L.bind( function() {
 					this._zeroClipboard.setText(this._textarea.val());
-					alert( 'It was copied to the clipboard' );
+					alert( 'It was copied to the clipboard.' );
 				},this ) );
 
 				this._zeroClipboard.on( 'aftercopy', L.bind( function() {
@@ -8628,7 +8396,23 @@ GSI.ShareDialog = GSI.Dialog.extend( {
 		item = __createItem( this,'Display the UTM grid.' );
 		ul.append( item.li );
 		this._utmGridCheck = item.checkbox;
-
+		
+		// Tile coordinates
+		item = __createItem( this,'Display the Tile coordinates.' );
+		ul.append( item.li );
+		this._tileGridCheck = item.checkbox;
+		
+		// Regional Mesh
+		item = __createItem( this,'Display the Regional Mesh.' );
+		ul.append( item.li );
+		this._chiikiMeshCheck = item.checkbox;
+		
+		// 1:25,000 topographic maps Grid
+		item = __createItem( this,'Display the 1:25,000 topographic maps Grid.' );
+		ul.append( item.li );
+		this._t25000Check = item.checkbox;
+		
+		
 		// Magnetic north line
 		item = __createItem( this,'Display the magnetic north line.' );
 		ul.append( item.li );
@@ -8654,11 +8438,12 @@ GSI.ShareDialog.MODE = {
 GSI.ViewListDialog = GSI.Dialog.extend( {
 
 	options : {
-		title : 'Layer'
+		title : 'Layers'
 	},
-	initialize : function(map, mapLayerList, cocoTileLayer, options)
+	initialize : function(map, layersJSON, mapLayerList, cocoTileLayer, options)
 	{
 		this.map = map;
+		this.layersJSON = layersJSON;
 		this.mapLayerList = mapLayerList;
 		this.cocoTileLayer = cocoTileLayer;
 		this.mapLayerList.on( 'change', L.bind( this.onMapLayerListChange, this ) );
@@ -8703,13 +8488,13 @@ GSI.ViewListDialog = GSI.Dialog.extend( {
 	{
 		var frame = $( '<div>' ).css( { 'height': '25px' } ).addClass( 'viewlistdialog_control_frame' );
 
-        this._ButtonTxtAdd = $("<a>").css({"position":"absolute",'left':'5px','bottom':'5px','cursor':'pointer'}).addClass('view_list_dialog_button').html("<img src='./image/system/add.png' style='position:relative;left:-2px;top:3px;' />add layer / change basemap");
-        this._RbtnTxtAdd = $("<a>").css({"position":"absolute",'right':'4px','bottom':'5px','cursor':'pointer'}).addClass('view_list_dialog_button').html("Reset");
+        //this._ButtonTxtAdd = $("<a>").css({"position":"absolute",'left':'5px','bottom':'5px','cursor':'pointer'}).addClass('view_list_dialog_button').html("<img src='./image/system/add.png' style='position:relative;left:-2px;top:3px;' />情報追加/ベースマップ切替");
+        this._RbtnTxtAdd = $("<a>").css({"position":"absolute",'left':'4px','bottom':'5px','cursor':'pointer'}).addClass('view_list_dialog_button').html("Reset");
 		
 		var frameRange            = $( '<div>' ).css({ 'position':'absolute','right':'5px','bottom':'5px','opacity':'1'});
         /*
         this._ButtonRangeSwitch   = new GSI.OnOffSwitch( {className:'onoff', checked:this.cocoTileLayer.getVisible(), title: ""} );
-		var frameRangeSwitchLabel = $( '<label>' ).css({"padding-left":"5px"}).attr({'for':this._ButtonRangeSwitch.getId()}).html( 'Narrow down the display range' );
+		var frameRangeSwitchLabel = $( '<label>' ).css({"padding-left":"5px"}).attr({'for':this._ButtonRangeSwitch.getId()}).html( '表示範囲に絞込み' );
 		this._ButtonRangeSwitch.on( 'change' , L.bind( this._onCocoTileCheckChange, this, this._ButtonRangeSwitch ) );
 
 		frameRange.append( this._ButtonRangeSwitch.getElement() );
@@ -8717,12 +8502,12 @@ GSI.ViewListDialog = GSI.Dialog.extend( {
         */
 
         /*
-		this._showAllButton   = $( '<a>' ).attr( { href:'javascript:void(0);'} ).html( 'Show all'   ).addClass( 'normalbutton showallbutton' );
-		this._hideAllButton   = $( '<a>' ).attr( { href:'javascript:void(0);'} ).html( 'Hide all' ).addClass( 'normalbutton showallbutton' );
-		this._removeAllButton = $( '<a>' ).attr( { href:'javascript:void(0);'} ).html( 'Delete all'   ).addClass( 'normalbutton showallbutton' );
+		this._showAllButton   = $( '<a>' ).attr( { href:'javascript:void(0);'} ).html( '全表示'   ).addClass( 'normalbutton showallbutton' );
+		this._hideAllButton   = $( '<a>' ).attr( { href:'javascript:void(0);'} ).html( '全非表示' ).addClass( 'normalbutton showallbutton' );
+		this._removeAllButton = $( '<a>' ).attr( { href:'javascript:void(0);'} ).html( '全削除'   ).addClass( 'normalbutton showallbutton' );
         */
 
-        frame.append( this._ButtonTxtAdd );
+        //frame.append( this._ButtonTxtAdd );
         frame.append( this._RbtnTxtAdd );
 
 		frame.append( frameRange );
@@ -8734,7 +8519,7 @@ GSI.ViewListDialog = GSI.Dialog.extend( {
 		var dummy = $('<div>').html( '&nbsp;' ).css( { "font-size": '9.5pt' } );
 		frame.append(dummy );
 
-		this._ButtonTxtAdd.click( L.bind( this._onAddClick, this ) );
+		//this._ButtonTxtAdd.click( L.bind( this._onAddClick, this ) );
 		this._RbtnTxtAdd.click( L.bind( this._onResetClick, this ) );
 
         /*
@@ -8752,6 +8537,7 @@ GSI.ViewListDialog = GSI.Dialog.extend( {
     _onResetClick : function()
     {
 		this._resetTiles();
+		this._checkEvacuationLayer();
     },
     onCocoTileCheckChange  : function(onOffSwitch)
 	{
@@ -8841,9 +8627,9 @@ GSI.ViewListDialog = GSI.Dialog.extend( {
 			this.container.css( { 'height' : 'auto'} );
 		}
 	},
-	show : function()
+	show : function(noActivate)
 	{
-		GSI.Dialog.prototype.show.call(this);
+		GSI.Dialog.prototype.show.call(this,noActivate);
 	},
 	initializeList : function()
 	{
@@ -8893,8 +8679,28 @@ GSI.ViewListDialog = GSI.Dialog.extend( {
             }
     		if ( item ) list.push( item );
 		}
-
+		
         if(f){
+			for ( var i=0; i<liList.length; i++ )
+			{
+				var li = $( liList[i] );
+				var isFirstTile = ( i==0 );
+				
+				var isLastTile = ( i>= list.length-1 || ( i == list.length-2 && 
+						list[list.length-1].parent && list[list.length-1].parent.title_sys && list[list.length-1].parent.title_sys == CONFIG.layerBaseFolderSYS ) );
+				
+				if ( isFirstTile )
+					li.find(".updown_frame a.up").addClass("disabled");//.hide();
+				else
+					li.find(".updown_frame a.up").removeClass("disabled");//
+	
+
+				if ( isLastTile ) 
+					li.find(".updown_frame a.down").addClass("disabled");//.hide();
+				else
+					li.find(".updown_frame a.down").removeClass("disabled");//.show();
+			}
+			
 		    this.mapLayerList.refreshTileList(list);
         }
 	},
@@ -8908,6 +8714,9 @@ GSI.ViewListDialog = GSI.Dialog.extend( {
 	},
 	makePankzu : function( target )
 	{
+		
+		if ( target._appendInfo ) target = target._appendInfo;
+		
 		target = target.parent;
 		var result = '';
 		while( target )
@@ -8918,7 +8727,7 @@ GSI.ViewListDialog = GSI.Dialog.extend( {
 
 		return result;
 	},
-	_updateLayer : function( li, item, isTile )
+	_updateLayer : function( li, item, isTile, isFirstTile, isLastTile  )
 	{
 		var cocoVisible = this.cocoTileLayer.getVisible();
 		if (cocoVisible && item.cocotile && !item.hasTile )
@@ -8936,21 +8745,47 @@ GSI.ViewListDialog = GSI.Dialog.extend( {
             }
             li.find("a").removeClass("nococotile");
 		}
+		
+		
+		if ( isFirstTile )
+			li.find(".updown_frame a.up").addClass("disabled");//.hide();
+		else
+			li.find(".updown_frame a.up").removeClass("disabled");//.show();
+			
+
+		if ( isLastTile ) 
+			li.find(".updown_frame a.down").addClass("disabled");//.hide();
+		else
+			li.find(".updown_frame a.down").removeClass("disabled");//.show();
+		
 	},
-	_makeLayer : function( li, a, item, isTile )
+	_makeLayer : function( li, a, item, isTile, isFirstTile, isLastTile )
 	{
 		var cocoVisible = this.cocoTileLayer.getVisible();
 
         var vClass = 'item_frame';
         var vClassTitle = 'title';
         var fBaseMap = false;
+        var enablemt = false;
         if(item.parent && item.parent.title_sys && item.parent.title_sys == CONFIG.layerBaseFolderSYS){
             vClass   = 'item_frame_fixed';
             vClassTitle = 'title_base';
             fBaseMap = true;
         }
         a.addClass( vClass );
-
+		
+		if ( (!GSI.Utils.Browser.ie) && (item.url) && (!fBaseMap) )
+        {
+            var regext = /\.png$|\.jpg$|\.jpeg$/g;
+            var hit = regext.exec(item.url);
+            if ( (hit) && (hit.length > 0) )
+            {
+                vClassTitle = 'title_mt';
+                enablemt = true;
+            }
+        
+        }
+        
 		var frame = $( '<div>' );
 		if ( isTile ) frame.addClass( 'tille' );
 		li.data( { 'data' : item } );
@@ -9000,7 +8835,7 @@ GSI.ViewListDialog = GSI.Dialog.extend( {
 			    ( GSI.Utils.Browser.ie && ( GSI.Utils.Browser.version < 10 || ( CONFIG.USEIE10GRAYSCALE && GSI.Utils.Browser.version == 10 ) || ( CONFIG.USEIE11GRAYSCALE && GSI.Utils.Browser.version >= 11 ) ) )
 		     )
 		    {
-                var grayScale_Label = $( '<span>' ).addClass( 'grayscale_label' ).html( 'gray' );
+                var grayScale_Label = $( '<span>' ).addClass( 'grayscale_label' ).html( 'grayscale' );
 		        li.append( grayScale_Label );
 
                 var grayScale = new GSI.OnOffSwitch( {className:'onoff', checked:(GSI.GLOBALS.baseLayer.getGrayScale())} );
@@ -9011,10 +8846,30 @@ GSI.ViewListDialog = GSI.Dialog.extend( {
 		        li.append( grayScaleElement);
             }
         }
+        else
+        {
+			//multiplication
+            if (enablemt)
+            {
+                var mp = new GSI.ToggleSwitch( {className:'toggle', checked:(item._visibleInfo.blend)} );
+                //var mp = new GSI.OnOffSwitch( {className:'filetext', checked:(item._visibleInfo.blend)} );
+                var mpElement = mp.getElement();
+                mpElement.addClass("multiplytile");
+                mpElement.on( 'change', L.bind(this._onBlendSwitchChange, this, a, mp ) );
+ 
+                li.append( mpElement );
+            }
+		}
+		
         // opacity
+		var opacityBtn =$("<a>").addClass("opacity_btn").attr( {"href":"javascript:void(0);"} ).html('Transparency');
+		opacityBtn.click( L.bind(function(){ this._onOpacityBtnClick(li); }, this ));
+		li.append( opacityBtn );
+		
+		/*
         var opacity = ( item._visibleInfo ? item._visibleInfo.opacity : 1 );
 		var opacityPercentage = Math.round( 100 - ( opacity * 100 ) );
-        var opacity = $( '<span>' ).addClass( 'opacity' ).html( 'transparency '+opacityPercentage+'%' );
+        var opacity = $( '<span>' ).addClass( 'opacity' ).html( '透過'+opacityPercentage+'%' );
 		li.append( opacity );
 
 		var opacityUpBtn = $( '<span>' ).addClass( 'opacity_up_btn' ).html( "<img src='./image/system/opacityUp.png' class=\"btn\" oncontextmenu=\"return false;\" />");
@@ -9038,6 +8893,7 @@ GSI.ViewListDialog = GSI.Dialog.extend( {
 		    opacityDnBtn.unbind( 'mousedown' ).bind( 'mousedown' , L.bind( this._opacity_start, this, a, opacity, '-' ) );
 		    opacityDnBtn.unbind( 'mouseup'   ).bind( 'mouseup'   , L.bind( this._opacity_stop , this, a, opacity, '-' ) );
         }
+		*/
 
         // Detail
 		var descriptionBtn = $( '<span>' ).addClass( 'description_btn').html("ｉ");
@@ -9045,12 +8901,177 @@ GSI.ViewListDialog = GSI.Dialog.extend( {
 		descriptionBtn.unbind( 'click' ).bind( 'click', L.bind( this._onLayerMouseEnter, this, a, item ) );
 
 		// Close
-		var closeBtn = $( '<div>' ).addClass( 'closebtn' )
+		var closeBtn = $( '<div>' ).addClass( 'closebtn' );
 		li.append(closeBtn );
     	closeBtn.unbind( 'click' ).bind( 'click', L.bind( this.onRemoveClick, this, li ) );
+		
+		// sort
+		if ( isTile && !fBaseMap && ( !isFirstTile || !isLastTile ) )
+		{
+			
+			
+			var updownFrame = $( "<div>").addClass( 'updown_frame' );
+			var upButton = $( "<a>" ).attr( {"href":"javascript:void(0);"} ).addClass( "up" )
+				.click( L.bind( function(){this._up(li);}, this ) );
+			var downButton = $ ( "<a>" ).attr( {"href":"javascript:void(0);"} ).addClass( "down" )
+				.click( L.bind( function(){this._down(li);}, this ) );
+			
+			if ( isFirstTile )
+				upButton.addClass("disabled");//.hide();
+			else
+				upButton.removeClass("disabled");//.hide();
+			
+			if ( isLastTile ) 
+				downButton.addClass("disabled");//.hide();
+			else
+				downButton.removeClass("disabled");//.hide();
+			
+			
+			updownFrame.append( upButton ).append( downButton );
+			li.append(updownFrame );
 
+		}
+		
+		
 		a.click( L.bind( this.onItemClick, this, li, a, viewMark) );
 	},
+	_onOpacityBtnClick : function(li)
+	{
+		
+		
+		var item = li.data('data');
+		var opacity = ( item._visibleInfo ? item._visibleInfo.opacity : 1 );
+		if ( !this._opacityWindow )
+		{
+			this._opacityWindow = $( '<div>' ).addClass( 'viewlistdialog_opacity_window' );
+			this._opacityValue = $( '<div>' ).addClass( 'value' ).html( 'transparency:' );
+			this._opacitySlider = $( '<div>' ).addClass( 'slider' ).html( '&nbsp;' );
+			this._opacityWindow.append(this._opacityValue ).append( this._opacitySlider );
+			$( "body" ) .append( this._opacityWindow );
+			this._opacitySlider.slider({
+				min: 0,
+				max : 100
+			});
+		}
+		else if ( this._opacityWindow && this._opacityWindow.is(":visible") && this._opacityWindow.data("item") == item )
+		{
+			this._opacityWindow.slideUp(200);
+			return;
+		}
+		var offset = li.find("a.opacity_btn").offset();
+		this._opacityWindow.css({
+			top: offset.top + li.find("a.opacity_btn").outerHeight() -4,
+			left :offset.left - 200 + 'px'
+		}).data( { "item" : item } );
+		
+		var opacityPercentage = Math.round( 100 - ( opacity * 100 ) );
+		this._opacityValue.html('transparency:' + opacityPercentage + '%');
+		this._opacitySlider.data({"__target_item":item}).slider( "option", "value", opacityPercentage );
+		this._opacitySlider.off("slide").on( "slide", L.bind(function( event, ui ) {
+			var item = this._opacitySlider.data('__target_item');
+			var value = ui.value;// this._opacitySlider.slider( "option", "value" );
+			this._opacityValue.html('transparency:' + value + '%');
+			var opacity = value/ 100.0;
+			if ( opacity < 0 ) opacity = 0;
+			if ( opacity > 1 ) opacity = 1;
+			opacity = 1- opacity;
+			if(item.parent.title_sys && item.parent.title_sys == CONFIG.layerBaseFolderSYS){
+				GSI.GLOBALS.baseLayer.setOpacity(opacity);
+				item._visibleInfo.opacity = opacity;
+			}
+			else{
+				item._visibleInfo.layer.setOpacity( opacity );
+				item._visibleInfo.opacity = opacity;
+			}
+		}, this ) );
+		
+		if ( this._hideOpacityWindowHandler )
+		{
+			$( document.body ).unbind( 'mousedown', this._hideOpacityWindowHandler );
+			$( document.body ).unbind( 'touchstart', this._hideOpacityWindowHandler );
+		
+		}
+		this._hideOpacityWindowHandler  = L.bind( function(event)
+		{
+			if ( !this._opacityWindow 
+				|| event.target == this._opacityWindow[0]
+			    || $(event.target).is(".opacity_btn")) return;
+
+			var parents = $( event.target ).parents();
+			
+			var hit = false;
+			for( var i=0; i<parents.length; i++ )
+			{
+				if ( $(parents[i]).is(".viewlistdialog_opacity_window"))
+				{
+					hit = true;
+					break;
+				}
+			}
+			if ( !hit )
+			{
+				this._opacityWindow.slideUp(200);
+				$( document.body ).unbind( 'mousedown', this._hideOpacityWindowHandler );
+				$( document.body ).unbind( 'touchstart', this._hideOpacityWindowHandler );
+			}
+		}, this );
+
+		$( document.body ).bind( 'mousedown', this._hideOpacityWindowHandler );
+		$( document.body ).bind( 'touchstart', this._hideOpacityWindowHandler );
+		
+		this._opacityWindow.hide().slideDown(200);
+		
+	},
+	_up : function(li)
+	{
+		var item = li.data('data');
+		var tileList = this.mapLayerList.getTileList();
+		var hit = false;
+		for( var i=1; i<tileList.length; i++ )
+		{
+			if ( item == tileList[i])
+			{
+				hit = true;
+				break;
+			}
+			
+		}
+		if ( hit ) li.prev().before( li.detach() ); 
+		
+		this.onSortChange();
+		this._initializeList( true );
+	},
+	
+	_down : function(li)
+	{
+		var item = li.data('data');
+		var tileList = this.mapLayerList.getTileList();
+		var hit = false;
+		for( var i=0; i<tileList.length; i++ )
+		{
+			if ( item == tileList[i])
+			{
+				if ( i < tileList.length-1)
+				{
+					var nextItem = tileList[i+1];
+				
+					
+					if(nextItem.parent && nextItem.parent.title_sys && nextItem.parent.title_sys == CONFIG.layerBaseFolderSYS){
+						
+					}
+					else hit = true;
+				}
+				break;
+			}
+			
+		}
+		if ( hit ) li.next().after( li.detach() ); 
+		
+		this.onSortChange();
+		this._initializeList( true );
+	},
+	
+	
 	Refresh : function(visibleLayers)
 	{
         this._removeAll();
@@ -9059,7 +9080,8 @@ GSI.ViewListDialog = GSI.Dialog.extend( {
 		{
 			var l = visibleLayers[i];
 			if(l && l.info){
-				GSI.GLOBALS.mapLayerList.append(l.info, true,l.hidden);
+				//GSI.GLOBALS.mapLayerList.append(l.info, true,l.hidden);
+				GSI.GLOBALS.mapLayerList.append(l.info, true,l.hidden, null, l.blend);
 			}
 		}
 
@@ -9068,14 +9090,13 @@ GSI.ViewListDialog = GSI.Dialog.extend( {
 	_initializeList : function( liRefresh )
 	{
         this._hideItemTooltip();
-
 		var list     = this.mapLayerList.getList();
 		var tileList = this.mapLayerList.getTileList();
-
+		
 		if ( list.length <= 0 && tileList.length <= 0 )
 		{
 			this.listContainer.empty();
-			var li = $( '<li>' ).addClass( 'nodata' ).html( 'No layer' );
+			var li = $( '<li>' ).addClass( 'nodata' ).html( 'No data' );
 			this.listContainer.append( li );
 		}
 
@@ -9090,6 +9111,8 @@ GSI.ViewListDialog = GSI.Dialog.extend( {
 			this._initializeListOne( tileList, liList, ul, liRefresh, true );
 			this.tileListContainer.sortable("refresh");
 		}
+		
+		
 	},
 	_initializeListOne : function( list,liList, ul, liRefresh, isTile )
 	{
@@ -9097,16 +9120,22 @@ GSI.ViewListDialog = GSI.Dialog.extend( {
 		{
 			var item = list[i];
 			var li = ( liRefresh ? $( liList[i] ) : $( '<li>' ) );
-
+			
+			
 			if ( liRefresh )
 			{
-				this._updateLayer( li, item, isTile );
+				this._updateLayer( li, item, isTile, 
+						i==0,
+						i>= list.length-1 || ( i == list.length-2 && 
+						list[list.length-1].parent && list[list.length-1].parent.title_sys && list[list.length-1].parent.title_sys == CONFIG.layerBaseFolderSYS )  );
 			}
 			else
 			{
 			    var a = $( '<a>' ).attr( { 'href':'javascript:void(0);' } );
 			    a.data( { 'data' : item } );
-				this._makeLayer(li, a, item, isTile );
+				this._makeLayer(li, a, item, isTile, i==0,
+						i>= list.length-1 || ( i == list.length-2 && 
+						list[list.length-1].parent && list[list.length-1].parent.title_sys && list[list.length-1].parent.title_sys == CONFIG.layerBaseFolderSYS )  );
 			    li.append( a );
 			}
 
@@ -9131,6 +9160,13 @@ GSI.ViewListDialog = GSI.Dialog.extend( {
 
             a.addClass( 'view' );
 
+			if (item.id.indexOf(CONFIG.layerEvacuationHeader)>=0)
+			{
+				if ( GSI.Dialog._dialogManager.isVisibleDialog(GSI.GLOBALS.evacDialog) == false )
+				{
+					GSI.GLOBALS.evacDialog.show();
+				}
+			}
 		}
 		else
 		{
@@ -9139,7 +9175,18 @@ GSI.ViewListDialog = GSI.Dialog.extend( {
 
             viewMark.removeClass( 'viewmark' ).html( ' ' );
             a.removeClass( 'view' );
+
+			if (item.id.indexOf(CONFIG.layerEvacuationHeader)>=0 )
+			{
+				GSI.GLOBALS.evacDialog.hide();
+			}
         }
+        
+        if ( item._visibleInfo.blend )
+        {
+            this._blendTile(a, item._visibleInfo.blend);
+        }
+        
 
 		var cocoVisible = this.cocoTileLayer.getVisible();
 		if (cocoVisible && item.cocotile && !item.hasTile )
@@ -9151,6 +9198,16 @@ GSI.ViewListDialog = GSI.Dialog.extend( {
 	onMapLayerListChange : function()
 	{
 		this.initializeList();
+		/*
+		var tileList = this.mapLayerList.getTileList();
+		
+		if ( this.mapLayerList.getList().length > 0 || tileList.length > 0)
+		{
+			if ( this.mapLayerList.getList().length == 0 && tileList.length ==1 && 
+				tileList[0].parent && tileList[0].parent.title_sys && tileList[0].parent.title_sys == CONFIG.layerBaseFolderSYS ) return;
+			this.show(true);
+		}
+		*/
 	},
 	onRemoveClick : function(li)
 	{
@@ -9162,6 +9219,7 @@ GSI.ViewListDialog = GSI.Dialog.extend( {
 		li.fadeOut( 'fast', L.bind( function(li) {
 			this.mapLayerList.remove( item );
 			li.remove();
+			this._checkEvacuationLayer();
 			if ( this._userResized ) this._onResize();
 		}, this, li ) );
 	},
@@ -9178,6 +9236,19 @@ GSI.ViewListDialog = GSI.Dialog.extend( {
 	_onLayerMouseLeave : function( a, item )
 	{
 		this._hideItemTooltip( a, item );
+	},
+	_onBlendSwitchChange : function( a, mp )
+	{
+		/*
+       	if (GSI.Utils.Browser.ie)
+       	{
+       		alert('この機能はインターネットエクスプローラーではご利用いただけません。');
+       		return;
+       	}
+       	*/
+       	var item = a.data( 'data' );
+       	item._visibleInfo.blend = mp.checked();
+       	this._blendTile( a, mp.checked() );
 	},
 	_makeToolTip : function( item )
 	{
@@ -9340,7 +9411,7 @@ GSI.ViewListDialog = GSI.Dialog.extend( {
         else if(v > 100){ v = 100; }
 
 		var vPercentage = Math.floor(v);
-		opacity.text('transparency '+vPercentage+'%');
+		opacity.text('transparency'+vPercentage+'%');
 		v = (100 - v) / 100;
 
 		var item = a.data( 'data' );
@@ -9397,6 +9468,70 @@ GSI.ViewListDialog = GSI.Dialog.extend( {
             GSI.GLOBALS.baseLayer.setGrayScale(sw.checked());
         }
 	},
+	_checkEvacuationLayer : function()
+	{
+	    if ( this.mapLayerList )
+	    {
+	    	var l = this.mapLayerList.getList();
+	    	for(i = 0 ; i < l.length; i++ )
+	    	{				
+	    		if ( l[i].id.indexOf(CONFIG.layerEvacuationHeader) >= 0 )
+	    		{
+	    			return true;
+	    		}				
+	    	}
+	    	var tl = this.mapLayerList.getTileList();
+
+	    	for(i = 0 ; i < tl.length; i++ )
+	    	{				
+	    		if ( tl[i].id.indexOf(CONFIG.layerEvacuationHeader) >= 0 )
+	    		{
+	    			return true;
+	    		}			
+	    	}
+	    }
+		if( GSI.GLOBALS.layerTreeDialog.current )
+		{
+			if ( GSI.GLOBALS.layerTreeDialog.current.title_evac )
+			{
+				return true;
+			}
+		}
+		
+
+	    GSI.GLOBALS.evacDialog.hide();
+		CONFIG.layerEvacuationIsConfirmOK = false;
+	    return false;
+	},
+	_blendTile : function ( a, flg )
+	{
+       	if (GSI.Utils.Browser.ie)
+       	{
+       		//alert('この機能はインターネットエクスプローラーではご利用いただけません。');
+       		return;
+       	}
+
+		var item = a.data('data');
+		GSI.Utils.setMixBlendMode( item, flg );
+		/*
+		var tileId = getblendTileSetting(item.id);
+
+		var el = item._visibleInfo.layer._container.getAttribute('style');
+		if ( el )
+		{
+		    el = el.replace("mix-blend-mode: multiply; ", "");
+		}
+		else
+		{
+		    el = "";
+		}
+		if ( flg == true)
+		{
+			el = "mix-blend-mode: multiply; " + el;
+		}
+	    item._visibleInfo.layer._container.setAttribute('style', el);
+		*/
+	}
 });
 
 GSI.OpacitySlider = L.Class.extend( {
@@ -9441,6 +9576,58 @@ GSI.OpacitySlider = L.Class.extend( {
 
 /************************************************************************
  L.Class
+ - GSI.EvacDialog
+ ************************************************************************/
+GSI.EvacDialog = L.Control.extend( {
+	options : {
+		width: '310px',
+		position:'bottomright',
+	},
+	initialize : function()
+	{
+		this._map = GSI.GLOBALS.map;
+		L.Util.setOptions(this, this.options);
+		this._isShow = false;
+	},
+	show : function ()
+	{
+		if (this._isShow == false)
+		{
+			if (!this._map)
+			{
+				this._map = GSI.GLOBALS.map;
+			}
+			this.addTo(this._map);
+		}
+		this._isShow = true;
+	},
+	hide : function ()
+	{
+		if (this._isShow == true)
+		{
+			this.removeFrom(this._map);
+		}
+		this._isShow = false;
+	},
+	onAdd: function (map)
+	{
+		this._map = map;
+		this._container = L.DomUtil.create('div', 'evac_dialog');
+		//content
+		var frame =$('<div>').addClass('evac_dialog_content').html(this.createContent());
+		
+		$(this._container).css({'opacity':'0.7'}).append(frame);
+
+		return this._container
+	},
+	createContent : function()
+	{
+		return GSI.TEXT.EVAC.KIYAKU + "<br>" + GSI.TEXT.EVAC.KIYAKULINK;
+    }
+} );
+
+/************************************************************************
+ L.Class
  - GSI.DialogManager
  ************************************************************************/
 GSI.DialogManager = L.Class.extend( {
@@ -9451,20 +9638,26 @@ GSI.DialogManager = L.Class.extend( {
 	{
 		this.dialogList.push( dlg );
 	},
-	appendVisibleList : function( dlg )
+	appendVisibleList : function( dlg, noActivate )
 	{
 		for ( var i=0; i<this.visibleList.length; i++ )
 		{
 			var d = this.visibleList[i];
 			if ( d == dlg )
 			{
+				if ( noActivate ) return;
 				this.visibleList.splice( i,1 );
 				break;
 			}
 		}
 
 		this.adjust( dlg );
-		this.visibleList.push( dlg );
+		if ( noActivate && this.visibleList.length > 0)
+		{
+			this.visibleList.splice( this.visibleList.length-1, 0, dlg );
+		}
+		else
+			this.visibleList.push( dlg );
 		this.refreshZIndex();
 
 		if ( !this._onWindowResize )
@@ -9508,7 +9701,10 @@ GSI.DialogManager = L.Class.extend( {
 		for ( var i=0; i<this.visibleList.length-1; i++ )
 		{
 			var opacity = 0.6 + ( 0.4 / this.visibleList.length * idx );
-			this.visibleList[i].css({'z-index':zIndex, opacity: opacity} );
+			if (this.visibleList[i].options.containerClass != "evac_dialog")
+			{
+				this.visibleList[i].css({'z-index':zIndex, opacity: opacity} );			
+			}
 			this.visibleList[i].addClass( "deactive");
 
 			zIndex++;
@@ -9517,7 +9713,14 @@ GSI.DialogManager = L.Class.extend( {
 
 		if ( this.visibleList.length > 0 )
 		{
-			this.visibleList[ this.visibleList.length - 1 ].css({'z-index':zIndex, opacity: 0.95} );
+			if (this.visibleList[ this.visibleList.length - 1].options.containerClass != "evac_dialog")
+			{
+				this.visibleList[ this.visibleList.length - 1 ].css({'z-index':zIndex, opacity: 0.95} );
+			}
+			else
+			{
+				this.visibleList[ this.visibleList.length - 1 ].css({'z-index':zIndex, opacity: 0.6} );				
+			}
 			this.visibleList[i].removeClass( "deactive");
 		}
 	},
@@ -9631,8 +9834,167 @@ GSI.DialogManager = L.Class.extend( {
 			var d = this.visibleList[i];
 			this.adjust( d,windowSize );
 		}
+	},
+	isVisibleDialog : function( dlg ){
+		for ( var i=0; i<this.visibleList.length; i++ )
+		{
+			var d = this.visibleList[i];
+			if ( d == dlg )
+			{
+				return true;
+			}
+		}
+		return false;
 	}
 } );
+/************************************************************************
+ L.Class
+ - GSI.EvacuationManager
+ ************************************************************************/
+GSI.EvacuationManager = L.Class.extend({
+	initialize : function( queryParams )
+	{
+		this._isVisibleDialog = false;
+		if (queryParams)
+		{
+			this._queryparams = null;
+			this._queryParams = queryParams;
+		}
+	},
+	Reset : function( qp )
+	{
+		this.initialize( qp );
+	},
+	Out : function()
+	{
+		return this._queryParams;
+	},
+	accept : function()
+	{
+		var d;
+		
+		if (this._queryParams.params["disp"])
+		{
+			d = this._queryParams.params["disp"];
+		}
+
+		var ls, ly, lcd;
+		if(this._queryParams.params["ls"])
+		{
+			ls = this._queryParams.params["ls"].split("|");
+			GSI.Utils.rpad(d, "0", ls.length);
+		}
+		ly = this._queryParams._layers;
+		lcd = this._queryParams.params["lcd"];
+		if (ls)
+		{
+			if (d.charAt(ls.length-1) == "1")
+			{
+				this._isVisibleDialog = true;
+			}
+
+			if ( lcd && lcd.indexOf(CONFIG.layerEvacuationHeader) >= 0 )
+			{
+				for(var i = ls.length - 1; i >= 0; i--)
+				{
+					if ( (lcd != ls[i]) && ls[i].indexOf(CONFIG.layerEvacuationHeader) >= 0 )
+					{
+						ls.splice(i,1);
+						this._isVisibleDialog = (this._isVisibleDialog || (d.charAt(i) == "1") )
+					}
+				}
+			}
+			else
+			{
+				var lsct = 0;
+				for(var i = ls.length - 1; i >= 0; i--)
+				{
+					if (ls[i].indexOf(CONFIG.layerEvacuationHeader)>=0)
+					{
+						if (lsct > 0)
+						{
+							ls.splice(i,1);
+						}
+						lsct++;
+					}
+				}
+			}
+			this._queryParams.params["ls"] = ls.join('|');
+		}
+
+		var dct = 0;
+		if (ly)
+		{
+			for(var i = ly.length - 1; i >= 0; i--)
+			{
+				if ( lcd && lcd.indexOf(CONFIG.layerEvacuationHeader) >= 0 )
+				{
+					if ((lcd != ly[i].id) && ly[i].id.indexOf(CONFIG.layerEvacuationHeader) >= 0 )
+					{
+						ly.splice(i,1);
+					}
+				}
+				else
+				{
+					if ( ly[i].id.indexOf(CONFIG.layerEvacuationHeader) >= 0 )
+					{
+						if (dct > 0)
+						{
+							ly.splice(i,1);
+						}
+						dct++;
+					}
+				}			
+			}
+		}
+	},
+	cancel : function()
+	{
+		var ls, ly, lcd;
+		if(this._queryParams.params["ls"])
+		{
+			ls = this._queryParams.params["ls"].split("|");
+		}
+		ly = this._queryParams._layers;
+		lcd = this._queryParams.params["lcd"];
+
+		if (ls)
+		{
+			for(var i = ls.length - 1; i >= 0; i--)
+			{
+				if (ls[i].indexOf(CONFIG.layerEvacuationHeader)>=0)
+				{
+					ls.splice(i,1);
+				}
+			}
+			this._queryParams.params["ls"] = ls.join('|');
+		}
+
+		if (lcd)
+		{
+			if (lcd.indexOf(CONFIG.layerEvacuationHeader)>=0)
+			{
+				this._queryParams.params["lcd"]=null;
+			}
+		}
+
+		if (ly)
+		{
+			for(var i = ly.length - 1; i >= 0; i--)
+			{
+				if (ly[i].id.indexOf(CONFIG.layerEvacuationHeader)>=0)
+				{
+					ly.splice(i,1);
+				}
+			}
+		}
+		this._isVisibleDialog = false;
+	},
+	isVisibleDialog : function()
+	{
+		return this._isVisibleDialog;
+	}
+});
 
 /************************************************************************
  L.Class
@@ -9732,6 +10094,7 @@ GSI.Footer = L.Class.extend( {
 	refreshSize : function()
 	{
 		var windowSize = GSI.Utils.getScreenSize();
+
 
 		if ( windowSize.w < windowSize.h )
 		{
@@ -9843,9 +10206,9 @@ GSI.Footer = L.Class.extend( {
 		var dms = GSI.Utils.latLngToDMS( center );
 
 		$( '#latlng_60' ).html(
-			(center.lat < 0 ? '-' : '') + dms.lat.d + '°' + dms.lat.m + '′' + ( Math.round( dms.lat.s * 100 ) / 100 ).toFixed(2)  + '″'
+			(center.lat < 0 ? '-' : '') + dms.lat.d + '° ' + dms.lat.m + '′ ' + ( Math.round( dms.lat.s * 100 ) / 100 ).toFixed(2)  + '″'
 			+ '&nbsp;'  +
-			(center.lng < 0 ? '-' : '') + dms.lng.d + '°' + dms.lng.m + '′' + ( Math.round( dms.lng.s * 100 ) / 100 ).toFixed(2)  + '″'
+			(center.lng < 0 ? '-' : '') + dms.lng.d + '° ' + dms.lng.m + '′ ' + ( Math.round( dms.lng.s * 100 ) / 100 ).toFixed(2)  + '″'
 			);
 		
 		$( '#latlng_10' ).html(
@@ -9926,9 +10289,9 @@ GSI.Footer = L.Class.extend( {
 	},
 	getElevationRusult : function (data, dataSrc)
 	{
-        var outPutHeight = data;
-        var outPutHeightSrc = "（" + "Data Source：" + this.vDemAltSRC + "）";
-
+		var outPutHeight = data;
+		var outPutHeightSrc = "（" + "Data Source：" + this.vDemAltSRC + "）";
+		
 		$( "#elevation" ).html( outPutHeight );
 		$( "#elevationSrc" ).html( outPutHeightSrc );
 		this.refreshSize();
@@ -10087,21 +10450,25 @@ GSI.Footer = L.Class.extend( {
  ************************************************************************/
 GSI.GeoLocation = L.Class.extend( {
 	includes: L.Mixin.Events,
-	options : {},
-
+	options : {
+		watchInterval : 5000,
+		max : 1000
+	},
 	initialize : function (map)
 	{
 		this.map = map;
 	},
+	
 	getLocation : function()
 	{
 		if ( GSI.GeoLocation.can )
 		{
-			if ( this.watchId ) return false;
-			this.watchCounter = 0;
-			this.watchId = navigator.geolocation.watchPosition(
+			if ( this._getLocationId ) return false;
+			
+			this._locationCounter = 0;
+			this._getLocationId = navigator.geolocation.watchPosition(
 				L.bind(function(loc) {
-					if ( loc.coords.accuracy < 100 || this.watchCounter >= 0)
+					if ( loc.coords.accuracy < 100 || this._locationCounter >= 0)
 					{
 						var lat = loc.coords.latitude;
 						var lng = loc.coords.longitude;
@@ -10112,12 +10479,12 @@ GSI.GeoLocation = L.Class.extend( {
 						}
 						this.map.setView( [lat, lng], z );
 						// clear
-						navigator.geolocation.clearWatch(this.watchId);
-						this.watchId = null;
+						navigator.geolocation.clearWatch(this._getLocationId);
+						this._getLocationId = null;	
 					}
-					this.watchCounter++;
+					this._locationCounter++;
 				}, this ),
-				L.bind(this.locationError,this),
+				L.bind(function(){},this),
 				{ enableHighAccuracy: true, timeout: 60000, maximumAge: 0 }
 			);
 
@@ -10126,9 +10493,13 @@ GSI.GeoLocation = L.Class.extend( {
 		else return false;
 
 	}
+	
+	
 } );
 
 GSI.GeoLocation.can = ( navigator.geolocation && typeof navigator.geolocation.getCurrentPosition == 'function' ? true : false );
+
+
 
 /************************************************************************
  L.Class
@@ -10286,7 +10657,7 @@ GSI.HashOptions = L.Class.extend( {
 		    visibles[ CONFIG.PARAMETERNAMES.FOOTER     ] = GSI.GLOBALS.footer.isVisible();
 		    var visibleDialogs = {};
 		    visibleDialogs[ CONFIG.DIALOGPARAMETER.VIEWLISTDIALOG ] = GSI.GLOBALS.viewListDialog .getVisible(); // Information list setting：Information list d=l
-		    visibleDialogs[ CONFIG.DIALOGPARAMETER.LAYERTREEDIALOG] = GSI.GLOBALS.layerTreeDialog.getVisible(); // Information list setting：Information in the selection   d=v
+		    visibleDialogs[ CONFIG.DIALOGPARAMETER.LAYERTREEDIALOG] = GSI.GLOBALS.layerTreeDialog.getVisible(); // Information list setting：Information in the selection    d=v
 
 		    var queryParams = GSI.GLOBALS.pageStateManager.getQueryParams(
             {
@@ -10329,99 +10700,276 @@ GSI.HashOptions = L.Class.extend( {
 
         return hash;
     },
-    HashSetProc : function(hash){
+    HashSetProc : function( hash ){
         var n = hash.indexOf("/&");
         if(n >= 1){
             var options = hash.substr(n);
             if(this.vHashOptions != options){
                 this.eHashChange = true;
-                this.eHashChangeOptions = options;
-
-                GSI.GLOBALS.queryParams.initialize_proc(options);
-
-                // Basic configuration：Share a background map in the display
-                // base=
-                var base = GSI.GLOBALS.queryParams.getBaseMap();
-                GSI.GLOBALS.baseLayer.setActiveId(base);
-                // base_grayscale=
-                GSI.GLOBALS.baseLayer.setGrayScale(GSI.GLOBALS.queryParams.getBaseMapGrayScale());
-
-                // Basic configuration：Share a layer in display
-                // ls=
-                //  +
-                // Information setting in the selection
-                // disp=
-                var layers = GSI.GLOBALS.queryParams.getLayers();
-                var bfind = false;
-                var vl = GSI.GLOBALS.pageStateManager.getLayersQueryString();
-                var idx = vl.indexOf( "ls=" );
-                if ( idx >= 0 )
-                {
-                	vl = vl.substring( idx + 3 ).split( "%7C" );
-                }
-                if ( layers && ( vl && vl.length > 0 ) )
-                {
-                	
-	                for( var i =0; i < layers.length; i++ )
-	                {
-	                	for( var j=0; j < vl.length; j++ )
-	                	{
-	                		if ( layers[i].id == vl[j] )
-	                		{
-	                			bfind = true;
-	                			break;
-	                		}
-	                		
-	                	}
-	                	if ( bfind == false )
-	                	{
-		                    GSI.Utils.sendSelectedLayer( layers[i].id );
-		                }
-	                	bfind = false;
-	                }
-                }
-                else if ( layers )
-                {
-                    for( i = 0; i < layers.length; i++ )
-                    {
-                        GSI.Utils.sendSelectedLayer( layers[i].id );
-                    }
-                }
-                GSI.GLOBALS.layersJSON.initialize_layers_data(layers);
-                GSI.GLOBALS.viewListDialog.Refresh(GSI.GLOBALS.layersJSON.visibleLayers);
-
-                var viewSetting = GSI.GLOBALS.queryParams.getViewSetting();
-                // Setting display：Center crosshairs           vs=c[0/1]
-                GSI.GLOBALS.onoffObjects[CONFIG.PARAMETERNAMES.CENTERCROSS].obj.setVisible(viewSetting.centerCross);
-                // Setting display：Latitude and longitude grid     vs=l[0/1]
-                GSI.GLOBALS.onoffObjects[CONFIG.PARAMETERNAMES.LATLNGGRID ].obj.setVisible(viewSetting.latLngGrid );
-                // Setting display：UTM grid          vs=u[0/1]
-                GSI.GLOBALS.onoffObjects[CONFIG.PARAMETERNAMES.UTMGRID ].obj.setVisible(viewSetting.utmGrid    );
-                // Setting display：Magnetic north line               vs=j[0/1]
-                GSI.GLOBALS.onoffObjects[CONFIG.PARAMETERNAMES.JIHOKULINE    ].obj.setVisible(viewSetting.jihokuLine );
-                // Setting display：Context menu vs=f[0/1]
-                GSI.GLOBALS.onoffObjects[CONFIG.PARAMETERNAMES.FOOTER     ].obj.setVisible(viewSetting.footer     );
-
-                // Information list setting：Information in the selection   d=v
-                if(GSI.GLOBALS.queryParams.getViewListDialogVisible()){
-                    GSI.GLOBALS.viewListDialog.show();
-                }
-                else{
-                    GSI.GLOBALS.viewListDialog.hide();
-                }
-
-                // Information list setting：Information list d=v
-                if(GSI.GLOBALS.queryParams.getLayerTreeDialogVisible()){
-                    GSI.GLOBALS.layerTreeDialog.show();
-                }
-                else{
-                    GSI.GLOBALS.layerTreeDialog.hide();
-                }
-
+				
+				if (options.indexOf(CONFIG.layerEvacuationHeader) >= 0)
+				{
+					this.forEvacuation(options);
+				}
+				else
+				{
+					this.HashSetProc_sub(options);
+				}
             }
-
         }
-    }
+    },
+    HashSetProc_sub : function( options ){
+		this.eHashChangeOptions = options;
+
+		GSI.GLOBALS.queryParams.initialize_proc(options);
+
+		// Basic configuration：Share a background map in the display
+		// base=
+		var base = GSI.GLOBALS.queryParams.getBaseMap();
+		GSI.GLOBALS.baseLayer.setActiveId(base);
+		// base_grayscale=
+		GSI.GLOBALS.baseLayer.setGrayScale(GSI.GLOBALS.queryParams.getBaseMapGrayScale());
+
+		// Basic configuration：Share a layer in display
+		// ls=
+		//  +
+		// Information setting in the selection
+		// disp=
+		var layers = GSI.GLOBALS.queryParams.getLayers();
+		var bfind = false;
+		var vl = GSI.GLOBALS.pageStateManager.getLayersQueryString();
+		var idx = vl.indexOf( "ls=" );
+		if ( idx >= 0 )
+		{
+			vl = vl.substring( idx + 3 ).split( "%7C" );
+		}
+		if ( layers && ( vl && vl.length > 0 ) )
+		{
+			
+			for( var i =0; i < layers.length; i++ )
+			{
+				for( var j=0; j < vl.length; j++ )
+				{
+					if ( layers[i].id == vl[j] )
+					{
+						bfind = true;
+						break;
+					}
+					
+				}
+				if ( bfind == false )
+				{
+					GSI.GLOBALS.layerTreeDialog.setCurrentPath(GSI.GLOBALS.queryParams.getCurrentPath());
+				}
+				bfind = false;
+			}
+		}
+		else if ( layers )
+		{
+			for( i = 0; i < layers.length; i++ )
+			{
+				GSI.Utils.sendSelectedLayer( layers[i].id );
+			}
+		}
+		GSI.GLOBALS.layersJSON.initialize_layers_data(layers);
+		GSI.GLOBALS.viewListDialog.Refresh(GSI.GLOBALS.layersJSON.visibleLayers);
+
+		var viewSetting = GSI.GLOBALS.queryParams.getViewSetting();
+		// Setting display：Center crosshairs           vs=c[0/1]
+		GSI.GLOBALS.onoffObjects[CONFIG.PARAMETERNAMES.CENTERCROSS].obj.setVisible(viewSetting.centerCross);
+		// Setting display：Magnetic north line               vs=j[0/1]
+		GSI.GLOBALS.onoffObjects[CONFIG.PARAMETERNAMES.JIHOKULINE ].obj.setVisible(viewSetting.jihokuLine );
+		// Setting display：Latitude and longitude grid     vs=l[0/1]
+		GSI.GLOBALS.onoffObjects[CONFIG.PARAMETERNAMES.LATLNGGRID ].obj.setVisible(viewSetting.latLngGrid    );
+		// Setting display：UTM grid          vs=u[0/1]
+		GSI.GLOBALS.onoffObjects[CONFIG.PARAMETERNAMES.UTMGRID    ].obj.setVisible(viewSetting.utmGrid );
+		// Setting display：Context menu vs=f[0/1]
+		GSI.GLOBALS.onoffObjects[CONFIG.PARAMETERNAMES.FOOTER     ].obj.setVisible(viewSetting.footer     );
+
+		// Information list setting：Information in the selection   d=v
+		if(GSI.GLOBALS.queryParams.getViewListDialogVisible()){
+			GSI.GLOBALS.viewListDialog.show();
+		}
+		else{
+			GSI.GLOBALS.viewListDialog.hide();
+		}
+
+		// Information list setting：Information list d=v
+		if(GSI.GLOBALS.queryParams.getLayerTreeDialogVisible()){
+			GSI.GLOBALS.layerTreeDialog.show();
+		}
+		else{
+			GSI.GLOBALS.layerTreeDialog.hide();
+		}
+
+	},
+	forEvacuation : function ( options )
+	{
+		
+		var disp = "";
+		var ops = {};
+		var op = options.split("&");
+		for( var i = 0; i < op.length; i++ )
+		{
+			var it = op[i].split("=");
+			ops[it[0]] = it[1];
+		}
+		
+		if (ops["disp"])
+		{
+			//in reverse order
+			for( var i = ops["disp"].length - 1; i >= 0; i-- )
+			{
+				disp += ops["disp"].charAt(i);
+			}
+			ops["disp"] = "";
+		}
+		GSI.GLOBALS.confirmDlg.onPositiveButtonClick = L.bind(this.evacuationConfirmOK, this, ops, disp);
+		GSI.GLOBALS.confirmDlg.onNegativeButtonClick = L.bind(this.evacuationConfirmCancel, this, ops, disp);
+
+		if ( ops["ls"].indexOf(CONFIG.layerEvacuationHeader) < 0 )
+		{
+			GSI.GLOBALS.evacDialog.hide();
+			HashSetProc_sub(options);
+		}
+		else
+		{
+			var ls = ops["ls"].split("%7C");
+			if  (CONFIG.layerEvacuationIsConfirmOK == false )
+			{
+				GSI.GLOBALS.confirmDlg.show();
+			}
+			else
+			{
+				this.evacuationConfirmOK( ops, disp );
+			}
+		}
+	},
+	evacuationConfirmOK : function( ops, disp )
+	{
+		var wrongls = false;
+		if (ops["ls"])
+		{
+			var ls = ops["ls"].split("%7C");
+			if (ls)
+			{
+				if ( disp.length < ls.length ) GSI.Utils.rpad(disp, "0", ls.length);
+
+				if ( ops["lcd"] && ops["lcd"].indexOf(CONFIG.layerEvacuationHeader) >= 0 )
+				{
+					var cc = 0;
+					//with lcd
+					for (var i = ls.length-1; i>=0; i--)
+					{
+						
+						if ((ops["lcd"] != ls[i]) && (ls[i].indexOf(CONFIG.layerEvacuationHeader)>=0))
+						{
+							ls.splice(i, 1);
+							wrongls = true;
+						}
+						else
+						{
+							ops["disp"]+=disp.charAt(i);
+						}
+					}
+				}
+				else
+				{
+					var dct;
+					for (var i = ls.length-1; i>=0; i--)
+					{
+						if (ls[i].indexOf(CONFIG.layerEvacuationHeader)>=0)
+						{
+							if (dct > 0)
+							{
+								ls.splice(i, 1);
+								wrongls = true;
+							}
+							else
+							{
+								ops["disp"] += disp.charAt(i);
+								dct++;
+							}
+						}
+						else
+						{
+							if ( disp.charAt(i) )
+							{
+								ops["disp"] += disp.charAt(i);
+							}
+						}
+					}
+				}
+				ops["ls"] = ls.join("%7C");
+			}		
+		}
+		var newop = "";
+		for( var key in ops )
+		{
+			if ( ops[key] )
+				newop += (key + "=" + ops[key] + "&");
+			else
+				newop += (key + "&");
+		}
+		if (wrongls == true)
+		{
+			location.hash = newop;
+		}
+		else
+		{
+			this.HashSetProc_sub(newop.substring(0, newop.length - 1));
+		}
+		GSI.GLOBALS.confirmDlg.hide();
+		if (GSI.Dialog._dialogManager.isVisibleDialog(GSI.GLOBALS.evacDialog) == false)
+		{
+			GSI.GLOBALS.evacDialog.show();
+		}
+
+	},
+	evacuationConfirmCancel : function( ops, disp )
+	{
+		if ( ops["ls"] )
+		{
+			var ls = ops["ls"].split("%7C");
+			if( ls )
+			{
+				if ( disp.length < ls.length ) GSI.Utils.rpad(disp, "0", ls.length);
+
+				for ( var i = ls.length - 1; i >= 0; i-- )
+				{
+					if ( ls[i].indexOf(CONFIG.layerEvacuationHeader) >= 0 )
+					{
+						ls.splice(i, 1);
+					}
+					else
+					{
+						if ( disp.charAt(i) )
+						{
+							ops["disp"] += disp.charAt(i);
+						}
+					}
+				}
+				ops["ls"] = ls.join("%7C");
+			}
+			if ( ops["lcd"] )
+			{
+				if ( ops["lcd"].indexOf(CONFIG.layerEvacuationHeader) >= 0 )
+				{
+					ops["lcd"] = null;
+				}
+			}		
+		}
+		var newop = "";
+		for( var key in ops )
+		{
+			if ( ops[key] )
+				newop += (key + "=" + ops[key] + "&");
+			else
+				newop += (key + "&");
+		}
+		location.hash = newop;
+		GSI.GLOBALS.confirmDlg.hide();
+	}
 } );
 
 /************************************************************************
@@ -10743,6 +11291,7 @@ GSI.IconSelector = L.Class.extend( {
 } );
 
 
+
 /************************************************************************
  L.Class
  - GSI.JihokuLine（Magnetic north line）
@@ -10777,6 +11326,77 @@ GSI.JihokuLine = L.Class.extend( {
 		var center = this._map.getCenter();
 		return GSI.Utils.getVariation(center) * pi / 180;	// Convert the angle in radians
 	},
+	
+	drawPath : function(texture)
+	{
+		if ( !this._lines ) return;
+		for( var i=0; i< this._lines.length; i++ )
+		{
+			this._drawPath( texture, this._lines[i] );
+		}
+		
+		
+	},
+	
+	_updateStyle: function (texture, layer) {
+		if ( !layer._parts ) return;
+		
+		var options = layer.options;
+		if (options.stroke) {
+			texture.lineWidth = options.weight;
+			texture.strokeStyle = options.color;
+		}
+		if (options.fill) {
+			texture.fillStyle = options.fillColor || options.color;
+		}
+	},
+	
+	_drawPath: function (texture, layer) {
+		if ( !layer._parts ) return;
+		
+		var i, j, len, len2, point, drawMethod;
+		var vp = this._map._pathViewport;
+		
+		
+		var origin = this._map.getPixelOrigin();
+		var pixelBounds = this._map.getPixelBounds();
+		texture.beginPath();
+		
+		var parts = layer._parts;
+		
+		for (i = 0, len = parts.length; i < len; i++) {
+			
+			for (j = 0, len2 = parts[i].length; j < len2; j++) {
+				point = parts[i][j];
+				drawMethod = (j === 0 ? 'move' : 'line') + 'To';
+				
+				texture[drawMethod](point.x + ( origin.x - pixelBounds.min.x ), point.y + ( origin.y - pixelBounds.min.y ));
+			}
+			// TODO refactor ugly hack
+			if (layer instanceof L.Polygon || layer instanceof L.Circle) {
+				texture.closePath();
+			}
+		}
+		
+		texture.save();
+		this._updateStyle(texture, layer);
+		
+		var opacity = 1;
+		//console.log( this.options.opacity );
+		if (layer.options.fill) {
+			
+			texture.globalAlpha = ( layer.options.fillOpacity ?layer.options.fillOpacity : 1 ) * opacity;
+			texture.fill();          
+		}
+		if (layer.options.stroke) {
+			texture.globalAlpha = opacity;
+			texture.stroke();
+		}
+
+		texture.restore();
+	},
+	
+	
 	clear : function()
 	{
 		if (this._layer)
@@ -10808,11 +11428,11 @@ GSI.JihokuLine = L.Class.extend( {
 			this.clear();
 			return ;
 		}
-		
+
 		var mc = GSI.Utils.get2ndMesh(center.lat, center.lng);
 
 		var count = this.options.num;
-		
+		//var variation = GSI.Utils.getVariation(center);
 		if (!GSI.MeshDeclination[mc])
 		{
 			this.clear();
@@ -10874,8 +11494,8 @@ GSI.JihokuLine = L.Class.extend( {
 			}
 		}
 
-        var KKK_NUM = sVariation;
-        
+		var KKK_NUM = sVariation;
+		
 		if (!this._label) {
 
 			// Labeling
@@ -10893,8 +11513,10 @@ GSI.JihokuLine = L.Class.extend( {
 			layer.addLayer(label);
 		}
 		else {
+			
 			this._label.setContent('<div unselectable="on">' + KKK_NUM + '</div>');
 			this._label.setLatLng(this._map.getCenter());
+		
 		}
 
 		if ( !this._layer )
@@ -10922,6 +11544,428 @@ GSI.JihokuLine = L.Class.extend( {
 		return this.options.visible;
 	}
 } );
+
+
+/************************************************************************
+ L.Class
+ - GSI.TileGrid（Tile coordinates）
+ ************************************************************************/
+GSI.TileGridLayer = L.TileLayer.Canvas.extend( {
+	
+	_initContainer: function ()
+	{
+		var tilePane = this._map._panes.overlayPane;
+		
+		if (!this._container) {
+			this._container = L.DomUtil.create('div', 'leaflet-layer');
+
+			this._updateZIndex();
+
+			if (this._animated) {
+				var className = 'leaflet-tile-container';
+				this._bgBuffer = L.DomUtil.create('div', className, this._container);
+				this._tileContainer = L.DomUtil.create('div', className, this._container);
+
+			} else {
+				this._tileContainer = this._container;
+			}
+			
+			tilePane.insertBefore(this._container,tilePane.firstChild);
+			//tilePane.appendChild(this._container);
+
+		}
+	},
+	
+	drawTo : function(texture)
+	{
+		var ctx = texture;
+		var zoom = this._map.getZoom();
+		
+		var origin = this._map.getPixelOrigin();
+		var pixelBounds = this._map.getPixelBounds();
+		
+		for( var key in this._tiles )
+		{
+			var tile = this._tiles[key];
+			
+			var pos = $(tile).position();
+			pos.left += ( origin.x - pixelBounds.min.x );
+			pos.top += ( origin.y - pixelBounds.min.y );
+			
+			ctx.globalAlpha =1.0;
+			ctx.fillStyle = '#FF0000';
+			ctx.strokeStyle = '#FF0000';
+			ctx.strokeRect(
+				pos.left,
+				pos.top, 255, 255);
+			
+			
+			ctx.textAlign = 'center';
+			ctx.font = 'bold 24px sans-serif';
+			//ctx.fillStyle = '#98514B';
+			ctx.fillStyle = '#FF0000';
+			ctx.strokeStyle = '#fff';
+			
+			ctx.lineWidth = 5;
+			ctx.strokeText(zoom + '/' + tile._tilePoint.x + '/' + tile._tilePoint.y,
+				 pos.left+128, pos.top+128);
+			ctx.globalAlpha = 1.0;
+			ctx.fillText(zoom + '/' + tile._tilePoint.x + '/' + tile._tilePoint.y,
+				 pos.left+128, pos.top+128);
+		}
+	},
+	
+	drawTile : function(canvas, tilePoint, zoom) {
+		var ctx = canvas.getContext('2d');
+		ctx.globalAlpha = 1.0;
+		ctx.fillStyle = '#FF0000';
+		ctx.strokeStyle = '#FF0000';
+		//ctx.fillStyle = '#FF0000';
+		//ctx.strokeStyle = '#FF0000';
+		ctx.strokeRect(0, 0, 255, 255);
+		ctx.textAlign = 'center';
+		ctx.font = 'bold 24px sans-serif';
+		//ctx.fillStyle = '#98514B';
+		ctx.fillStyle = '#FF0000';
+		ctx.strokeStyle = '#fff';
+		ctx.lineWidth = 5;
+		ctx.strokeText(zoom + '/' + tilePoint.x + '/' + tilePoint.y, 128, 128);
+		ctx.globalAlpha = 1.0;
+		ctx.fillText(zoom + '/' + tilePoint.x + '/' + tilePoint.y, 128, 128);
+	}
+} );
+
+GSI.TileGrid = L.Class.extend( {
+	options : {
+		lineStyle : {
+			color : "#1D417A",
+			weight : 2,
+			opacity: 1,
+			fillOpacity:1,
+			dashArray : [3,3]
+		},
+		labelClassName : 'latlnggrid_label'
+	},
+	visible : false,
+	initialize: function(map, options) {
+		this._layer = null;
+		this._map = map;
+
+		options = L.setOptions(this, options);
+
+		options.lineStyle.clickable = false;
+
+		this._visible = options.visible;
+		this.setVisible(this._visible);
+	},
+	
+	drawPath : function(texture)
+	{
+		if ( this._layer ) this._layer.drawTo (texture);
+		
+		
+	},
+	
+	
+	
+	setVisible : function( on )
+	{
+		this._visible = on;
+		if ( this._layer )
+			this._map.removeLayer(this._layer);
+		if ( this._visible )
+		{
+			this._layer = new GSI.TileGridLayer({minZoom:2, maxZoom:18});
+			this._map.addLayer(this._layer);
+		}
+	},
+	getVisible : function()
+	{
+		return this._visible;
+	}
+});
+
+/************************************************************************
+ L.Class
+ - GSI.T25000Grid（1:25,000 topographic maps）
+ ************************************************************************/
+GSI.T25000Grid = L.Class.extend( {
+	options : {
+		lineStyle : {
+			color : "#1D417A",
+			weight : 2,
+			opacity: 1,
+			fillOpacity:1,
+			dashArray : [3,3]
+		},
+		labelClassName : 'latlnggrid_label'
+	},
+	visible : false,
+	initialize: function(map, options) {
+		this._layer = null;
+		this._map = map;
+		this._style = null;
+
+		options = L.setOptions(this, options);
+
+		options.lineStyle.clickable = false;
+
+		this._visible = options.visible;
+		this.setVisible(this._visible);
+		
+		
+	},
+	setVisible : function( on )
+	{
+		this._visible = on;
+		
+		
+
+		if ( this._layer )
+			this._map.removeLayer(this._layer);
+		if ( this._visible )
+		{
+			/*
+			var style = {
+				options:
+				{
+				  attribution: '図郭',minZoom: 10,maxNativeZoom: 8, maxZoom: 18
+				},
+				geojsonOptions:
+				{
+						 pointToLayer: function(feature, latlng) {
+						   var idstyle = "\""
+							   +"font-size: 16px;"
+							   +"color:#f00;"
+							   +"white-space: nowrap;"
+							   +"\"";
+						   var idAnchor = feature.properties['図名'].length /2 * 16;
+						   var myIcon= L.divIcon({
+										   iconAnchor: [idAnchor,10],
+										   className: "gsi-div-icon", 
+										   html: "<div style="+idstyle+">"+feature.properties['図名']+"</div>"});
+						   var s = '<div class="popup">';
+						   for(var k in feature.properties) {
+							 if(k == "図郭座標"){continue;}
+							 var v = feature.properties[k];
+							 s += k + ': ' + v + '<br>';
+						   }
+						   s += '</div>';
+						   var zdiv = L.marker(latlng, {icon: myIcon}).bindPopup(s);
+						   var zkaklb = [[feature.properties['図郭座標'][0][1],feature.properties['図郭座標'][0][0]],[feature.properties['図郭座標'][1][1],feature.properties['図郭座標'][1][0]]];
+						   var zkak = L.rectangle(zkaklb, {color: '#f00', weight: 1, opacity: 1,'fillColor': '#f00', 'fillOpacity': 0});
+						   return L.featureGroup([zdiv,zkak]);
+						 }
+				}
+			};
+			*/
+			if ( !this._style )
+			{
+				$.ajax( {
+					type: "GET",
+					url: "https://cyberjapandata.gsi.go.jp/xyz/zk25000/style.js",
+					dataType: "text",
+					cache:false,
+					success : L.bind(this._onStyleLoad, this),
+					error : L.bind(this._onStyleLoadError, this)
+				} );
+			}
+			else
+			{
+				this._layer = new GSI.VectorTileLayer(
+					'https://cyberjapandata.gsi.go.jp/xyz/zk25000/{z}/{x}/{y}.geojson',
+					this._style.options,this._style.geojsonOptions, true);
+				
+				this._map.addLayer(this._layer);
+			}
+		}
+	},
+	getVisible : function()
+	{
+		return this._visible;
+	},
+	
+	_onStyleLoad : function( text )
+	{
+		try
+		{
+			this._style= eval( "(" + text + ")" );
+			this._style.options.skipLoadStyle = true;
+			//this._style.options.styletype = "canvas";
+		}
+		catch( e)
+		{
+			this._onStyleLoadError();
+			return;
+		}
+		if ( this._layer )
+			this._map.removeLayer(this._layer);
+		if ( this._visible )
+		{
+			
+			this._layer = new GSI.VectorTileLayer(
+				'https://maps.gsi.go.jp/xyz/zk25000/{z}/{x}/{y}.geojson',
+				this._style.options,this._style.geojsonOptions, true);
+			
+			this._map.addLayer(this._layer,this._style.geojsonOptions);
+		}
+	},
+	
+	_onStyleLoadError : function( text )
+	{
+		//if ( this._layer )
+		//	this._map.removeLayer(this._layer);
+		if ( this._visible )
+		{
+			this._layer = new L.TileLayer.GeoJSON(
+				'https://maps.gsi.go.jp/xyz/zk25000/{z}/{x}/{y}.geojson',
+				{});
+			
+			this._map.addLayer(this._layer);
+		}
+	}
+	
+});
+
+
+
+/************************************************************************
+ L.Class
+ - GSI.ChiikiMesh（Regional Mesh）
+ ************************************************************************/
+GSI.ChiikiMesh = L.Class.extend( {
+	options : {
+		lineStyle : {
+			color : "#1D417A",
+			weight : 2,
+			opacity: 1,
+			fillOpacity:1,
+			dashArray : [3,3]
+		},
+		labelClassName : 'latlnggrid_label'
+	},
+	visible : false,
+	initialize: function(map, options) {
+		this._layer = null;
+		this._map = map;
+
+		options = L.setOptions(this, options);
+
+		options.lineStyle.clickable = false;
+
+		this._visible = options.visible;
+		this.setVisible(this._visible);
+	},
+	setVisible : function( on )
+	{
+		this._visible = on;
+		
+		
+
+		if ( this._layer )
+			this._map.removeLayer(this._layer);
+		if ( this._visible )
+		{
+			/*
+			var style = {
+				options:
+				{
+				  attribution: '地域メッシュ',minZoom: 6,maxNativeZoom: 14, maxZoom: 18
+				},
+				geojsonOptions:
+				{
+						 pointToLayer: function(feature, latlng) {
+						   var idstyle = "\""
+							   +"font-size: 16px;"
+							   +"color:#f00;"
+							   +"white-space: nowrap;"
+							   +"\"";
+						   var idAnchor = (feature.properties['mesh_code'].length - 0.5) /3 * 16;
+						   var myIcon= L.divIcon({
+										   iconAnchor: [idAnchor,10],
+										   className: "gsi-div-icon", 
+										   html: "<div style="+idstyle+">"+feature.properties['mesh_code']+"</div>"});
+
+						   var zdiv = L.marker(latlng, {icon: myIcon});
+						   var zkaklb = [[feature.properties['rectangle_lb'][0][1],feature.properties['rectangle_lb'][0][0]],[feature.properties['rectangle_lb'][1][1],feature.properties['rectangle_lb'][1][0]]];
+						   var zkak = L.rectangle(zkaklb, {color: '#f00', weight: 1, opacity: 1,'fillColor': '#f00', 'fillOpacity': 0});
+						   return L.featureGroup([zdiv,zkak]);
+						 }
+				}
+			};
+			this._layer = new L.TileLayer.GeoJSON(
+				'https://cyberjapandata.gsi.go.jp/xyz/chiikimesh/{z}/{x}/{y}.geojson',
+				style.options,style.geojsonOptions);
+			
+			this._map.addLayer(this._layer);
+			*/
+			if ( !this._style )
+			{
+				$.ajax( {
+					type: "GET",
+					url: "https://cyberjapandata.gsi.go.jp/xyz/chiikimesh/style.js",
+					dataType: "text",
+					cache:false,
+					success : L.bind(this._onStyleLoad, this),
+					error : L.bind(this._onStyleLoadError, this)
+				} );
+			}
+			else
+			{
+				this._layer = new GSI.VectorTileLayer(
+					'https://cyberjapandata.gsi.go.jp/xyz/chiikimesh/{z}/{x}/{y}.geojson',
+					this._style.options,this._style.geojsonOptions, true);
+				
+				this._map.addLayer(this._layer);
+			}
+		}
+	},
+	getVisible : function()
+	{
+		return this._visible;
+	},
+	
+	_onStyleLoad : function( text )
+	{
+		try
+		{
+			this._style= eval( "(" + text + ")" );
+			this._style.options.skipLoadStyle = true;
+			//this._style.options.styletype = "canvas";
+		}
+		catch( e)
+		{
+			this._onStyleLoadError();
+			return;
+		}
+		if ( this._layer )
+			this._map.removeLayer(this._layer);
+		if ( this._visible )
+		{
+			
+			this._layer = new GSI.VectorTileLayer(
+				'https://cyberjapandata.gsi.go.jp/xyz/chiikimesh/{z}/{x}/{y}.geojson',
+				this._style.options,this._style.geojsonOptions, true);
+			
+			this._map.addLayer(this._layer,this._style.geojsonOptions);
+		}
+	},
+	
+	_onStyleLoadError : function( text )
+	{
+		//if ( this._layer )
+		//	this._map.removeLayer(this._layer);
+		if ( this._visible )
+		{
+			this._layer = new L.TileLayer.GeoJSON(
+				'https://cyberjapandata.gsi.go.jp/xyz/chiikimesh/{z}/{x}/{y}.geojson',
+				{});
+			
+			this._map.addLayer(this._layer);
+		}
+	}
+});
+
 
 /************************************************************************
  L.Class
@@ -10961,6 +12005,120 @@ GSI.LatLngGrid = L.Class.extend( {
 		this._lines = null;
 		this._labels = null;
 	},
+	
+	drawPath : function(texture)
+	{
+		if ( !this._lines ) return;
+		texture.beginPath();
+		for( var i=0; i< this._lines.length; i++ )
+		{
+			var from = null;
+			
+			for( var j=0; j<this._lines[i]._latlngs.length; j ++ )
+			{
+				var point = this._map.latLngToContainerPoint(this._lines[i]._latlngs[j]);
+				
+				if( j == 0 ) texture.moveTo( point.x, point.y );
+				else {
+					this._lineToDot( texture, from.x, from.y, point.x, point.y );
+				}
+				
+				from = point;
+			}
+			//this._drawPath( texture, this._lines[i] );
+		}
+		
+		texture.save();
+		
+		texture.lineWidth = this.options.lineStyle.weight;
+		texture.strokeStyle = this.options.lineStyle.color;
+			
+		
+		var opacity = 1;
+		texture.globalAlpha = opacity;
+		texture.stroke();
+
+		texture.restore();
+		
+	},
+	
+	_lineToDot : function (texture, p1x, p1y, p2x, p2y)
+	{
+		var d = Math.sqrt(Math.pow(p2x - p1x, 2) + Math.pow(p2y - p1y, 2));
+		var rad = Math.atan2(p2y - p1y, p2x - p1x);
+		var space = 3;
+		var dotted = Math.round(d / space / 2);
+
+		for (var i = 0; i < dotted; i++) {
+			var p3x = Math.cos(rad) * space * (i * 2) + p1x;
+			var p3y = Math.sin(rad) * space * (i * 2) + p1y;
+			var p4x = Math.cos(rad) * space * (i * 2 + 1) + p1x;
+			var p4y = Math.sin(rad) * space * (i * 2 + 1) + p1y;
+
+			texture.moveTo(p3x, p3y);
+			texture.lineTo(p4x, p4y);
+			
+		}
+	},
+	
+	_updateStyle: function (texture, layer) {
+		if ( !layer._parts ) return;
+		
+		var options = layer.options;
+		if (options.stroke) {
+			texture.lineWidth = options.weight;
+			texture.strokeStyle = options.color;
+		}
+		if (options.fill) {
+			texture.fillStyle = options.fillColor || options.color;
+		}
+	},
+	
+	_drawPath: function (texture, layer) {
+		if ( !layer._parts ) return;
+		
+		var i, j, len, len2, point, drawMethod;
+		var vp = this._map._pathViewport;
+		
+		
+		var origin = this._map.getPixelOrigin();
+		var pixelBounds = this._map.getPixelBounds();
+		texture.beginPath();
+		
+		var parts = layer._parts;
+		
+		for (i = 0, len = parts.length; i < len; i++) {
+			
+			for (j = 0, len2 = parts[i].length; j < len2; j++) {
+				point = parts[i][j];
+				drawMethod = (j === 0 ? 'move' : 'line') + 'To';
+				
+				texture[drawMethod](point.x + ( origin.x - pixelBounds.min.x ), point.y + ( origin.y - pixelBounds.min.y ));
+			}
+			// TODO refactor ugly hack
+			if (layer instanceof L.Polygon || layer instanceof L.Circle) {
+				texture.closePath();
+			}
+		}
+		
+		texture.save();
+		this._updateStyle(texture, layer);
+		
+		var opacity = 1;
+		//console.log( this.options.opacity );
+		if (layer.options.fill) {
+			
+			texture.globalAlpha = ( layer.options.fillOpacity ?layer.options.fillOpacity : 1 ) * opacity;
+			texture.fill();          
+		}
+		if (layer.options.stroke) {
+			texture.globalAlpha = opacity;
+			texture.stroke();
+		}
+
+		texture.restore();
+	},
+	
 	refresh : function()
 	{
 		if ( !this._visible )
@@ -11193,7 +12351,6 @@ GSI.LayerOpacitySetter = L.Class.extend({
 		{
 			$( layer._container ).css( {opacity:this.opacity} );
 		}
-
 		if ( layer.eachLayer )
 		{
 			layer.eachLayer( L.bind( this._setLayerOpacity, this) );
@@ -11220,7 +12377,24 @@ GSI.LayersJSON = L.Class.extend( {
         this._load_base   = false;
         this._loadingData = null;
         this._data        = [];
-
+		this._tabs = $.extend( [], options.layersTab );
+		
+		for ( var i=0; i<this._tabs .length; i++ )
+		{
+			this._data.push( {
+					"type": "LayerGroup",
+					"title": this._tabs[i].caption,
+					"iconUrl": "",
+					"toggleall": false,
+					"isDetail" : this._tabs[i].isDetail,
+					"entries": [],
+					"isTab" : true
+			} );
+			if ( this._tabs[i].isDetail)
+			{
+				this._detailTabIndex = i;
+			}
+		}
 		options = L.setOptions(this, options);
 
 		if ( options.layers )
@@ -11233,7 +12407,8 @@ GSI.LayersJSON = L.Class.extend( {
 				this._loadingData.push( {
 					url    : this.options.layers[i],
                     load   : false,
-					layers : []
+					layers : [],
+					isDetail : true
 				} );
 			}
 		}
@@ -11244,7 +12419,7 @@ GSI.LayersJSON = L.Class.extend( {
     initialize_layers : function(layers)
     {
         this.visibleLayers     = [];
-        this.visibleLayersHash = [];
+        this.visibleLayersHash = {};
 
 		if ( !layers ){
             this.options.visibleLayers = [];
@@ -11276,11 +12451,14 @@ GSI.LayersJSON = L.Class.extend( {
 				id : layerData.id,
 				idx : this.visibleLayers.length,
 				initialOpacity : layerData.opacity,
-				hidden : layerData.hidden
+				hidden : layerData.hidden,
+				blend : layerData.blend
 			};
-
 			this.visibleLayers.push( info );
-			this.visibleLayersHash[ layerData.id ] = info;
+			if ( !this.visibleLayersHash[ layerData.id ] )
+				this.visibleLayersHash[ layerData.id ] = [];
+				
+			this.visibleLayersHash[ layerData.id ].push( info );
 		}
     },
     initialize_layers_data : function(layers)
@@ -11309,17 +12487,33 @@ GSI.LayersJSON = L.Class.extend( {
 		}
 
 	},
+    
     add : function(layers){
         if(layers){
             if(this._loadingData == null){
                 this._loadingData     = [];
     			this.currentFileIndex = -1;
+				for( var i=0; i<this._tabs.length; i++ )
+				{
+					if ( this._tabs[i].layers == null ) continue;
+					for( var j=0; j< this._tabs[i].layers.length; j++ )
+					{
+						this._loadingData.push( {
+							url    : this._tabs[i].layers[j],
+							load   : false,
+							layers : [],
+							isDetail : this._tabs[i].isDetail,
+							tabIndex : i
+						} );
+					}
+				}
             }
 		    for (var i = 0; i < layers.length; i++){
 				this._loadingData.push( {
 					url    : layers[i],
                     load   : false,
-					layers : []
+					layers : [],
+					isDetail : true
 				} );
             }
 
@@ -11360,18 +12554,33 @@ GSI.LayersJSON = L.Class.extend( {
 	_loadNext : function()
 	{
 		this.currentFileIndex++;
-
+		
 		if ( this.currentFileIndex >= this._loadingData.length )
 		{
 			for ( var i=0; i<this._loadingData.length; i++ )
 			{
-				// concat
-				for ( var j=0; j<this._loadingData[i].layers.length; j++ )
-                {
-					this._data.push( this._loadingData[i].layers[j] );
+				// concatは？
+				
+				
+				if ( this._loadingData[i].isDetail )
+				{
+					for ( var j=0; j<this._loadingData[i].layers.length; j++ )
+					{
+						//if ( !this._tabs[this._detailTabIndex].data ) this._tabs[this._detailTabIndex].data =[];
+						this._data[this._detailTabIndex].entries.push( this._loadingData[i].layers[j] );
+						//this._data.push( this._loadingData[i].layers[j] );
+					}
+				}
+				else
+				{
+					for ( var j=0; j<this._loadingData[i].layers.length; j++ )
+					{
+						//if ( !this._tabs[this._detailTabIndex].data ) this._tabs[this._detailTabIndex].data =[];
+						this._data[this._loadingData[i].tabIndex].entries.push( this._loadingData[i].layers[j] );
+						//this._data.push( this._loadingData[i].layers[j] );
+					}
 				}
 			}
-
 			this._loadingData = null;
 
             var _data = this._data.concat();
@@ -11407,15 +12616,49 @@ GSI.LayersJSON = L.Class.extend( {
                 json      = json_base;
         }
 
+		if ( (json.layers) && (json.layers[0].title) && (!json.layers[0].title_sys) )
+		{
+			var hybridjson = JSON.parse("{ \"layers\":[] }");
+			for(ll in json.layers)
+			{
+				if (json.layers[ll].title == "Emergency Evacuation Area")
+				{
+        			var json_evac2 = JSON.parse("{ \"type\": \"LayerGroup\", \"title\": \"" + CONFIG.layerEvacuationFolder + "\", \"title_evac\": \"" + CONFIG.layerEvacuationFolderSYS + "\", \"iconUrl\": \"\", \"open\": false, \"toggleall\": false, \"entries\": [] }");
+        			//var json_evac2 = JSON.parse("{ \"layers\": [ { \"type\": \"LayerGroup\", \"title\": \"" + CONFIG.layerEvacuationFolder + "\", \"title_evac\": \"" + CONFIG.layerEvacuationFolderSYS + "\", \"iconUrl\": \"\", \"open\": false, \"toggleall\": false, \"entries\": [] } ] }");
+        			json_evac2.entries = json.layers[ll].entries.concat();
+        			//json_evac2.layers[0].entries = json.layers[ll].entries.concat();
+        			hybridjson.layers.push(json_evac2);
+				}
+				else
+				{
+					hybridjson.layers.push(json.layers[ll]);
+				}
+			}
+			json = hybridjson;
+		}
+		/*
+        if (json.layers && json.layers[0].title)
+        {
+        	if ( json.layers[0].title == "指定緊急避難場所" )
+        	{
+        		var json_evac = JSON.parse("{ \"layers\": [ { \"type\": \"LayerGroup\", \"title\": \"" + CONFIG.layerEvacuationFolder + "\", \"title_evac\": \"" + CONFIG.layerEvacuationFolderSYS + "\", \"iconUrl\": \"\", \"open\": false, \"toggleall\": false, \"entries\": [] } ] }");
+        		json_evac.layers[0].entries = json.layers[0].entries.concat();
+        		json = json_evac;
+        	}
+        }
+        */
         if ( json.layers ){
             this._onLoad_SRC_URL(json.layers, this._loadingData[ this.currentFileIndex ].url);
         }
 
 		if ( this._loadingData )
 		{
-            this._loadingData[ this.currentFileIndex ].load   = true;
+			
+					
+			this._loadingData[ this.currentFileIndex ].load   = true;
 			this._loadingData[ this.currentFileIndex ].layers = json.layers;
-			this._loadNext();
+            this._loadNext();
+			
 		}
 		else
 		{
@@ -11450,7 +12693,7 @@ GSI.LayersJSON = L.Class.extend( {
     },
 	getBase : function()
     {
-        return this._data[0].entries;
+        return this._data[this._detailTabIndex].entries[0].entries;
     },
 	getOriginal : function()
 	{
@@ -11472,64 +12715,7 @@ GSI.LayersJSON = L.Class.extend( {
 		this._initializeTree( data, parent );
 		this.tree = data;
 	},
-	_url2LayerType : function( url )
-	{
-		if ( !url ) return "";
-		url = $.trim( url );
-
-		if ( url.match( /\{tms\}/ ) )
-		{
-			return "tms";
-		}
-
-		if ( url.match( /photoprot\.php/ ) )
-		{
-			return "kml";
-		}
-
-		var ext = "";
-		var layerType = "";
-		var matchResult = url.match( /.*\.([^.]+$)/ );
-		// extension
-		if (  matchResult ) ext = matchResult[1]
-
-		// kml
-		if ( ext == "kml" )
-		{
-			layerType = "kml";
-			return layerType;
-		}
-
-		// tile
-		if ( url.match( /(\{x\})/ ) )
-		{
-			switch( ext )
-			{
-				case "geojson":
-					layerType = "geojson_tile";
-					break;
-				case "topojson":
-					layerType = "topojson_tile";
-					break;
-				default:
-					layerType = "tile";
-					break;
-			}
-		}
-		else
-		{
-			switch( ext )
-			{
-				case "geojson":
-				case "topojson":
-				case "kml":
-					layerType = ext;
-					break;
-			}
-		}
-
-		return layerType;
-	},
+	
 	_getFolderId : function(lv)
 	{
 		if ( !this._currentFolderIdList ) this._currentFolderIdList = {};
@@ -11545,6 +12731,8 @@ GSI.LayersJSON = L.Class.extend( {
 	},
 	_initializeTree : function( tree, parent )
 	{
+		if ( !this.layersHash ) this.layersHash = {};
+		
 		if ( !tree ) return;
 		var folderCount = 0;
 		for ( var i=0; i<tree.length; i++ )
@@ -11552,32 +12740,73 @@ GSI.LayersJSON = L.Class.extend( {
 			if ( tree[i].type == "Layer" )
 			{
 				var info = tree[i];
-				info.layerType = this._url2LayerType( info.url );
+
+				if((ua.indexOf("msie") >= 0) && (vs.indexOf("msie 9") >= 0))
+				{
+					info.url=info.url.replace('https://','//');
+				}
+				if(( info.url.indexOf('{z}/{x}/{y}.png') != -1 || info.url.indexOf('{z}/{x}/{y}.jpg') != -1  ) && (info.url.indexOf('//maps.gsi.go.jp/') != -1 || info.url.indexOf('//cyberjapandata.gsi.go.jp/') != -1 ))
+				{
+					info.url=info.url.replace('cyberjapandata.gsi.go.jp', 'maps.gsi.go.jp' );
+					info.url=info.url.replace('http://','//');
+					info.url=info.url.replace('https://','//');
+				}
+//				if ( window.location.protocol == "https:" )
+//					info.url = info.url.replace( "http://", "https://" );
+				info.layerType = GSI.LayersJSON.url2LayerType( info.url );
 				if ( info.cocotile  )
 				{
 					if (  this.hasTileList ){
 						info.hasTile = ( this.hasTileList[ info.id ] == true );
                     }
 				}
-
+				
 				if ( this.visibleLayersHash[ info.id ] )
 				{
-					var layerInfo = this.visibleLayersHash[ info.id ];
-					info.initialOpacity =layerInfo.initialOpacity;
-					this.visibleLayersHash[ info.id ].info = info;
+					for ( var j = 0; j<this.visibleLayersHash[ info.id ].length; j++ )
+					{
+						var layerInfo = this.visibleLayersHash[ info.id ][j];
+						info.initialOpacity =layerInfo.initialOpacity;
+						if ( ! this.visibleLayersHash[ info.id ][j].info  )
+							this.visibleLayersHash[ info.id ][j].info = info;
+					}
 				}
+				
+				
+				if (!this.layersHash[info.id] )
+					this.layersHash[info.id] = info;
 				this.layers.push( info );
 			}
 			else
 			{
 				if ( !tree[ i ] .id )
 				{
+					tree[ i ] .isMultiLayer = false;
 					tree[ i ] .id = ( parent ? parent.id + '_' + folderCount : 'f' + folderCount );
 					folderCount ++;
 				}
+				else if ( tree[ i ] .isMultiLayer != false)
+				{
+					var info = tree[i];
+					info.layerType = 'multiLayer';
+					info.isMultiLayer = true;
+					if ( this.visibleLayersHash[ info.id ] )
+					{
+						for ( var j = 0; j<this.visibleLayersHash[ info.id ].length; j++ )
+						{
+							var layerInfo = this.visibleLayersHash[ info.id ][j];
+							info.initialOpacity =layerInfo.initialOpacity;
+							this.visibleLayersHash[ info.id ][j].info = info;
+						}
+					}
+					if (!this.layersHash[info.id] )
+						this.layersHash[info.id] = info;
+					
+					this.layers.push( info );
+				}
 			}
 			tree[i].parent = parent;
-			this._initializeTree( tree[i].entries, tree[i]);
+			this._initializeTree( tree[i].isMultiLayer ? null : tree[i].entries, tree[i]);
 		}
 	},
 	_initializeTreeCopy : function( tree, parent )
@@ -11595,7 +12824,7 @@ GSI.LayersJSON = L.Class.extend( {
 		if ( this._loadingData )
 			this._loadNext();
 		else
-			alert( 'Layer configuration file could not be read' );
+			alert( 'Layer configuration file could not be read.' );
 	},
 	_onFileLoadErrorRetry : function()
 	{
@@ -11607,7 +12836,64 @@ GSI.LayersJSON = L.Class.extend( {
 	_onLoadErrorExit : function() {}
 } );
 
+GSI.LayersJSON.url2LayerType = function( url )
+{
+	if ( !url ) return "";
+	url = $.trim( url );
 
+	if ( url.match( /\{tms\}/ ) )
+	{
+		return "tms";
+	}
+
+	if ( url.match( /photoprot\.php/ ) )
+	{
+		return "kml";
+	}
+
+	var ext = "";
+	var layerType = "";
+	var matchResult = url.match( /.*\.([^.]+$)/ );
+	// extension
+	if (  matchResult ) ext = matchResult[1]
+
+	// kml
+	if ( ext == "kml" )
+	{
+		layerType = "kml";
+		return layerType;
+	}
+
+	// tile
+	if ( url.match( /(\{x\})/ ) )
+	{
+		switch( ext )
+		{
+			case "geojson":
+				layerType = "geojson_tile";
+				break;
+			case "topojson":
+				layerType = "topojson_tile";
+				break;
+			default:
+				layerType = "tile";
+				break;
+		}
+	}
+	else
+	{
+		switch( ext )
+		{
+			case "geojson":
+			case "topojson":
+			case "kml":
+				layerType = ext;
+				break;
+		}
+	}
+
+	return layerType;
+};
 
 /************************************************************************
  L.Class
@@ -11637,25 +12923,146 @@ GSI.MapLayerList = L.Class.extend( {
 			this.append( infoList[i], true, isHide );
 		}
 	},
-	append : function( info, noFinishMove, isHide ,Confirm_FLAG)
+	append : function( info, noFinishMove, isHide ,Confirm_FLAG, blend)
 	{
 		if ( this.exists( info ) ) return;
-		// if ( info.id=="kokuarea" )
-		// {
-		// 	if(Confirm_FLAG == null){
-		// 		var KARI=this;
-		// 		jConfirm("航空法第１３２条で規定する無人航空機の飛行禁止空域のうち、航空法施行規則第２３６条第１号に掲げる空域（空港等の周辺空域）の投影面下となる場所を表示します。<br>なお、この情報には誤差が含まれている場合がありますので、境界付近等正確な空域については空港等の管理者に確認願います。<br>詳細については、<a target='_blank' href='//www.mlit.go.jp/koku/koku_tk10_000003.html'>国土交通省ホームページ</a>で確認してください。", 'Consideration', function(r) {
-		// 			if(r) {
-		// 				KARI.append(info, noFinishMove, isHide ,1);
-		// 			}
-		// 		});
-		// 		return;
-		// 	}
-		// }
+		info._appendInfo = null;
+		
+		if ( GSI.GLOBALS.layersJSON.layersHash[info.id] &&
+			GSI.GLOBALS.layersJSON.layersHash[info.id] != info &&
+			!GSI.GLOBALS.layersJSON.layersHash[info.id].isMultiLayerChild)
+		{
+			var oldInfo = info;
+			info = GSI.GLOBALS.layersJSON.layersHash[info.id];
+			info._appendInfo = oldInfo;
+		}
+		
+		/*if ( info.id=="kokuarea" )
+		{
+			if(Confirm_FLAG == null){
+				var KARI=this;
+				jConfirm("航空法第１３２条で規定する無人航空機の飛行禁止空域のうち、航空法施行規則第２３６条第１号に掲げる空域（空港等の周辺空域）の投影面下となる場所を表示します。<br>なお、この情報には誤差が含まれている場合がありますので、境界付近等正確な空域については空港等の管理者に確認願います。<br>詳細については、<a target='_blank' href='http://www.mlit.go.jp/koku/koku_tk10_000003.html'>国土交通省ホームページ</a>で確認してください。", '留意事項', function(r) {
+					if(r) {
+						KARI.append(info, noFinishMove, isHide ,1);
+					}
+				});
+				return;
+			}
+		}*/
 		info._visibleInfo = {};
 		info._visibleInfo.opacity = ( info.initialOpacity ? info.initialOpacity : 1.0 );
+		if ( isHide ) info._visibleInfo._isHidden = true;
+		
+		if ( ( blend === undefined ) || ( blend == null ) )
+		{
+		    info._visibleInfo.blend = false;
+		}
+		else
+		{
+		    info._visibleInfo.blend = ( blend == "1" ? true : false );
+		}
 		info.initialOpacity = null;
 		
+		info._visibleInfo.layer = GSI.Utils.infoToLayer(info, noFinishMove );
+		if ( info._visibleInfo.layer)
+		{
+			if ( info.layerType=="tile" )
+			{
+				var fBaseMap = false;
+				if(info.parent && info.parent != null && info.parent.title_sys == CONFIG.layerBaseFolderSYS){
+					fBaseMap = true;
+				}
+				if ( !info._visibleInfo._isHidden)
+				{
+					if(fBaseMap){
+						info._visibleInfo.grayscale = GSI.GLOBALS.baseLayer.isGrayScale;
+						GSI.GLOBALS.baseLayer.setActiveId(info.id);
+					}
+					else{
+						this.map.addLayer(info._visibleInfo.layer,true,info._visibleInfo.blend);
+    					GSI.Utils.setMixBlendMode( info, info._visibleInfo.blend );
+					}
+				}
+				if(fBaseMap) this.tileList.push( info );
+				else this.tileList.unshift( info );
+				
+				this._initZIndex( this.tileList );
+			}
+			else if ( info.layerType=="kml" )
+			{
+			// KML
+				info._visibleInfo .layer.on("loadstart", L.bind( this.onLayerLoadStart, this, info._visibleInfo.layer, "KML"  ) );
+				info._visibleInfo .layer.on("loaded", L.bind( this.onLayerLoad, this, info._visibleInfo.layer  ) );
+				info._visibleInfo .layer .load();
+
+				if ( !info._visibleInfo._isHidden ) this.map.addLayer(info._visibleInfo.layer,true);
+
+				this.list.unshift( info );
+				this._initZIndexOffset( this.list, 10000 );
+			}
+			else if ( info.layerType=="geojson" )
+			{
+			// GeoJSON
+				info._visibleInfo .layer.on("loadstart", L.bind( this.onLayerLoadStart, this, info._visibleInfo.layer, "GeoJSON"  ) );
+				info._visibleInfo .layer.on( "load", L.bind( function(e){ this.onLayerLoad(e.src) },this));
+				info._visibleInfo .layer .load();
+
+				if ( !info._visibleInfo._isHidden ) this.map.addLayer(info._visibleInfo.layer);
+
+				this.list.unshift( info );
+				this._initZIndexOffset( this.list, 10000 );
+
+			}
+			else if ( info.layerType=="geojson_tile" )
+			{
+			// GeoJSON Tile
+				if ( !info._visibleInfo._isHidden )this.map.addLayer(info._visibleInfo.layer,true);
+
+				this.list.unshift( info );
+				this._initZIndexOffset( this.list, 10000 );
+			}
+			else if ( info.layerType=="topojson_tile" )
+			{
+			// TopoJSON Tile
+				if ( !info._visibleInfo._isHidden ) this.map.addLayer(info._visibleInfo.layer,true);
+				this.list.unshift( info );
+				this._initZIndexOffset( this.list, 10000 );
+			}
+			else if ( info.layerType=="topojson" )
+			{
+			// TopoJSON
+				info._visibleInfo .layer.on("loadstart", L.bind( this.onLayerLoadStart, this, info._visibleInfo.layer, "TopoJSON"  ) );
+				info._visibleInfo .layer.on( "load", L.bind( function(e){ this.onLayerLoad(e.src) },this));
+				info._visibleInfo .layer .load();
+				if ( !info._visibleInfo._isHidden ) this.map.addLayer(info._visibleInfo.layer);
+
+				this.list.unshift( info );
+				this._initZIndexOffset( this.list, 10000 );
+			}
+			else if ( info.layerType=="tms" )
+			{
+			// TMS
+				
+				if ( !info._visibleInfo._isHidden ) this.map.addLayer(info._visibleInfo.layer,true);
+				this.tileList.unshift( info );
+				this._initZIndex( this.tileList );
+			}
+			else if ( info.layerType=="multiLayer" )
+			{
+			// Multiple Layers
+				info._visibleInfo .layer.on("loadstart", L.bind( this.onLayerLoadStart, this, info._visibleInfo.layer, "MultiLayer"  ) );
+				info._visibleInfo .layer.on( "load", L.bind( function(e){ this.onLayerLoad(e.src) },this));
+				info._visibleInfo .layer. load();
+				if ( !info._visibleInfo._isHidden ) this.map.addLayer(info._visibleInfo.layer);
+				this.list.unshift( info );
+				this._initZIndexOffset( this.list, 10000 );
+
+
+			}
+			
+			
+		}
+		/*
 		if ( info.layerType=="tile" )
 		{
             var fBaseMap = false;
@@ -11674,6 +13081,7 @@ GSI.MapLayerList = L.Class.extend( {
 			if ( ( info.maxZoom == 0 || info.maxZoom ) && info.maxZoom != "" ) options.maxZoom =info.maxZoom;
 			if ( info.maxNativeZoom && info.maxNativeZoom!="" ) options.maxNativeZoom =info.maxNativeZoom;
 			if ( info.attribution ) options.attribution =info.attribution;
+			if ( info.bounds && info.bounds!="" ) options.bounds =info.bounds;
 			
 			info._visibleInfo.layer = new GSI.TileLayer(info.url,options);
 			if ( isHide)
@@ -11703,6 +13111,7 @@ GSI.MapLayerList = L.Class.extend( {
 			if ( ( info.maxZoom == 0 || info.maxZoom ) && info.maxZoom != "" ) options.maxZoom =info.maxZoom;
 			if ( info.attribution ) options.attribution =info.attribution;
             if ( info.errorTileUrl ) options.errorTileUrl =info.errorTileUrl;
+			if ( info.bounds && info.bounds!="" ) options.bounds =info.bounds;
 			info._visibleInfo .layer = new GSI.KML(info.url, options);
 			info._visibleInfo .layer._noFinishMove = noFinishMove;
 			info._visibleInfo .layer.on("loadstart", L.bind( this.onLayerLoadStart, this, info._visibleInfo.layer, "KML"  ) );
@@ -11725,6 +13134,7 @@ GSI.MapLayerList = L.Class.extend( {
 			if ( ( info.minZoom == 0 || info.minZoom ) && info.minZoom != "" ) options.minZoom= info.minZoom;
 			if ( ( info.maxZoom == 0 || info.maxZoom ) && info.maxZoom != "" ) options.maxZoom =info.maxZoom;
 			if ( info.attribution ) options.attribution =info.attribution;
+			if ( info.bounds && info.bounds!="" ) options.bounds =info.bounds;
 
 			info._visibleInfo .layer = new GSI.GeoJSON(info.url,options);
 			info._visibleInfo .layer._noFinishMove = noFinishMove;
@@ -11743,7 +13153,7 @@ GSI.MapLayerList = L.Class.extend( {
 		}
 		else if ( info.layerType=="geojson_tile" )
 		{
-		// Tile GeoJSON
+		// タイルGeoJSON
 			var options = { clipTiles : true};
 			var options2 = {};
 
@@ -11773,8 +13183,12 @@ GSI.MapLayerList = L.Class.extend( {
 				options.attribution =info.attribution;
 				options._attribution =info.attribution;
 			}
-
-			info._visibleInfo.layer = new GSI.GeoJSONTileLayer(info.url,options, options2);
+			if ( info.bounds && info.bounds!="" )
+			{
+				options.bounds =info.bounds;
+				options._bounds =info.bounds;
+			}
+			info._visibleInfo.layer = new GSI.VectorTileLayer(info.url,options, options2);
 
 			if ( isHide )
 				info._visibleInfo._isHidden = true;
@@ -11786,7 +13200,7 @@ GSI.MapLayerList = L.Class.extend( {
 		}
 		else if ( info.layerType=="topojson_tile" )
 		{
-		// Tile TopoJSON
+		// タイルTopoJSON
 			var options = { clipTiles : true, isTopoJSON: true};
 			var options2 = {};
 
@@ -11816,8 +13230,13 @@ GSI.MapLayerList = L.Class.extend( {
 				options.attribution =info.attribution;
 				options._attribution =info.attribution;
 			}
+			if ( info.bounds && info.bounds!="" )
+			{
+				options.bounds =info.bounds;
+				options._bounds =info.bounds;
+			}
 
-			info._visibleInfo.layer = new GSI.GeoJSONTileLayer(info.url,options, options2);
+			info._visibleInfo.layer = new GSI.VectorTileLayer(info.url,options, options2);
 			if ( isHide )
 				info._visibleInfo._isHidden = true;
 			else
@@ -11833,6 +13252,7 @@ GSI.MapLayerList = L.Class.extend( {
 			if ( ( info.minZoom == 0 || info.minZoom ) && info.minZoom != "" ) options.minZoom= info.minZoom;
 			if ( ( info.maxZoom == 0 || info.maxZoom ) && info.maxZoom != "" ) options.maxZoom =info.maxZoom;
 			if ( info.attribution ) options.attribution =info.attribution;
+			if ( info.bounds && info.bounds!="" ) ptions.bounds =info.bounds;
 
 			info._visibleInfo .layer = new GSI.GeoJSON(info.url,options);
 			info._visibleInfo .layer._noFinishMove = noFinishMove;
@@ -11856,6 +13276,7 @@ GSI.MapLayerList = L.Class.extend( {
 			if ( ( info.maxZoom == 0 || info.maxZoom ) && info.maxZoom != "" ) options.maxZoom =info.maxZoom;
 			if ( info.maxNativeZoom && info.maxNativeZoom!="" ) options.maxNativeZoom =info.maxNativeZoom;
 			if ( info.attribution ) options.attribution =info.attribution;
+			if ( info.bounds && info.bounds!="" ) ptions.bounds =info.bounds;
 
 			info._visibleInfo.layer = new GSI.GSITMSLayer(info.url,options);
 			if ( isHide )
@@ -11865,7 +13286,18 @@ GSI.MapLayerList = L.Class.extend( {
 			this.tileList.unshift( info );
 			this._initZIndex( this.tileList );
 		}
-		
+		else if ( info.layerType=="multiLayer" )
+		{
+			// 複数レイヤ
+			info._visibleInfo.layer = new GSI.MultiLayer(info.entries);
+			if ( isHide )
+				info._visibleInfo._isHidden = true;
+			else
+				this.map.addLayer(info._visibleInfo.layer);
+
+			
+		}
+		*/
 		if( info._visibleInfo.layer )
 		{
             if(info.parent && info.parent != null && info.parent.title_sys == CONFIG.layerBaseFolderSYS){
@@ -11961,20 +13393,24 @@ GSI.MapLayerList = L.Class.extend( {
 		{
 			for ( var i=0; i<this.tileList.length; i++ )
 			{
-				if ( this.tileList[i] == info )
-				{
-					return true;
-				}
+				if ( this.tileList[i] == info )return true;
+				
+			}
+			for ( var i=0; i<this.tileList.length; i++ )
+			{
+				if ( this.tileList[i].id == info.id )return true;
+				
 			}
 		}
 		else
 		{
 			for ( var i=0; i<this.list.length; i++ )
 			{
-				if ( this.list[i] == info )
-				{
-					return true;
-				}
+				if ( this.list[i] == info ) return true;
+			}
+			for ( var i=0; i<this.list.length; i++ )
+			{
+				if ( this.list[i].id == info.id ) return true;
 			}
 		}
 
@@ -11982,16 +13418,33 @@ GSI.MapLayerList = L.Class.extend( {
 	},
 	remove : function( info )
 	{
+		var targetInfo = null;
 		if ( CONFIG.LAYERTYPELIST[info.layerType].isTileImage )
 		{
 			for ( var i=0; i<this.tileList.length; i++ )
 			{
 				if ( this.tileList[i] == info )
 				{
+					targetInfo = info;
 					this.tileList.splice(i, 1);
 					break;
 				}
 			}
+			
+			if ( !targetInfo )
+			{
+				for ( var i=0; i<this.tileList.length; i++ )
+				{
+					if ( this.tileList[i].id == info.id )
+					{
+						targetInfo = this.tileList[i];
+						this.tileList.splice(i, 1);
+						break;
+					}
+				}
+			}
+		
+		
 		}
 		else
 		{
@@ -11999,14 +13452,32 @@ GSI.MapLayerList = L.Class.extend( {
 			{
 				if ( this.list[i] == info )
 				{
+					targetInfo = info;
 					this.list.splice(i, 1);
 					break;
 				}
 			}
+			
+			
+			if ( !targetInfo )
+			{
+				for ( var i=0; i<this.list.length; i++ )
+				{
+					if ( this.list[i].id == info.id )
+					{
+						targetInfo = this.list[i];
+						this.list.splice(i, 1);
+						break;
+					}
+				}
+			}
 		}
-
-		this.map.removeLayer( info._visibleInfo.layer );
-		info._visibleInfo = null;
+			
+		if ( targetInfo )
+		{
+			this.map.removeLayer( targetInfo._visibleInfo.layer );
+			targetInfo._visibleInfo = null;
+		}
 		this.fire('change');
 	},
 	clear : function()
@@ -12036,8 +13507,203 @@ GSI.MapLayerList = L.Class.extend( {
 	getList : function()
 	{
 		return this.list;
+	},
+	getTotalCount : function()
+	{
+		return ( this.tileList ? this.tileList.length : 0 )
+			+ ( this.list ? this.list.length : 0 );
 	}
 } );
+
+
+GSI.Utils.infoToLayer = function( info, noFinishMove )
+{
+	var layer = null;
+	if ( info.layerType=="tile" )
+	{
+		var fBaseMap = false;
+		if(info.parent && info.parent != null && info.parent.title_sys == CONFIG.layerBaseFolderSYS){
+			fBaseMap = true;
+		}
+
+		var options = {
+			errorTileUrl : '',
+		};
+		if ( info.subdomains &&info.subdomains!="" )
+		{
+			options.subdomains= info.subdomains;
+		}
+		if ( ( info.minZoom == 0 || info.minZoom ) && info.minZoom != "" ) options.minZoom= info.minZoom;
+		if ( ( info.maxZoom == 0 || info.maxZoom ) && info.maxZoom != "" ) options.maxZoom =info.maxZoom;
+		if ( info.maxNativeZoom && info.maxNativeZoom!="" ) options.maxNativeZoom =info.maxNativeZoom;
+		if ( info.attribution ) options.attribution =info.attribution;
+		if ( info.bounds && info.bounds!="" ) options.bounds =info.bounds;
+
+		layer = new GSI.TileLayer(info.url,options);
+
+	}
+	else if ( info.layerType=="kml" )
+	{
+		var options = {async: true, "_map": this.map};
+
+		if ( ( info.minZoom == 0 || info.minZoom ) && info.minZoom != "" ) options.minZoom= info.minZoom;
+		if ( ( info.maxZoom == 0 || info.maxZoom ) && info.maxZoom != "" ) options.maxZoom =info.maxZoom;
+		if ( info.attribution ) options.attribution =info.attribution;
+		if ( info.errorTileUrl ) options.errorTileUrl =info.errorTileUrl;
+		if ( info.bounds && info.bounds!="" ) options.bounds =info.bounds;
+		layer = new GSI.KML(info.url, options);
+		layer._noFinishMove = noFinishMove;
+
+	}
+	else if ( info.layerType=="geojson" )
+	{
+	// GeoJSON
+		var options = {};
+
+		if ( ( info.minZoom == 0 || info.minZoom ) && info.minZoom != "" ) options.minZoom= info.minZoom;
+		if ( ( info.maxZoom == 0 || info.maxZoom ) && info.maxZoom != "" ) options.maxZoom =info.maxZoom;
+		if ( info.attribution ) options.attribution =info.attribution;
+		if ( info.bounds && info.bounds!="" ) options.bounds =info.bounds;
+
+		layer = new GSI.GeoJSON(info.url,options);
+		layer._noFinishMove = noFinishMove;
+
+	}
+	else if ( info.layerType=="geojson_tile" )
+	{
+	// GeoJSON Tile
+		var options = { clipTiles : true};
+		var options2 = {};
+
+		if ( info.subdomains &&info.subdomains!="" )
+		{
+			options.subdomains= info.subdomains;
+		}
+		if ( ( info.minZoom == 0 || info.minZoom) && info.minZoom!="" )
+		{
+			options.minZoom= info.minZoom;
+			options._minZoom= info.minZoom;
+		}
+		if ( ( info.maxZoom == 0 || info.maxZoom ) && info.maxZoom!="" )
+		{
+			options.maxZoom =info.maxZoom;
+			options._maxZoom =info.maxZoom;
+		}
+
+		if ( info.maxNativeZoom  && info.maxNativeZoom!="" )
+		{
+			options.maxNativeZoom =info.maxNativeZoom;
+			options._maxNativeZoom =info.maxNativeZoom;
+		}
+		
+		if ( info.maxCanvasZoom  && info.maxCanvasZoom!="" )
+		{
+			options.maxCanvasZoom =info.maxCanvasZoom;
+			options._maxCanvasZoom =info.maxCanvasZoom;
+		}
+		
+		if ( info.attribution )
+		{
+			options.attribution =info.attribution;
+			options._attribution =info.attribution;
+		}
+		if ( info.bounds && info.bounds!="" )
+		{
+			options.bounds =info.bounds;
+			options._bounds =info.bounds;
+		}
+		if ( info.styleurl && info.styleurl!="" )
+		{
+			options.styleurl =info.styleurl;
+			options._styleurl =info.styleurl;
+		}
+		
+		//console.log( info );
+		
+		//if ( info.canvas &&  L.Browser.canvas )
+		//	layer = new GSI.Canvas.GeoJSONTileLayer(info.url,options, options2);
+		//else
+			layer = new GSI.VectorTileLayer(info.url,options, options2);
+
+	}
+	else if ( info.layerType=="topojson_tile" )
+	{
+	// TopoJSON Tile
+		var options = { clipTiles : true, isTopoJSON: true};
+		var options2 = {};
+
+		if ( info.subdomains &&info.subdomains!="" )
+		{
+			options.subdomains= info.subdomains;
+		}
+		if ( ( info.minZoom == 0 || info.minZoom) && info.minZoom!="" )
+		{
+			options.minZoom= info.minZoom;
+			options._minZoom= info.minZoom;
+		}
+		if ( ( info.maxZoom == 0 || info.maxZoom ) && info.maxZoom!="" )
+		{
+			options.maxZoom =info.maxZoom;
+			options._maxZoom =info.maxZoom;
+		}
+
+		if ( ( info.maxNativeZoom ) && info.maxNativeZoom!="" )
+		{
+			options.maxNativeZoom =info.maxNativeZoom;
+			options._maxNativeZoom =info.maxNativeZoom;
+		}
+
+		if ( info.attribution )
+		{
+			options.attribution =info.attribution;
+			options._attribution =info.attribution;
+		}
+		if ( info.bounds && info.bounds!="" )
+		{
+			options.bounds =info.bounds;
+			options._bounds =info.bounds;
+		}
+
+		layer = new GSI.VectorTileLayer(info.url,options, options2);
+
+	}
+	else if ( info.layerType=="topojson" )
+	{
+	// TopoJSON
+		var options = {layerType:'topojson'};
+
+		if ( ( info.minZoom == 0 || info.minZoom ) && info.minZoom != "" ) options.minZoom= info.minZoom;
+		if ( ( info.maxZoom == 0 || info.maxZoom ) && info.maxZoom != "" ) options.maxZoom =info.maxZoom;
+		if ( info.attribution ) options.attribution =info.attribution;
+		if ( info.bounds && info.bounds!="" ) ptions.bounds =info.bounds;
+
+		layer = new GSI.GeoJSON(info.url,options);
+		layer._noFinishMove = noFinishMove;
+	}
+	else if ( info.layerType=="tms" )
+	{
+	// TMS
+		var options = {};
+
+		if ( ( info.minZoom == 0 || info.minZoom ) && info.minZoom != "" ) options.minZoom= info.minZoom;
+		if ( ( info.maxZoom == 0 || info.maxZoom ) && info.maxZoom != "" ) options.maxZoom =info.maxZoom;
+		if ( info.maxNativeZoom && info.maxNativeZoom!="" ) options.maxNativeZoom =info.maxNativeZoom;
+		if ( info.attribution ) options.attribution =info.attribution;
+		if ( info.bounds && info.bounds!="" ) ptions.bounds =info.bounds;
+
+		layer = new GSI.GSITMSLayer(info.url,options);
+	}
+	else if ( info.layerType=="multiLayer" )
+	{
+		// Multiple Layers
+		layer = new GSI.MultiLayer(info.entries);
+
+
+	}
+
+	return layer;
+};
+
 
 /************************************************************************
  L.Class
@@ -12046,6 +13712,7 @@ GSI.MapLayerList = L.Class.extend( {
 GSI.MapMenuList = [];
 
 GSI.MapMenu = L.Class.extend( {
+	includes: L.Mixin.Events,
 	options : {
 		position : "left",
 		zIndex : 15000,
@@ -12079,7 +13746,8 @@ GSI.MapMenu = L.Class.extend( {
 			.click( L.bind( this.onItemClick, this ) );
 		var a = new GSI.Control.Button( elem[0], {position:'top' + this.options.position} );
 		a.addTo( this.map );
-
+		this._menuItemList = [];
+		
 		this.rootItem = {
 			elem : elem,
 			children : [],
@@ -12141,12 +13809,17 @@ GSI.MapMenu = L.Class.extend( {
 					var a = $( '<a>' )
 						.attr( { 'href' : 'javascript:void(0);'} )
 						.html( childConfig.title )
-						.click( L.bind( this.onItemClick, this ) );
+						.click( L.bind( this.onItemClick, this ) )
+						.on( 'mouseover', L.bind( this.onItemMouseOver, this ))
+						.on( 'mouseout',  L.bind( this.onItemMouseOut, this ));
 
 					if ( childConfig.arrow )
 					{
 						a.addClass( "arrow" );
-						a.addClass( this.options.position );
+						if ( childConfig.textAlign == "left" )
+							a.addClass( this.options.position ).css({"text-align":"left", "padding-left" : "20px"});
+						else
+							a.addClass( this.options.position );
 					}
 					else if ( childConfig.right )
 					{
@@ -12165,6 +13838,7 @@ GSI.MapMenu = L.Class.extend( {
 					a.data( { 'data' : item } );
 					parent.children.push( item );
 					li.append( a );
+					this._menuItemList.push( a );
 				}
 				ul.append( li );
 				parent.childrenFrame = ul;
@@ -12175,12 +13849,49 @@ GSI.MapMenu = L.Class.extend( {
 			$( document.body).append( ul );
 		}
 	},
+	disableMenuItem : function( id )
+	{
+		if ( !this._menuItemList ) return;
+		for( var i=0; i<this._menuItemList.length; i++ )
+		{
+			if ( this._menuItemList[i].data('data').id == id )
+				this._menuItemList[i].addClass( 'disabled' );
+		}
+	},
+	
+	
+	isEnableMenuItem : function( id )
+	{
+		if ( !this._menuItemList ) return;
+		for( var i=0; i<this._menuItemList.length; i++ )
+		{
+			if ( this._menuItemList[i].data('data').id == id )
+				return !this._menuItemList[i].hasClass( 'disabled' );
+		}
+		
+		return false;
+	},
+	
+	
+	enableMenuItem : function( id )
+	{
+		if ( !this._menuItemList ) return;
+		for( var i=0; i<this._menuItemList.length; i++ )
+		{
+			if ( this._menuItemList[i].data('data').id == id )
+				this._menuItemList[i].removeClass( 'disabled' );
+			
+		}
+	},
+	
+	
 	hideChildren : function(info, noEffect)
 	{
 		if ( info.childrenFrame )
 		{
 			if ( noEffect )
 			{
+				
 				info.childrenFrame.hide();
 			}
 			else
@@ -12247,6 +13958,28 @@ GSI.MapMenu = L.Class.extend( {
 				info.childrenFrame.hide();
 		}
 	},
+	
+	onItemMouseOver : function(event)
+	{
+		
+		var target =  event.currentTarget;
+		var info = $( target ).data( 'data' );
+		if ( this.options.onMenuItemMouseOver )
+		{
+			this.options.onMenuItemMouseOver(info.id);
+		}
+	},
+	onItemMouseOut : function(event)
+	{
+		var target =  event.currentTarget;
+		var info = $( target ).data( 'data' );
+		if ( this.options.onMenuItemMouseOut )
+		{
+			this.options.onMenuItemMouseOut(info.id);
+		}
+	},
+	
+	
 	onItemClick : function( event )
 	{
 		var target =  event.currentTarget;
@@ -12357,12 +14090,14 @@ GSI.MapMenu = L.Class.extend( {
 			{
 				this.options.onMenuItemClick(info.id);
 			}
-			this.hide();
+			this.hide(true);
 		}
 	},
 	hide : function(noEffect)
 	{
+		this._visible = false;
 		this.hideChildren( this.rootItem, noEffect );
+		this.fire("hide");
 	},
 	onCheckBoxClick : function(target, event )
 	{
@@ -12592,7 +14327,7 @@ GSI.MiniMap = L.Class.extend( {
 	{
 		if ( !this.miniMap )
 		{
-			var baseLayer = L.tileLayer('//cyberjapandata.gsi.go.jp/xyz/std/{z}/{x}/{y}.png' );
+			var baseLayer = L.tileLayer('http://cyberjapandata.gsi.go.jp/xyz/std/{z}/{x}/{y}.png' );
 			this.miniMap = new L.Control.MiniMap(baseLayer, { toggleDisplay: false }).addTo(this.map);
 		}
 	},
@@ -12911,7 +14646,7 @@ GSI.Modal.FileSelectDialog = GSI.Modal.Dialog.extend( {
 	},
 	_onLoadErrorExit : function()
 	{
-		alert( 'Failed to load the file' );
+		alert( 'Failed to load the file.' );
 	},
 	onPositiveButtonClick : function()
 	{
@@ -12954,6 +14689,79 @@ GSI.Modal.FileSelectDialog = GSI.Modal.Dialog.extend( {
 	}
 } );
 
+/************************************************************************
+ L.Class
+ - GSI.Modal.BaseClass
+   - GSI.Modal.Dialog
+     - GSI.Modal.confirmDialog（免責事項選択ダイアログ）
+ ************************************************************************/
+/*GSI.Modal.confirmDialog = GSI.Modal.Dialog.extend( {
+	options : {
+		positiveButtonText : 'ＯＫ',
+		nagativeButtonText : 'キャンセル',
+		title : "免責事項・ご利用上の注意"
+		,message : ""
+		,width : 460
+	},
+	getContent : function()
+	{
+		var frame = $( '<div>' ).css({'height':'280px','overflow':'auto'}).addClass( 'gsi_modal_dialog_content' );
+		var inframe = $('<div>').css({'margin':'10px'});
+		var liframe1 = $('<div>').css({'margin':'5px 18px 0px 0px'});
+		var liframe2 = $('<div>').css({'margin':'0px 18px 0px 0px'});
+		var frmct = $( '<div>' ).html(GSI.TEXT.EVAC.CONFIRMTOP);
+		var uol = $('<ol>');
+		var li1 = $('<li>').attr({"value":"1"}).html(GSI.TEXT.EVAC.CONFIRMITEM1);
+		var li2 = $('<li>').attr({"value":"2"}).html(GSI.TEXT.EVAC.CONFIRMITEM2);
+		var li3 = $('<li>').attr({"value":"3"}).html(GSI.TEXT.EVAC.CONFIRMITEM3);
+		var atten = $( '<div>' ).html(GSI.TEXT.EVAC.ATTENTION);
+
+		var dol = $('<ol>');
+		var dli1 = $('<li>').attr({"value":"1"}).html(GSI.TEXT.EVAC.DATAITEM1);
+		var dli2 = $('<li>').attr({"value":"2"}).html(GSI.TEXT.EVAC.DATAITEM2);
+		var dli3 = $('<li>').attr({"value":"3"}).html(GSI.TEXT.EVAC.DATAITEM3);
+		var dli4 = $('<li>').attr({"value":"4"}).html(GSI.TEXT.EVAC.DATAITEM5);
+		var datten = $( '<div>' ).html(GSI.TEXT.EVAC.ATTENTIONDATA);
+
+		uol.append(li1);
+		uol.append(li2);
+		uol.append(li3);
+		liframe1.append(atten);
+		liframe1.append(uol);
+
+		dol.append(dli1);
+		dol.append(dli2);
+		dol.append(dli3);
+		dol.append(dli4);
+		liframe2.append(datten);
+		liframe2.append(dol);
+
+		inframe.append(frmct);
+		inframe.append(liframe1);
+		inframe.append(liframe2);
+
+		frame.append(inframe);
+		var titleFrame = $( '<div>' ).addClass('gsi_modal_dialog_header').html( this.options.title );
+
+		var dialogFrame = GSI.Modal.Dialog.prototype.getContent.call( this );
+
+		this.dialogContent.append( titleFrame );
+		this.dialogContent.append( frame );
+
+		return dialogFrame ;
+	},
+	onPositiveButtonClick : function()
+	{
+		this.hide();
+		this.fire('positive');
+	},
+	onNegativeButtonClick : function()
+	{
+		this.hide();
+		this.fire( 'negative' );
+	}
+} );
+*/
 /************************************************************************
  L.Class
  - GSI.Modal.BaseClass
@@ -13137,6 +14945,119 @@ GSI.OnOffSwitch = L.Class.extend( {
 	}
 });
 
+
+/************************************************************************
+ L.Class
+ - GSI.ToggleSwitch
+ ************************************************************************/
+GSI.ToggleSwitch = L.Class.extend( {
+	includes: L.Mixin.Events,
+	options : {
+		className : "toggle",
+		checked:true,
+		onText:"ON",
+		offText:"OFF"
+	},
+	classNames : {
+		"toggle":"gsi_onoffswitch_toggle",
+	},
+	initialize : function (options)
+	{
+		options = L.setOptions(this, options);
+
+		this._create();
+	},
+	getElement : function()
+	{
+		return this.frame;
+	},
+	getCheckBox : function()
+	{
+		return this.input;
+	},
+	getId : function()
+	{
+		return this.id;
+	},
+	_create : function()
+	{
+		var id = 'GSI_ToggleSwitch_' + GSI.Utils.getCurrentID();
+		this.id = id;
+
+		this.frame = $("<span>").addClass( this.classNames[ this.options.className ] );
+		this.input = $( '<input>' ).attr( {
+				'type' : 'checkbox',
+				'id' : id
+			} ).addClass( 'checkbox' );
+		this.frame.append(this.input);
+		if ( this.options.checked )
+		{
+			this.input.attr({"checked": true} );
+		}
+
+		var label = $( '<label>' ).addClass( 'label' ).attr( {
+				'for' : id
+			} );
+
+		var span = $( '<span>' ).addClass( 'inner' );
+		label.append( span );
+
+		span = $( '<span>' ).addClass( 'switch' );
+		label.append( span );
+
+		this.frame.append( label );
+
+		if ( GSI.Utils.Browser.ie && GSI.Utils.Browser.version <= 8 )
+		{
+			this._initCheckBoxIE8();
+			this.frame.click( L.bind( this.onFrameClick, this  ) );
+		}
+		else
+		{
+			this.input.click( L.bind( function(){this.fire( 'change' );}, this  ) );
+		}
+	},
+	_initCheckBoxIE8 : function()
+	{
+		if ( this.input.is( ":checked" ) )
+		{
+			this.frame.find( '.label,.inner' ).addClass("on_label_inner");
+			this.frame.find( '.label,.switch' ).addClass("on_label_switch");
+		}
+		else
+		{
+			this.frame.find( '.label,.inner' ).removeClass("on_label_inner");
+			this.frame.find( '.label,.switch' ).removeClass("on_label_switch");
+		}
+	},
+	onFrameClick : function()
+	{
+		this.input.attr({"checked": !this.input.is( ":checked" )} );
+		this._initCheckBoxIE8();
+		this.fire( 'change' );
+	},
+	checked : function( value)
+	{
+		if ( value == true )
+		{
+			this.input.attr( {"checked": true} );
+			this.input.prop( {"checked": true} );
+		}
+		else if ( value == false )
+		{
+			this.input.attr( {"checked": false} );
+			this.input.prop( {"checked": false} );
+		}
+		
+		if ( GSI.Utils.Browser.ie && GSI.Utils.Browser.version <= 8 )
+		{
+			this._initCheckBoxIE8();
+		}
+		
+		return this.input.is( ':checked' );
+	}
+});
+
 /************************************************************************
  L.Class
  - GSI.PagePrinter
@@ -13186,7 +15107,8 @@ GSI.PagePrinter = L.Class.extend( {
 			{
 				this._map.removeLayer( tileList[i]._visibleInfo.layer );
                 if(tileList[i].parent && tileList[i].parent.title_sys != CONFIG.layerBaseFolderSYS){
-				    this._originalMap.addLayer ( tileList[i]._visibleInfo.layer );
+				    this._originalMap.addLayer ( tileList[i]._visibleInfo.layer, null, tileList[i]._visibleInfo.blend );
+					GSI.Utils.setMixBlendMode( tileList[i], tileList[i]._visibleInfo.blend );
                 }
 			}
 			tileList[i]._printInfo = null;
@@ -13226,7 +15148,6 @@ GSI.PagePrinter = L.Class.extend( {
 	},
 	_initialize : function()
 	{
-
 		var paperSizeArr = this._paperSizeSelect.val().split( ',' );
 		var paperSizeVal = paperSizeArr[0];
 		var hq = ( paperSizeArr.length >= 2 && paperSizeArr[1] == 'hq' ? true: false );
@@ -13238,7 +15159,8 @@ GSI.PagePrinter = L.Class.extend( {
 		{
 			zoomsliderControl: false,
 			zoomControl: false,
-			attributionControl : false
+			attributionControl : false,
+			closePopupOnClick : false
 		});
 		L.control.scale({imperial:false}).addTo(this._map);
 
@@ -13253,7 +15175,6 @@ GSI.PagePrinter = L.Class.extend( {
 			var visible = ( tileList[i]._visibleInfo._isHidden ? false : true );
 
 			this._originalMap.removeLayer ( tileList[i]._visibleInfo.layer );
-
 			if ( visible )
 			{
 				tileList[i]._printInfo._visible = true;
@@ -13261,7 +15182,9 @@ GSI.PagePrinter = L.Class.extend( {
                     fBase = true;
                 }
                 else{
-    				this._map.addLayer( tileList[i]._visibleInfo.layer );
+    				//this._map.addLayer( tileList[i]._visibleInfo.layer );
+    				this._map.addLayer( tileList[i]._visibleInfo.layer, null, tileList[i]._visibleInfo.blend );
+    				GSI.Utils.setMixBlendMode( tileList[i], tileList[i]._visibleInfo.blend );
                 }
 			}
 		}
@@ -13269,9 +15192,8 @@ GSI.PagePrinter = L.Class.extend( {
         if(fBase){
 		    this._baseLayer = new GSI.BaseLayer(CONFIG.BASETILES, this._originalBaseLayer.getActiveId());
 
-				this._baseLayer.isGrayScale = this._originalBaseLayer.isGrayScale
-				this._baseLayer.options.opacity = this._originalBaseLayer.options.opacity;
-
+			this._baseLayer.isGrayScale = this._originalBaseLayer.isGrayScale;
+			this._baseLayer.options.opacity = this._originalBaseLayer.options.opacity;
 		    this._baseLayer.setHighQuality( hq );
 		    this._baseLayer.addTo(this._map);
         }
@@ -13327,7 +15249,37 @@ GSI.PagePrinter = L.Class.extend( {
 				labelClassName:CONFIG.UTMGRIDLABELCLASSNAME
 			} );
 		}
-
+		
+		// tileGrid
+		if ( this.options.tileGrid.getVisible() )
+		{
+			new GSI.TileGrid( this._map, {
+				condition: CONFIG.UTMGRID.CONDITION,
+				visible: true,
+				lineStyle:CONFIG.UTMGRIDSTYLE,
+				labelClassName:CONFIG.UTMGRIDLABELCLASSNAME
+			} );
+		}
+		// t25000Grid
+		if ( this.options.t25000Grid.getVisible() )
+		{
+			new GSI.T25000Grid( this._map, {
+				condition: CONFIG.UTMGRID.CONDITION,
+				visible: true,
+				lineStyle:CONFIG.UTMGRIDSTYLE,
+				labelClassName:CONFIG.UTMGRIDLABELCLASSNAME
+			} );
+		}// chiikiMesh
+		if ( this.options.chiikiMesh.getVisible() )
+		{
+			new GSI.ChiikiMesh( this._map, {
+				condition: CONFIG.UTMGRID.CONDITION,
+				visible: true,
+				lineStyle:CONFIG.UTMGRIDSTYLE,
+				labelClassName:CONFIG.UTMGRIDLABELCLASSNAME
+			} );
+		}
+		
 		// jihokuLine
 		if ( this.options.jihokuLine.getVisible() )
 		{
@@ -13433,7 +15385,7 @@ GSI.PagePrinter = L.Class.extend( {
 
 		// back button
 		td = $( '<td>' ).css( {width:"120px"} );
-		var backBtn  = $( '<button>' ).css({'white-space':'nowrap'}).html( 'Back to the original screen' ).addClass( 'no_print' ).click( L.bind( this.hide, this ) );
+		var backBtn  = $( '<button>' ).css({'white-space':'nowrap'}).html( 'Back to the original screen.' ).addClass( 'no_print' ).click( L.bind( this.hide, this ) );
 		td.append( backBtn );
 		tr.append( td );
 
@@ -13517,6 +15469,7 @@ GSI.PageStateManager = L.Class.extend( {
 
 		var result           = '';
         var result_grayscale = '';
+        var result_blend     = '';
 		var tileIdList = [];
 		if ( !options.noTile )
 		{
@@ -13542,8 +15495,14 @@ GSI.PageStateManager = L.Class.extend( {
 
             if(fList){
                 flist = true;
-			    var opacity   = ( tileIdList[i]._visibleInfo && tileIdList[i]._visibleInfo.opacity   ? tileIdList[i]._visibleInfo.opacity   : 1);
-	            result += ( result !='' ? '|' : '' ) +tileIdList[i].id + ( opacity != 1 ? ',' + opacity : '');
+			    var opacity   = ( ( tileIdList[i]._visibleInfo && ( tileIdList[i]._visibleInfo.opacity || tileIdList[i]._visibleInfo.opacity == 0 ) ) ? tileIdList[i]._visibleInfo.opacity   : 1);
+			    var opacityText = ( opacity == 0 ? "0" : opacity.toFixed(2) );
+			    if ( opacityText != "0" ) opacityText = opacityText.replace(/0$/g,'');
+	            result += ( result !='' ? '|' : '' ) +tileIdList[i].id + ( opacity != 1 ? ',' + opacityText : '');
+	            if(i != tileIdList.length-1){
+	              var l = tileIdList[i]._visibleInfo.blend? "1": "0";
+	              result_blend += l;
+	            }
             }
 		}
 
@@ -13565,8 +15524,10 @@ GSI.PageStateManager = L.Class.extend( {
             }
 
             if(fList){
-			    var opacity = ( idList[i]._visibleInfo && idList[i]._visibleInfo.opacity ? idList[i]._visibleInfo.opacity : 1 );
-			    result += ( result !='' ? '|' : '' ) +idList[i].id + ( opacity != 1 ? ',' + opacity : '');
+			    var opacity = ( ( idList[i]._visibleInfo && ( idList[i]._visibleInfo.opacity || idList[i]._visibleInfo.opacity == 0 ) ) ? idList[i]._visibleInfo.opacity : 1 );
+			    var opacityText = ( opacity == 0 ? "0" : opacity.toFixed(2) );
+			    if ( opacityText != "0" ) opacityText = opacityText.replace(/0$/g,'');
+			    result += ( result !='' ? '|' : '' ) +idList[i].id + ( opacity != 1 ? ',' + opacityText : '');
             }
 		}
 
@@ -13576,6 +15537,11 @@ GSI.PageStateManager = L.Class.extend( {
             }
         }
 
+		if ( ( result != '') && (result_blend != '' ) )
+		{
+			result_blend= "&blend=" + result_blend;
+		}
+		
 		if ( result != ''  || result_grayscale)
 		{
             if(result_grayscale != ""){
@@ -13584,7 +15550,7 @@ GSI.PageStateManager = L.Class.extend( {
                 }
             }
 
-			return result_grayscale + "ls=" + encodeURIComponent( result );
+			return result_grayscale + "ls=" + encodeURIComponent( result ) + result_blend;;
 		}
 		else
 		{
@@ -13742,6 +15708,9 @@ GSI.QueryParams = L.Class.extend( {
 		centerCross : true,
 		latLngGrid : false,
 		utmGrid : false,
+		tileGrid : false,
+		t25000Grid : false,
+		chiikiMesh : false,
 		jihokuLine : false,
 		miniMap : false
 	},
@@ -13946,12 +15915,25 @@ GSI.QueryParams = L.Class.extend( {
 			
 			var layers = this.params["ls"].split( '|' );
             
+            var blds = this.params["blend"];
+			
 			for ( var i=0; i<layers.length; i++ )
 			{
 				if ( $.trim( layers[i] ) == '' ) continue;
 				var parts  = layers[i].split( ',' );
 				var $hdn = false;
 
+                var bld = "0";
+                if (i > 0)
+                {
+					if ( blds )
+                		bld = ( blds? blds.charAt( i - 1 ) : "0");
+                	else
+                	{
+						if ( parts[ 0 ].indexOf("relief") >= 0 )
+							bld = "1";
+					}
+                }
 				if ( disp && disp.length > i)
 				{
 					if ( disp.charAt(i) == '0' )
@@ -13995,7 +15977,8 @@ GSI.QueryParams = L.Class.extend( {
 				var layerData = {
 					id      :vID,
 					opacity : 1,
-					hidden  : $hdn
+					hidden  : $hdn,
+					blend   : bld
 				};
 
 				if ( parts.length >= 2 )
@@ -14156,7 +16139,7 @@ GSI.SakuzuListItem = L.Class.extend( {
 	_title : '',
 	_fileName : '',
 	_layer : null,
-	initialize : function( owner, dataType, title, fileName, layer, visible)
+	initialize : function( owner, dataType, title, fileName, layer, visible, iconLabelVisible)
 	{
 		this.editMode = GSI.SakuzuListItem.NONE;
 		this._owner = owner;
@@ -14165,6 +16148,7 @@ GSI.SakuzuListItem = L.Class.extend( {
 		this._fileName = fileName;
 		this._layer = layer;
 		this._visible = visible;
+		this._iconLabelVisible = iconLabelVisible;
 		if ( !this._layer ) this._layer = L.featureGroup();
 
 		if ( visible ) this._owner._map.addLayer( this._layer );
@@ -14190,6 +16174,48 @@ GSI.SakuzuListItem = L.Class.extend( {
 		}
 
 	},
+	
+	getIconLabelVisible : function()
+	{
+		return this._iconLabelVisible;
+	},
+	setIconLabelVisible : function( visible)
+	{
+		if ( this._iconLabelVisible  != visible )
+		{
+			this._iconLabelVisible = visible;
+			if ( this._layer )
+			{
+				if ( this._layer.getLayers )
+				{
+					var layers = this._layer.getLayers ();
+					for( var i=0; i<layers.length; i++ )
+					{
+						this._setIconLabelVisible( layers[i], visible );
+					}
+				}
+				else
+					this._setIconLabelVisible( this._layer.layer, visible );
+				
+			}
+		}
+
+	},
+	_setIconLabelVisible : function( layer, visible)
+	{
+		if ( !layer ) return;
+		if ( layer.setLabelVisible ) layer.setLabelVisible( visible );
+		if ( layer.options && layer.options.icon  && layer.options.icon .setLabelVisible ) layer.options.icon .setLabelVisible( visible );
+		if ( layer.getLayers )
+		{
+			var layers = layer.getLayers();
+			for( var i=0; i<layers.length; i++ )
+			{
+				this._setIconLabelVisible( layers[i], visible );
+			}
+		}
+	},
+	
 	getTitle : function()
 	{
 		return this._title;
@@ -14298,6 +16324,7 @@ GSI.SakuzuListItem = L.Class.extend( {
 	},
 	setEditingStyle : function(style)
 	{
+		
 		var radius = style.radius;
 		var currentStyle = this.getEditingStyle();
 		var icon = null;
@@ -14346,7 +16373,7 @@ GSI.SakuzuListItem = L.Class.extend( {
 
 				var iconSize = ( iconInfo.iconSize ? iconInfo.iconSize : currentIconSize );
 				var iconAnchor = ( iconInfo.iconAnchor ? iconInfo.iconAnchor : currentIconAnchor );
-
+				
 				icon = L.icon( {
 					iconUrl: ( iconInfo.iconUrl ? iconInfo.iconUrl : currentIconUrl ),
 					iconSize: iconSize,
@@ -14367,7 +16394,7 @@ GSI.SakuzuListItem = L.Class.extend( {
 				this._editingEditingLayer.setIcon( icon );
 			}
 
-			// Circle
+			// circle
             if(radius){
                 if(this._editingType == GSI.SakuzuListItem.POINT_CIRCLE){
                     this._editingEditingLayer._radius_px = radius;
@@ -14388,7 +16415,7 @@ GSI.SakuzuListItem = L.Class.extend( {
                 }
             }
 
-			// Other
+			// others
 			if ( this._editingEditingLayer.setStyle )
 			{
 				this._editingEditingLayer.setStyle( newStyle );
@@ -14407,10 +16434,10 @@ GSI.SakuzuListItem = L.Class.extend( {
 						this._editingPathList[i]._marker.setIcon ( icon );
 				}
 
-				// Circle
+				// circle
 				if ( this._editingPathList[i].setRadius && radius ) this._editingPathList[i].setRadius( radius );
 
-				// Other
+				// others
 				var newStyle = jQuery.extend(true, this._editingPathList[i].options.shapeOptions, style);
 				var shape = this._editingPathList[i]._shape;
 				if ( !shape ) shape = this._editingPathList[i]._poly;
@@ -14446,6 +16473,11 @@ GSI.SakuzuListItem = L.Class.extend( {
 		{
 			this._pathCreatedEventHandler = L.bind( this._onPathCreated, this );
 			this._owner._map.on('draw:created', this._pathCreatedEventHandler );
+			this._owner._map.on('draw:measurechange', function()
+			{
+				
+			} );
+			
 		}
 
 		this._editingEditingLayerInfo = {
@@ -14505,7 +16537,6 @@ GSI.SakuzuListItem = L.Class.extend( {
 		( layer._parent ? layer._parent : this._layer ).removeLayer( layer );
 		this._editingEditingLayer = this._cloneLayer( this._editingType, layer );
         this._editingEditingLayerSRC = $.extend(true, {}, this._editingEditingLayer);
-
 		this._editingFreatureGroup.addLayer( this._editingEditingLayer );
 
 		this._destroyEditEventHandler();
@@ -14534,8 +16565,7 @@ GSI.SakuzuListItem = L.Class.extend( {
 		{
 			case GSI.SakuzuListItem.POINT:
 				var iconOptions =$.extend( true, {}, layer.options.icon.options );
-
-				var icon = new L.Icon( iconOptions );
+				var icon = L.icon( iconOptions );
 				result = L.marker(layer.getLatLng(), {icon: icon, draggable:false});
 				break;
 
@@ -14601,7 +16631,7 @@ GSI.SakuzuListItem = L.Class.extend( {
 
 		if ( layer.getRadius )
 		{
-			// Circle
+			// circle
 			itemType = GSI.SakuzuListItem.CIRCLE;
 
             /*
@@ -14643,11 +16673,12 @@ GSI.SakuzuListItem = L.Class.extend( {
 			else
 			{
 				var geoJSON = layer.toGeoJSON();
+				
 				switch( geoJSON.geometry.type )
 				{
 					case "Point":
 						// DivIcon decision
-						if ( layer.options.icon.options.html || layer.options.icon.options.html == '' )
+						if ( layer.options.icon instanceof L.DivIcon )
 						{
 							itemType = GSI.SakuzuListItem.POINT_TEXT;
 						}
@@ -14948,7 +16979,7 @@ GSI.SakuzuListItem = L.Class.extend( {
 
 		this._owner._defaultIcon.url = CONFIG.SAKUZU.SYMBOL.URL + CONFIG.SAKUZU.SYMBOL.DEFAULTICON;
 		this._owner._defaultIcon._iconScale = CONFIG.SAKUZU.SYMBOL.ICON_SCALE;
-
+		
 		var path =  new  L.Draw.Marker(this._owner._map,{
 			edit: { featureGroup: this._editingFreatureGroup },
 			showLength : false,
@@ -14965,8 +16996,8 @@ GSI.SakuzuListItem = L.Class.extend( {
 	},
 	_startEditPointCircle : function()
 	{
-		L.drawLocal.draw.handlers.circle.tooltip.start = 'Click and drag the center position';
-		L.drawLocal.draw.handlers.simpleshape.tooltip.end = 'Exit when release the mouse button';
+		L.drawLocal.draw.handlers.circle.tooltip.start = 'Click and drag the center position.';
+		L.drawLocal.draw.handlers.simpleshape.tooltip.end = 'Exit when release the mouse button.';
 
 		this._editingPathList = [];
 
@@ -15231,6 +17262,15 @@ GSI.SakuzuListItem = L.Class.extend( {
 
 		if ( this._editingEditingLayer )
 		{
+			if ( this._editingEditingLayer.options.icon )
+			{
+				this._editingEditingLayer.options.icon.options.labelVisible = this._iconLabelVisible;
+				
+				if ( this._editingEditingLayer.options.icon.setLabelText )
+					this._editingEditingLayer.options.icon.setLabelText(
+						this._editingEditingLayerInfo.title
+					);
+			}
  			this._editingEditingLayer._information = this._editingEditingLayerInfo;
 			this._bindPopup( this._editingEditingLayer );
  		}
@@ -15947,19 +17987,32 @@ GSI.SakuzuListItem = L.Class.extend( {
 		{
 			// Circle→Polygon
 			latLngs = [];
-			var numSides = 80;
-			var degreeStep = 360 / numSides;
+			var numSides = CONFIG.CIRCLETOPOLYGONNUMSIDES;
 			var center = layer.getLatLng();
-			var latRadius = layer._getLatRadius();
-			var lngRadius = layer._getLngRadius();
-
-			for(var i = 0; i < numSides; i++)
+			var center_lat_rad = center.lat * Math.PI/180;
+			var center_lng_rad = center.lng * Math.PI/180;
+			var dmax_lat = layer._mRadius / 6378137;
+			var xys=[];
+			xys.push([dmax_lat,0]);
+			for(var i = 1; i < numSides; i++)
 			{
-				var rad = (degreeStep * i) * Math.PI / 180;
-
-				var x = center.lng + (Math.sin(rad) * lngRadius);
-				var y = center.lat + (Math.cos(rad) * latRadius);
-				latLngs.push(L.latLng(y, x));
+				var y = dmax_lat - 2 * dmax_lat/numSides * i;
+				var x =   2 * Math.asin(Math.sqrt((Math.pow(Math.sin(dmax_lat/2),2) - Math.pow(Math.sin((y)/2),2)) / (Math.cos(center_lat_rad+y)*Math.cos(center_lat_rad))));
+				if(x !== x){
+				 return;
+				}else{
+				 xys.push([y, x]);
+				}
+			}
+			xys.push([-dmax_lat,0]);
+			for(var i = 1; i < numSides; i++)
+			{
+				xys.push([xys[numSides-i][0],-xys[numSides-i][1]]);
+			}
+			xys.push([dmax_lat,0]);
+			for(var i = 0; i < xys.length; i++)
+			{
+				latLngs.push(L.latLng((center_lat_rad+xys[i][0]) / (Math.PI/180), (center_lng_rad+xys[i][1]) / (Math.PI/180)));
 			}
 		}
 		else
@@ -16581,7 +18634,8 @@ GSI.SakuzuList = L.Class.extend( {
 			  );
 		}
 		var layer = new GSI.KML(null, {async: true});
-
+		
+		layer._kmlText = text;
 		layer._addKML( xmlDoc, {} );
 
 		if ( !fileName )
@@ -16631,7 +18685,7 @@ GSI.SakuzuList = L.Class.extend( {
 		{
 			result =
 				'<?xml version="1.0" encoding="UTF-8"?>' + "\n" +
-				'<kml xmlns="//www.opengis.net/kml/2.2">' + "\n" +
+				'<kml xmlns="http://www.opengis.net/kml/2.2">' + "\n" +
 				'<Document>\n' +
 				result +
 				'</Document>\n' +
@@ -16687,6 +18741,13 @@ GSI.SakuzuList = L.Class.extend( {
 			var item = this._list[i];
 			if ( item.getVisible() )
 			{
+				if ( item._layer && item._layer._kmlText && item._layer._kmlText != "" )
+				{
+					result.push( {
+						"kmltext" : item._layer._kmlText
+					} );
+					continue;
+				}
 				var features = item.toGeoJSON();
 				for ( var j=0; j<features.length; j++ )
 				{
@@ -16709,6 +18770,8 @@ GSI.Searcher = L.Class.extend( {
 	QUERY_LATLNG2 : 3,
 	QUERY_UTMPOINT : 5,
 	QUERY_QUERY : 4,
+	QUERY_EXCHANGE : 7,
+	QUERY_LATLNGNE : 8,
 
 	options : {
 	},
@@ -16768,7 +18831,43 @@ GSI.Searcher = L.Class.extend( {
 				}
 				else
 				{
-					alert( 'Enter the correct UTM point' );
+					alert( 'Enter the correct UTM point.' );
+				}
+			}
+			else if ( qType == this.QUERY_EXCHANGE )
+			{
+				var latLng = this.parseLatLngText3( query );
+				
+				if (!latLng)
+				{
+					alert( 'Enter the correct latitude and longitude\n');
+				}
+				else if ( latLng[0] < 0 || latLng[0] > 90 || latLng[1] < 0 || latLng[1] > 180 )
+				{
+					alert( 'Enter the correct latitude and longitude\n' +
+						'latitude:' + latLng[0] + ' longitude:' + latLng[1] );
+				}
+				else
+				{
+					this.map.setView( latLng, CONFIG.SEARCHRESULTCLICKZOOM, {reset:true} );
+				}
+			}
+			else if ( qType == this.QUERY_LATLNGNE )
+			{
+				var latLng = this.parseLatLngText4( query );
+
+				if (!latLng)
+				{
+					alert( 'Enter the correct latitude and longitude\n');
+				}
+				else if ( latLng[0] < 0 || latLng[0] > 90 || latLng[1] < 0 || latLng[1] > 180 )
+				{
+					alert( 'Enter the correct latitude and longitude\n' +
+						'latitude:' + latLng[0] + ' longitude:' + latLng[1] );
+				}
+				else
+				{
+					this.map.setView( latLng, CONFIG.SEARCHRESULTCLICKZOOM, {reset:true} );
 				}
 			}
 		}
@@ -16777,7 +18876,6 @@ GSI.Searcher = L.Class.extend( {
 
 		return false;
 	},
-
 	clearSearch : function()
 	{
 		if ( this.chimeiAjax )
@@ -16846,8 +18944,25 @@ GSI.Searcher = L.Class.extend( {
 			return this.QUERY_LATLNG2;
 		}
 		else
-		{
-			return this.QUERY_QUERY;
+		{/*
+			if ( ( q.match(/^(?:N|北緯)*([0-9]{1,3}(?:\.[0-9]+)*)(?:,|\s)(?:E|東経)*([0-9]{1,3}(?:\.[0-9]+)*)/) )
+				||
+				( q.match(/^(?:E|東経)*([0-9]{1,3}(?:\.[0-9]+)*)(?:,|\s)(?:N|北緯)*([0-9]{1,3}(?:\.[0-9]+)*)/) ) )
+			{
+				//NE表記
+				return this.QUERY_LATLNGNE;
+			}
+			else if ( ( q.match(/^(?:N|北緯)*([0-9]{1,3}[度°])([0-9]{1,2}['分′])*([0-9]{1,2}(?:\.[0-9]+)*[秒″\"])*(?:,|\s)(?:E|東経)*([0-9]{1,3}[度°])([0-9]{1,2}['分′])*([0-9]{1,2}(?:\.[0-9]+)*[秒″\"])*$/) )
+			 		|| 
+			 		( q.match(/^(?:E|東経)*([0-9]{1,3}[度°])([0-9]{1,2}['分′])*([0-9]{1,2}(?:\.[0-9]+)*[秒″\"])*(?:,|\s)(?:N|北緯)*([0-9]{1,3}[度°])([0-9]{1,2}['分′])*([0-9]{1,2}(?:\.[0-9]+)*[秒″\"])*$/) ) )
+			{
+				//°′″表記
+				return this.QUERY_EXCHANGE;
+			}
+			else
+			{*/
+				return this.QUERY_QUERY;
+			//}
 		}
 	},
 	parseLatLngText2 : function( s )
@@ -16891,8 +19006,95 @@ GSI.Searcher = L.Class.extend( {
 			return [ lat< lng ? lat: lng, lat< lng ? lng: lat ];
 		}
 
+		matchArr = s.match(/^([0-9]+)°([0-9]+)′([0-9]+(?:\.[0-9]+)*)″[\s]+([0-9]+)°([0-9]+)′([0-9]+(?:\.[0-9]+)*)″$/);
+
+		if ( matchArr && matchArr.length > 0 )
+		{
+			var lat = parseInt( matchArr[1] ) + ( parseFloat( matchArr[2] ) / 60.0 ) + ( parseFloat( matchArr[3] ) / 3600.0 );
+			var lng = parseInt( matchArr[4] ) + ( parseFloat( matchArr[5] ) / 60.0 ) + ( parseFloat( matchArr[6] ) / 3600.0 );
+			return [ lat< lng ? lat: lng, lat< lng ? lng: lat ];
+		}
+
+
 		return null;
 	},
+	/*parseLatLngText3 : function( s )
+	{
+		s = $.trim(s);
+		s = s.replace( ',', ' ' );
+		
+		var matchArr =  s.match(/^(N|北緯)*([0-9]{1,3}[度°])([0-9]{1,2}[分′'])*([0-9]{1,2}(?:\.[0-9]+)*[秒″\"])*(?:,|\s)(E|東経)*([0-9]{1,3}[度°])([0-9]{1,2}[分′'])*([0-9]{1,2}(?:\.[0-9]+)*[秒″\"])*$/);
+		var revflg = false;
+		
+		if (!matchArr)
+		{
+			matchArr =  s.match(/^(E|東経)*([0-9]{1,3}[度°])([0-9]{1,2}[分′'])*([0-9]{1,2}(?:\.[0-9]+)*[秒″\"])*(?:,|\s)(N|北緯)*([0-9]{1,3}[度°])([0-9]{1,2}[分′'])*([0-9]{1,2}(?:\.[0-9]+)*[秒″\"])*$/);
+			revflg = true;
+		}
+		var lath,latm,lats,lonh,lonm,lons;
+		if (matchArr && matchArr.length == 9)
+		{
+			lath = parseInt(matchArr[2]);
+			lonh = parseInt(matchArr[6]);
+			
+			latm = matchArr[3] ? parseFloat(matchArr[3]) / 60 : 0;
+			lonm = matchArr[7] ? parseFloat(matchArr[7]) / 60 : 0;
+
+			lats = matchArr[4] ? parseFloat(matchArr[4]) / 3600 : 0;
+			lons = matchArr[8] ? parseFloat(matchArr[8]) / 3600 : 0;
+			
+			var la = lath + latm + lats;
+			var lo = lonh + lonm + lons;
+			
+			if ((revflg) || (!matchArr[1] && !matchArr[5] && ( la > lo )))
+			{
+				var t = la;
+				la = lo;
+				lo = t;
+			}
+			return [la, lo];
+		}
+		return null;
+		
+	},
+	parseLatLngText4 : function( s )
+	{
+		s = $.trim(s);
+
+		var matchArr = s.match(/^(N|北緯)*([0-9]{1,3}(?:\.[0-9]+)*)(?:,|\s)(E|東経)*([0-9]{1,3}(?:\.[0-9]+)*)/)
+		var revflg = false;
+		
+		if (!matchArr)
+		{
+			matchArr = s.match(/^(E|東経)*([0-9]{1,3}(?:\.[0-9]+)*)(?:,|\s)(N|北緯)*([0-9]{1,3}(?:\.[0-9]+)*)/)
+			revflg = true;
+		}
+
+		var lat, lon;
+		try{
+		
+			if (matchArr && matchArr.length == 5)
+			{
+				lat = parseFloat( matchArr[2] );
+				lon = parseFloat( matchArr[4] );
+				
+				if ( (revflg) || (!matchArr[1] && !matchArr[3] && lat > lon) )
+				{
+					var t = lat;
+					lat = lon;
+					lon = t;
+				}
+				return [lat, lon];
+			}
+			
+			return null;
+		}
+		catch( e )
+		{
+			return null;
+		}
+		
+	},*/
 	parseLatLngText : function( s )
 	{
 		s = $.trim(s);
@@ -16913,139 +19115,6 @@ GSI.Searcher = L.Class.extend( {
 		catch( e )
 		{
 			return null;
-		}
-	}
-} );
-
-/************************************************************************
- L.Control
- - GSI.Control.AccessCounter
- ************************************************************************/
-GSI.Control.AccessCounter = L.Control.extend({
-	options: {
-		position: 'bottomleft',
-		url : '',
-		refreshInterval : 0
-	},
-	retryCounter : 0,
-	counter : null,
-	initialize: function (options)
-	{
-		L.setOptions(this, options);
-	},
-	onAdd: function (map)
-	{
-    	this._map = map;
-		this._container = L.DomUtil.create('div', 'gsi_control_accesscounter');
-		if ( this.options.url != '' )
-		{
-			this._update();
-			this._load();
-		}
-		$( this._container ).attr( {title:GSI.TEXT.ACCESSCOUNTER.TOOLTIP} ).tooltip( {
-			position : { my: "right bottom", at: "right top", collision: "flipfit" },
-			tooltipClass : "gsi_control_accesscounter_tooltip"
-		} );
-
-		return this._container;
-	},
-	onRemove: function (map) {
-	},
-	_load : function()
-	{
-		if( this.options.url == '' ) return;
-
-				this.ajax = $.ajax({
-				type: "GET",
-				dataType:"text",
-				url : this.options.url,
-				success:  L.Util.bind( this._onLoad, this ),
-				error:  L.Util.bind( this._onLoadError, this )
-		});
-	},
-	_onLoad : function(result)
-	{
-		try
-		{
-			var data = null;
-			if ( !result ) return;
-			if ( result.data )
-			{
-				data = result.data;
-			}
-			else data = result;
-			this.counter = JSON.parse( data );
-
-			if ( this._container ) this._update();
-
-			this._next();
-		}
-		catch( e )
-		{
-			this._onLoadError();
-		}
-	},
-	_next : function()
-	{
-		if ( this.options.refreshInterval > 0 )
-		{
-			if ( this._timerId )
-			{
-				clearTimeout( this._timerId );
-				this._timerId = null;
-			}
-
-			this._timerId = setTimeout( L.bind(this._load,this), this.options.refreshInterval);
-		}
-	},
-	_retry : function()
-	{
-		if ( this._timerId )
-		{
-			clearTimeout( this._timerId );
-			this._timerId = null;
-		}
-
-		this.retryCounter++;
-		this._load();
-	},
-	_onLoadError : function()
-	{
-		if ( this._timerId )
-		{
-			clearTimeout( this._timerId );
-			this._timerId = null;
-		}
-
-		if ( this.retryCounter < CONFIG.ACCESSCOUNTERRETRY )
-		{
-			// Retry after 10 seconds
-			this._timerId = setTimeout( L.bind(this._retry,this), 10000);
-		}
-	},
-	_update : function()
-	{
-		var today = new Date();
-		var yesterday = new Date(today.getFullYear(), today.getMonth(), today.getDate() - 1);
-		var todayCaption = ( '00' + ( today.getMonth() + 1 ) ).slice(-2) + '/' +( '00' + today.getDate() ).slice(-2);
-		var yesterdayCaption = ( '00' + ( yesterday.getMonth() + 1 ) ).slice(-2) + '/' + ( '00' + yesterday.getDate() ).slice(-2);
-
-		if (!this._map) return;
-		if ( this.counter )
-		{
-			$(this._container).css({margin:0}).html(
-				todayCaption + '&nbsp;' + this.counter.today + '、' +
-				yesterdayCaption +'&nbsp;' + this.counter.yesterday + '、' +
-				'total&nbsp;' +  ( this.counter.total + '' ).replace( /(\d)(?=(\d\d\d)+(?!\d))/g, '$1,')
-			);
-		}
-		else
-		{
-			$(this._container).css({margin:0}).html(
-				todayCaption + '&nbsp;--、' +
-				yesterdayCaption +'&nbsp;--、' +
-				'total&nbsp;------'
-			);
 		}
 	}
 } );
@@ -17141,6 +19210,70 @@ GSI.Control.Spacer = L.Control.extend({
 } );
 
 /************************************************************************
+ L.Control
+ - GSI.Control.CrPanel
+ ************************************************************************/
+GSI.Control.CopyrightPanel = L.Control.extend({
+
+	options: {
+
+		position: 'bottomright',
+		title:'GSI',
+		linkurl:'http://maps.gsi.go.jp/development/ichiran.html',
+		width: 80,
+		height: 10,
+	},
+
+	
+
+	hideText: 'Hide CopyrightPanel',
+
+	showText: 'Show CopyrightPanel',
+
+
+	initialize: function (options) {
+		L.Util.setOptions(this, options);
+	},
+
+	onAdd: function (map) {
+		this._map = map;
+
+		//Creating the container and stopping events from spilling through to the main map.
+		this._container = L.DomUtil.create('div', 'leaflet-control-flatpanel');
+		this._container.style.width = this.options.width + 'px';
+		this._container.style.height = this.options.height + 'px';
+
+		var alink = L.DomUtil.create('a','leaflet-control-crpanel', this._container);
+
+		alink.innerHTML = this.options.title;
+		alink.href = this.options.linkurl;
+		alink.target = '_blank';
+		//alink.style.color='#000000';
+
+		this._urlPanel = alink;
+		
+		return this._container;
+	},
+
+	addTo: function (alink) {
+		L.Control.prototype.addTo.call(this, alink);
+		return this;
+	},
+
+	onRemove: function (map) {
+		this._miniMap.off( 'click', this._onMiniMapClick, this );
+		this._miniMap.off( 'touchend', this._onMiniMapClick, this );
+	},
+
+});
+
+L.Map.addInitHook(function () {
+	if (this.options.crPanel) {
+		this.crPanel = (new L.Control.CopyrightPanel()).addTo(this);
+	}
+});
+
+/************************************************************************
  L.DivIcon
  - GSI.DivIcon
  ************************************************************************/
@@ -17161,6 +19294,82 @@ GSI.DivIcon = L.DivIcon.extend( {
 GSI.divIcon = function (options) {
 	return new GSI.DivIcon(options);
 };
+
+
+/************************************************************************
+ L.Icon
+ - GSI.DivIcon
+ ************************************************************************/
+GSI.Icon = L.Icon.extend( {
+	
+	options :{
+		html : ''
+	},
+						 
+	createIcon: function (oldIcon) {
+		var img = L.Icon.prototype.createIcon.call(this,oldIcon);
+		$(img).css( {'margin':0} );
+		var div = $( (oldIcon && oldIcon.tagName === 'DIV') ? oldIcon : document.createElement('div') );
+		
+		div.empty();
+		div.append( img );
+		this._setIconStyles(div[0], 'icon');
+		
+		this._createLabel(div);
+		this._div = div;
+		return div[0];
+	},
+	_createLabel : function( div )
+	{
+		if ( this.options._name == null || this.options._name == '' )
+		{
+			this._label = null;
+		}
+		else
+		{
+			this._label = $("<div>").addClass("gsi-iconlabel-class").html(this.options._name).css({"position":"absolute"} );
+
+			var size = L.point(this.options['iconSize']);
+			if (!size) {
+				size = {};
+				size.x = 12;
+				size.y = 12;
+			}
+			
+			$("body").append( this._label );
+			this._label.css( { top:( size.y + 3 ) + 'px',
+				left : (size.x / 2) - (this._label.outerWidth() / 2) + 'px'} );
+			this._label.remove();
+
+			if ( !this.options.labelVisible  )
+			{
+				this._label.hide();		
+			}
+			div.append( this._label) ;
+		}
+	},
+	setLabelText : function(text)
+	{
+		this.options._name = text;
+		if ( this._label ) this._label.remove();
+		this._createLabel(this._div);
+	},
+	setLabelVisible : function(visible)
+	{
+		this.options.labelVisible = visible;
+		if (this._label )
+		{
+			if (  this.options.labelVisible ) this._label.slideDown(200);
+			else  this._label.slideUp(200);
+		}
+	}
+
+} );
+
+L.icon = function (options) {
+	return new GSI.Icon(options);
+};
+
 
 /************************************************************************
  L.Edit.Circle
@@ -17398,6 +19607,7 @@ GSI.KML = L.FeatureGroup.extend({
 			success:  L.Util.bind( this._onKMLLoad, this ),
 			error:  L.Util.bind( this._onKMLLoadError, this ),
 			async : async
+
 		});
 	},
 	onAdd: function (map) {
@@ -17605,8 +19815,17 @@ L.Util.extend(GSI.KML, {
 				} else {
 					var value = e.childNodes[0].nodeValue;
 					if (key === 'color') {
-						options.opacity = parseInt(value.substring(0, 2), 16) / 255.0;
-						options.color = '#' + value.substring(6, 8) + value.substring(4, 6) + value.substring(2, 4);
+						
+						if ( value && value.length > 0 && value.charAt(0) == "#" )
+						{
+							options.color = value;
+							options.opacity = 1;
+						}
+						else
+						{
+							options.color = '#' + value.substring(6, 8) + value.substring(4, 6) + value.substring(2, 4);
+							options.opacity = parseInt(value.substring(0, 2), 16) / 255.0;
+						}
 					} else if (key === 'width') {
 						options.weight = value;
 					} else if (key === 'Icon') {
@@ -17635,13 +19854,13 @@ L.Util.extend(GSI.KML, {
 			if (el && el[0]) { ioptions = _parse(el[0]); }
 			if (ioptions.href) {
 				// save anchor info until the image is loaded
-				options.icon = new GSI.KMLIcon({
+				options.icon = {
 					iconUrl: ioptions.href,
 					shadowUrl: null,
 					iconAnchorRef: {x: ioptions.x, y: ioptions.y},
 					iconAnchorType:	{x: ioptions.xunits, y: ioptions.yunits},
 					_iconScale : ioptions.scale
-				});
+				};
 			}
 			style['#' + e.getAttribute('id')] = options;
 		}
@@ -17695,7 +19914,12 @@ L.Util.extend(GSI.KML, {
 		}
 		var layers = [];
 		var parse = ['LineString', 'Polygon', 'Point'];
-
+		
+		var name, tbl = '', descr = '';
+		el = place.getElementsByTagName('name');
+		if (el.length && el[0].childNodes.length) {
+			name = el[0].childNodes[0].nodeValue;
+		}
 		for (j in parse) {
 			// for jshint
 			if (true)
@@ -17705,7 +19929,7 @@ L.Util.extend(GSI.KML, {
 				{
 					el = place.getElementsByTagName(tag);
 					for (i = 0; i < el.length; i++) {
-						var l = this['parse' + tag](el[i], xml, options);
+						var l = this['parse' + tag](el[i], xml, options, name);
 						if (l) { layers.push(l); }
 					}
 				}
@@ -17720,18 +19944,14 @@ L.Util.extend(GSI.KML, {
 			layer = new L.FeatureGroup(layers);
 		}
 
-		var name, tbl = '', descr = '';
-		el = place.getElementsByTagName('name');
-		if (el.length && el[0].childNodes.length) {
-			name = el[0].childNodes[0].nodeValue;
-		}
+		
 		el = place.getElementsByTagName('description');
 		for (i = 0; i < el.length; i++) {
 			for (j = 0; j < el[i].childNodes.length; j++) {
 				descr = descr + el[i].childNodes[j].nodeValue;
 			}
 		}
-
+		
 		layer._information = {
 			title : ( name && name != '' ? name : null ),
 			description : ( descr && descr != '' ? descr : null ),
@@ -17794,10 +20014,17 @@ L.Util.extend(GSI.KML, {
 		if (!coords.length) { return; }
 		return new L.Polyline(coords, options);
 	},
-	parsePoint: function (line, xml, options) {
+	parsePoint: function (line, xml, options, name) {
 		var el = line.getElementsByTagName('coordinates');
 		if (!el.length) {
 			return;
+		}
+		
+		if ( options.icon )
+		{
+			options = $.extend( {}, options );
+			options.icon._name = name;
+			options.icon = new GSI.KMLIcon(options.icon);
 		}
 		var ll = el[0].childNodes[0].nodeValue.split(',');
 		return new GSI.KMLMarker(new L.LatLng(ll[1], ll[0]), options);
@@ -17849,17 +20076,40 @@ L.Util.extend(GSI.KML, {
 			if (ll.length < 2) {
 				continue;
 			}
-			coords.push(new L.LatLng(ll[1], ll[0]));
+			latLng = new L.LatLng(ll[1], ll[0]);
+			if ( ll.length >= 3 && ll[2] != "" && ll[2] != 0 ) latLng._h = ll[2];
+			
+			coords.push(latLng);
 		}
 		return coords;
 	}
 });
 
 GSI.KMLIcon = L.Icon.extend({
-
-	createIcon: function () {
+	
+	/*					 
+	createIcon: function (oldIcon) {
+		var img = L.Icon.prototype.createIcon.call(this,oldIcon);
+		$(img).css( {'margin':0} );
+		var div = $( (oldIcon && oldIcon.tagName === 'DIV') ? oldIcon : document.createElement('div') );
+		div.append( img );
+		this._setIconStyles(div[0], 'icon');
+		
+		this._createLabel(div);
+		this._div = div;
+		return div[0];
+	},
+	
+	*/
+	
+	createIcon: function (oldIcon) {
 		var img = this._createIcon('icon');
 
+		$(img).css( {'margin':0} );
+		var div = $( (oldIcon && oldIcon.tagName === 'DIV') ? oldIcon : document.createElement('div') );
+		this._div = div;
+		div.append( $(img) );
+		this._setIconStyles(div[0], 'icon');
 		if ( img.width && img.width > 0 )
 		{
 			this._onIconImageLoaded( img );
@@ -17868,7 +20118,11 @@ GSI.KMLIcon = L.Icon.extend({
 		{
 			$(img).css({ 'visibility':'hidden'}).on( 'load', L.bind( this._onIconImageLoaded, this, img ) );
 		}
-		return img;
+		
+		
+		return div[0];
+		
+		//return img;
 	},
 	_onIconImageLoaded: function(img) {
 		var scale = ( this.options._iconScale ? this.options._iconScale : 1 );
@@ -17895,11 +20149,59 @@ GSI.KMLIcon = L.Icon.extend({
 			anchorY = Math.round(h/2);
 		}
 		this.options.iconAnchor = [anchorX,anchorY];
-
-		this._setIconStyles(img, "icon");
-		L.DomUtil.addClass(img, 'leaflet-clickable');
+		
+		img.style.width = w + 'px';
+		img.style.height = h + 'px';
+		this._setIconStyles(this._div[0], "icon");
+		L.DomUtil.addClass(this._div[0], 'leaflet-clickable');
 		img.style.visibility= 'visible';
+		this._createLabel(this._div);
+	},
+	_createLabel : function( div )
+	{
+		if ( this.options._name == null || this.options._name == '' )
+		{
+			this._label = null;
+		}
+		else
+		{
+			this._label = $("<div>").addClass("gsi-iconlabel-class").html(this.options._name).css({"position":"absolute"} );
+
+			var size = L.point(this.options['iconSize']);
+			if (!size) {
+				size = {};
+				size.x = 12;
+				size.y = 12;
+			}
+			
+			$("body").append( this._label );
+			this._label.css( { top:( size.y + 3 ) + 'px',
+				left : (size.x / 2) - (this._label.outerWidth() / 2) + 'px'} );
+			this._label.remove();
+
+			if ( !this.options.labelVisible  )
+			{
+				this._label.hide();
+			}
+			div.append( this._label) ;
+		}
+	},
+	setLabelText : function(text)
+	{
+		this.options._name = text;
+		if ( this._label ) this._label.remove();
+		this._createLabel(this._div);
+	},
+	setLabelVisible : function(visible)
+	{
+		this.options.labelVisible = visible;
+		if (this._label )
+		{
+			if (  this.options.labelVisible ) this._label.slideDown(200);
+			else  this._label.slideUp(200);
+		}
 	}
+	
 });
 
 
@@ -17911,110 +20213,106 @@ GSI.KMLMarker = L.Marker.extend({
 });
 
 
-GSI.GeoJSONTileLayer = L.TileLayer.GeoJSON.extend( {
 
-	_opacity : 1,
-	initialize: function (url, options, geojsonOptions) {
-		options.clipTiles = false;
-		L.TileLayer.GeoJSON.prototype.initialize.call(this, url, options, geojsonOptions);
-		this._loadStyle( url );
+/************************************************************************
+ GSI.MultiLayer
+ ************************************************************************/
+GSI.MultiLayer = L.LayerGroup.extend( {
+	includes: L.Mixin.Events,
+	initialize: function (entries, options) {
+		this._entries = entries;
+		L.LayerGroup.prototype.initialize.call(this, []);
 	},
-	setMarkerZIndex : function( zIndex )
-	{
-		this.options.zIndexOffset = zIndex;
-		if ( this.geojsonLayer && this.geojsonLayer.setMarkerZIndex )
-			this.geojsonLayer.setMarkerZIndex( this.options.zIndexOffset )
-	},
-	_tileLoaded: function (tile, tilePoint) {
-		if ( tile && tile.datum && this.options.isTopoJSON)
-		{
-			tile.datum = omnivore.topojson.parse(tile.datum);
-		}
-		L.TileLayer.Ajax.prototype._tileLoaded.apply(this, arguments);
-		if (tile.datum === null) { return null; }
-		this.addTileData(tile.datum, tilePoint);
-		if ( this._opacity != 1 )this.setOpacity( this._opacity );
-		
-		if ( this.geojsonLayer )
-		{
-			if ( this.options.zIndexOffset && this.geojsonLayer.setMarkerZIndex )
-			{
-				this.geojsonLayer.setMarkerZIndex( this.options.zIndexOffset )
-			}
-		}
-	},
-	_onStyleLoad : function(result)
-	{
-		try
-		{
-			var data = null;
-			if ( !result) return;
-			if ( result.data )
-			{
-				data = result.data;
-			}
-			else data = result;
-			data = eval( "(" + data + ")" );
-			if ( data.geojsonOptions ) this.geojsonLayer.options =  data.geojsonOptions;
-			if ( data.options )
-			{
-				if ( this.options._minZoom )
-					data.options.minZoom = this.options._minZoom;
-
-				if ( this.options._maxZoom )
-					data.options.maxZoom = this.options._maxZoom;
-
-				if ( this.options._maxNativeZoom )
-					data.options.maxNativeZoom = this.options._maxNativeZoom;
-
-				if ( this.options._attribution )
-					data.options.attribution = this.options._attribution;
-
-				L.setOptions(this, data.options);
-			}
-		}
-		catch( e ){}
-
-		if(this._tileContainer)
-			this._reset();
-
-		this._update();
-	},
-	_defaultLoadStyle : function()
-	{
-		var styleUrl = './js/style.js';
 	
-		this._styleAjax = $.ajax({
-			type: "GET",
-			dataType: "text",
-			url: styleUrl,
-			success:  L.Util.bind( this._onStyleLoad, this ),
-			async : true
-		});
-	},
-	_loadStyle : function(url)
+	load : function()
 	{
-		var styleUrl = url.replace(/\/\{z\}.*/,"") + '/style.js';
-
-		this._styleAjax = $.ajax({
-			type: "GET",
-			dataType: "text",
-			url: styleUrl,
-			success:  L.Util.bind( this._onStyleLoad, this ),
-			error :  L.Util.bind( this._defaultLoadStyle, this ),
-			async : true
-		});
+		this.clearLayers();
+		if ( !this._entries )
+		{
+			return;
+		}
+		
+		for( var i=0; i<this._entries.length; i++ )
+		{
+			var info = this._entries[i];
+			
+			if ( window.location.protocol == "https:" )
+				info.url = info.url.replace( "http://", "https://" );
+			info.layerType = GSI.LayersJSON.url2LayerType( info.url );
+			
+			var layer = GSI.Utils.infoToLayer(info);
+			if ( !layer ) continue;
+			
+			layer._info = info;
+			if ( info.layerType=="tile" )
+			{
+				this.addLayer(layer,true);
+			}
+			else if ( info.layerType=="kml" )
+			{
+			// KML
+				layer.on("loadstart", L.bind( this.onLayerLoadStart, this, layer, "KML"  ) );
+				layer.on("loaded", L.bind( this.onLayerLoad, this, layer  ) );
+				layer .load();
+				this.addLayer(layer,true);
+			}
+			else if ( info.layerType=="geojson" )
+			{
+			// GeoJSON
+				layer.on("loadstart", L.bind( this.onLayerLoadStart, this, layer, "GeoJSON"  ) );
+				layer.on( "load", L.bind( function(e){ this.onLayerLoad(e.src) },this));
+				layer .load();
+				this.addLayer(layer);
+			}
+			else if ( info.layerType=="geojson_tile" )
+			{
+			// GeoJSON Tile
+				this.addLayer(layer,true);
+			}
+			else if ( info.layerType=="topojson_tile" )
+			{
+			// TopoJSON Tile
+				this.addLayer(layer,true);
+			}
+			else if ( info.layerType=="topojson" )
+			{
+			// TopoJSON
+				layer.on("loadstart", L.bind( this.onLayerLoadStart, this, layer, "TopoJSON"  ) );
+				layer.on( "load", L.bind( function(e){ this.onLayerLoad(e.src) },this));
+				layer .load();
+				this.addLayer(layer);
+			}
+			else if ( info.layerType=="tms" )
+			{
+			// TMS
+				this.addLayer(layer,true);
+			}
+		}
+		
+	},
+	
+	onLayerLoadStart : function()
+	{
+		
+	},
+	
+	onLayerLoad : function()
+	{
+		
 	},
 	setOpacity : function( opacity )
 	{
 		this._opacity = opacity;
-
-		if ( this.geojsonLayer )
+		
+		var layers = this.getLayers();
+		
+		for( var i=0; i<layers.length; i++ )
 		{
-			var opacitySetter = new GSI.LayerOpacitySetter();
-			opacitySetter.setOpacity( this.geojsonLayer, opacity  );
+			if ( layers[i].setOpacity ) layers[i].setOpacity( opacity );
 		}
 	}
+	
+	
 } );
 
 /************************************************************************
@@ -18075,6 +20373,76 @@ GSI.Map = L.Map.extend( {
 GSI.map = function (id, options) {
 	return new GSI.Map(id, options);
 };
+
+
+L.Map.include({
+	setMultiPopup : function(val)
+	{
+		
+		if ( this._popupList )
+		{
+			for( var i=0; i<this._popupList.length; i++ )
+			{
+				
+				this.removeLayer(this._popupList[i]);
+				this._popupList[i]._isOpen = false;
+				
+			}
+			this._popupList = [];
+		}
+		
+		this.options.multipopup = val;
+		
+	},
+	openPopup: function (popup, latlng, options) { // (Popup) or (String || HTMLElement, LatLng[, Object])
+		
+		if ( !this.options.multipopup  ) 
+		{
+			this.closePopup();
+		}
+		if (!(popup instanceof L.Popup)) {
+			var content = popup;
+
+			popup = new L.Popup(options)
+			    .setLatLng(latlng)
+			    .setContent(content);
+		}
+		
+		//			
+		popup._isOpen = true;
+		
+		if ( this.options.multipopup  ) 
+		{
+			popup.options.closeOnClick = false;
+			if ( !this._popupList )
+				this._popupList = [];
+			this._popupList.push( popup );
+		}
+		else
+		{
+			popup.options.closeOnClick = true;
+			this._popup = popup;
+		}
+		return this.addLayer(popup);
+	},
+
+	closePopup: function (popup) {
+		
+		if (!popup || popup === this._popup) {
+			popup = this._popup;
+			this._popup = null;
+		}
+		if (popup) {
+			this.removeLayer(popup);
+			popup._isOpen = false;
+		}
+
+		
+		
+		return this;
+	}
+});
+
 
 /************************************************************************
  L.Marker
@@ -18190,7 +20558,7 @@ L.Path.prototype.onRemove = function(map)
 
 /************************************************************************
  L.Popup
- ・_updateLayout　Overwrite
+ ・_updateLayout Overwrite
  ・Specify the time of modification of width of table
  ************************************************************************/
 L.Popup.prototype._updateLayout = function () {
@@ -18247,7 +20615,7 @@ GSI.BaseLayer = L.TileLayer.extend({
 	opacity : 1,
 	highQuality : false,
 	initialize: function (baseLayerList, defaultMap, defaultMapGrayScale) {
-
+	
 		this.activeIndex    = 0;
         this.activeIndexPre = -1;
 		if ( defaultMap )
@@ -18590,7 +20958,7 @@ GSI.GeoJSON = L.Class.extend( {
 	},
 	onPointToLayer : function(feature, latlng )
 	{
-		if ( !feature.properties ) return L.marker( latlng ,{ icon : L.icon({iconUrl:'//cyberjapandata.gsi.go.jp/portal/sys/v4/symbols/080.png',iconSize:[20,20],iconAnchor:[10,10]}) });
+		if ( !feature.properties ) return L.marker( latlng ,{ icon : L.icon({iconUrl:'http://cyberjapandata.gsi.go.jp/portal/sys/v4/symbols/080.png',iconSize:[20,20],iconAnchor:[10,10]}) });
 
 		var marker = null;
 		if ( feature.properties[ "_markerType" ] )
@@ -18648,11 +21016,12 @@ GSI.GeoJSON = L.Class.extend( {
 
 		if ( !marker )
 		{
-			if ( !feature.properties[ "_iconUrl" ] ) return L.marker( latlng ,{ icon : L.icon({iconUrl:'//cyberjapandata.gsi.go.jp/portal/sys/v4/symbols/080.png',iconSize:[20,20],iconAnchor:[10,10]}) });
+			if ( !feature.properties[ "_iconUrl" ] ) return L.marker( latlng ,{ icon : L.icon({iconUrl:'http://cyberjapandata.gsi.go.jp/portal/sys/v4/symbols/080.png',iconSize:[20,20],iconAnchor:[10,10]}) });
 			var iconUrl = feature.properties[ "_iconUrl" ];
 			var iconSize = feature.properties[ "_iconSize" ];
 			var iconAnchor = feature.properties[ "_iconAnchor" ];
 			var className = feature.properties[ "_className" ];
+			var name = feature.properties[ "name" ];
 			var scale = iconSize[0] / CONFIG.SAKUZU.SYMBOL.ICONSIZE[0];
 					
 			var iconOptions = {};
@@ -18661,6 +21030,7 @@ GSI.GeoJSON = L.Class.extend( {
 			if ( iconAnchor ) iconOptions.iconAnchor = iconAnchor;
 			if ( className ) iconOptions.className = className;
 			if ( scale ) iconOptions._iconScale = scale;
+			if ( name ) iconOptions._name= name;
 			marker = L.marker( latlng, { icon : L.icon(iconOptions) });
 		}
 
@@ -18779,6 +21149,7 @@ GSI.GeoJSON = L.Class.extend( {
 			
 		}
 		catch(e){}
+		this.opacitySetter.setOpacity(this.layer, this.opacity );
 	},
 	onLoad : function(result)
 	{
@@ -18918,6 +21289,710 @@ GSI.GeoJSON = L.Class.extend( {
 	}
 } );
 
+
+
+
+/************************************************************************
+ L.Class
+ - GSI.Dialog
+   - GSI.ThreeDAreaDialog (3D Custom range management)
+ ************************************************************************/
+GSI.ThreeDAreaDialog = GSI.Dialog.extend( {
+	options : {
+		title : GSI.TEXT.THREEDAREA.DIALOG_TITLE,
+		width : "200px"
+	},
+	initialize : function(map,layer,options)
+	{
+		this._map = map;
+		this._layer = layer;
+		this._layer.on( 'change', L.bind( this._onChange, this ) );
+		GSI.Dialog.prototype.initialize.call(this, options);
+		this._onChange();
+	},
+	
+	show : function ()
+	{
+		this._origMinZoom = this._map.options.minZoom;
+		this._origMaxZoom = this._map.options.maxZoom;
+		this._map.options.minZoom = this._map.getZoom();
+		this._map.options.maxZoom = this._map.getZoom();
+		if ( this.options.zoomControl ) this.options.zoomControl._updateDisabled();
+		
+		GSI.Dialog.prototype.show.call(this);
+		this._onChange();
+	},
+	hide : function ()
+	{
+		this._map.options.minZoom = this._origMinZoom;
+		this._map.options.maxZoom = this._origMaxZoom;
+		if ( this.options.zoomControl ) this.options.zoomControl._updateDisabled();
+		
+		this._layer.remove();
+		GSI.Dialog.prototype.hide.call(this);
+	},
+	createHeader : function()
+	{
+		this.title = $( '<div>' ).html( this.options.title );
+
+		return $( '<div>' ).append( this.title );
+	},
+	
+	_onChange : function( e )
+	{
+		if ( !this._latLtFrame ) return;
+		//this._latFrame.html( ( this._layer ? this._layer._latlng.lat : "" )  );
+		//this._lngFrame.html( ( this._layer ? this._layer._latlng.lng : "" )  );
+		this._latLtFrame.html( ( this._layer && this._layer._latLngBounds ? 
+			( Math.round( this._layer._latLngBounds.getNorthWest().lat * 1000000 ) / 1000000 ).toFixed(6) : "" )  );
+		this._lngLtFrame.html( ( this._layer && this._layer._latLngBounds ? 
+			( Math.round( this._layer._latLngBounds.getNorthWest().lng * 1000000 ) / 1000000 ).toFixed(6) : "" )  );
+		this._latRbFrame.html( ( this._layer && this._layer._latLngBounds ? 
+			( Math.round( this._layer._latLngBounds.getSouthEast().lat * 1000000 ) / 1000000 ).toFixed(6) : "" )  );
+		this._lngRbFrame.html( ( this._layer && this._layer._latLngBounds ? 
+			( Math.round( this._layer._latLngBounds.getSouthEast().lng * 1000000 ) / 1000000 ).toFixed(6) : "" )  );
+		
+		var w =parseInt(this._layer.options.width);
+		var h =parseInt(this._layer.options.height);
+		
+		if (w % 2 != 0) w++;
+		if (h % 2 != 0) h++;
+		
+		this._sizeFrame.html( ( this._layer ? w + "×" + h: "" ) );
+	},
+	
+	createContent : function()
+	{
+		this._frame = $( '<div>' );
+		
+		var infoTable = $( '<table>' );
+		var infoTableTBody = $( '<tbody>' );
+		var tr = null;
+		
+		/*
+		tr = $( "<tr>" ).append( $("<td>").css({"white-space":"nowrap"}).html("中心緯度:"));
+		this._latFrame = $( '<td>' ).css({"white-space":"nowrap"}).html( '' );
+		tr.append( this._latFrame );
+		infoTableTBody.append( tr );
+		
+		
+		tr = $( "<tr>" ).append( $("<td>").css({"white-space":"nowrap"}).html("中心経度:"));
+		this._lngFrame = $( '<td>' ).css({"white-space":"nowrap"}).html( ''  );
+		tr.append( this._lngFrame );
+		infoTableTBody.append( tr );
+		*/
+		tr = $( "<tr>" ).append( $("<td>").css({"white-space":"nowrap"}).html("Upper left lat:"));
+		this._latLtFrame = $( '<td>' ).css({"white-space":"nowrap"}).html( '' );
+		tr.append( this._latLtFrame );
+		infoTableTBody.append( tr );
+		
+		
+		tr = $( "<tr>" ).append( $("<td>").css({"white-space":"nowrap"}).html("Upper left lng:"));
+		this._lngLtFrame = $( '<td>' ).css({"white-space":"nowrap"}).html( ''  );
+		tr.append( this._lngLtFrame );
+		infoTableTBody.append( tr );
+		
+			tr = $( "<tr>" ).append( $("<td>").css({"white-space":"nowrap"}).html("Lower right lat:"));
+		this._latRbFrame = $( '<td>' ).css({"white-space":"nowrap"}).html( '' );
+		tr.append( this._latRbFrame );
+		infoTableTBody.append( tr );
+		
+		
+		tr = $( "<tr>" ).append( $("<td>").css({"white-space":"nowrap"}).html("Lower right lng:"));
+		this._lngRbFrame = $( '<td>' ).css({"white-space":"nowrap"}).html( ''  );
+		tr.append( this._lngRbFrame );
+		infoTableTBody.append( tr );
+		
+		
+		tr = $( "<tr>" ).append( $("<td>").css({"white-space":"nowrap"}).html("Size:"));
+		this._sizeFrame = $( '<td>' ).css({"white-space":"nowrap"}).html( '' );
+		tr.append( this._sizeFrame );
+		infoTableTBody.append( tr );
+		
+		infoTable.append(infoTableTBody);
+		
+		this._buttonFrame = $( '<div>' ).css({"text-align":"center"});
+		
+		this._okButton = $( '<a>' )
+			.addClass("normalbutton threedareadialog_button")
+			.attr( {"href":"javascript:void(0);"} )
+			.html(GSI.TEXT.THREEDAREA.DIALOG_OKBTN)
+			.click( L.bind( this._onOkClick, this ) );
+		/*
+		this._cancelButton = $( '<a>' )
+			.addClass("normalbutton threedareadialog_button")
+			.attr( {"href":"javascript:void(0);"} )
+			.html(GSI.TEXT.THREEDAREA.DIALOG_CANCELBTN)
+			.click( L.bind( function(){ this.hide(); }, this ) );
+		*/
+		this._buttonFrame
+			.append( this._okButton );
+		//	.append( this._cancelButton );
+		
+		this._frame
+			.append( infoTable )
+			.append( this._buttonFrame );
+		
+		return this._frame;
+	},
+	_onOkClick : function()
+	{
+		var center = this._layer._latlng;
+		var args = "";
+		args += "?z="   + this._map.getZoom();
+		args += "&lat=" + center.lat;
+		args += "&lon=" + center.lng;
+		if ( this._layer.options.width == this._layer.options.height )
+		{
+			args += "&pxsize=" + this._layer.options.width;
+		}
+		else
+		{
+			var w =parseInt(this._layer.options.width);
+			var h =parseInt(this._layer.options.height);
+			
+			if (w % 2 != 0) w++;
+			if (h % 2 != 0) h++;
+			
+			args += "&w=" + w;
+			args += "&h=" + h;
+		}
+		args += "&"     + GSI.GLOBALS.pageStateManager.getLayersQueryString({visibleOnly:true})
+
+		this.hide();
+		
+		window.open( "./index_3d.html" + args  );
+	}
+	
+});
+
+
+
+GSI.ThreeDAreaSelectLayer = L.Class.extend( {
+	includes: L.Mixin.Events,
+	
+	options : {
+		width : 256,
+		height: 256
+	},
+	
+	initialize: function (latlng, options) {
+		L.setOptions(this, options);
+		this._latlng = latlng;
+	},
+	
+	setLatLng : function(latlng )
+	{
+		this._latlng = latlng;
+	},
+		
+	onAdd : function(map) {
+		this._map = map;
+		
+		if ( !this._dialog )
+		{
+			var windowSize = GSI.Utils.getScreenSize();
+			this._dialog = new GSI.ThreeDAreaDialog(this._map, this,{
+							width:220, left :windowSize.w - 240, top :45,
+							effect : CONFIG.EFFECTS.DIALOG,
+							zoomControl : this.options.zoomControl
+						});
+		}
+		
+		this._refreshLatLngBounds();
+		
+		this._dialog.show();
+		
+		
+		map.on('viewreset', this.update, this);
+	
+		this.update();
+		this.fire('add');
+		
+		this.fire('change', {
+			latlng : this._latlng,
+			width : this.options.width,
+			width : this.options.height
+		});
+		
+	},
+	
+	_refreshLatLngBounds : function()
+	{
+		var centerPos = this._map.latLngToContainerPoint(this._latlng);
+		
+		this._latLngBounds = L.latLngBounds(
+			this._map.containerPointToLatLng(
+				L.point( centerPos.x - ( this.options.width/ 2 ), centerPos.y+(this.options.height/ 2 )) ),
+			this._map.containerPointToLatLng(
+				L.point(centerPos.x + ( this.options.width/ 2 ), centerPos.y-(this.options.height/ 2 )) ) 
+		);
+		
+	},
+	
+	
+	addTo: function (map) {
+		map.addLayer(this);
+		var pos = this._map.latLngToLayerPoint(this._latlng).round();
+		return this;
+	},
+	remove : function()
+	{
+		if (!this._map)return;
+		this._map.removeLayer( this );
+	},
+	onRemove : function(map) {
+		
+		this._remove();
+		this.fire('remove');
+		
+		L.DomEvent.off(this._leftTopMark[0], "touchstart", this._onDown, this);
+		L.DomEvent.off(this._leftTopMark[0], "mousedown", this._onDown, this);
+		map.off('viewreset', this.update, this);
+
+		this._map = null;
+		
+		
+	},
+	_remove: function () {
+		this._map._panes.markerPane.removeChild(this._div[0]);
+
+		this._div = null;
+	},
+	update : function()
+	{
+		if ( !this._div )
+		{
+			this._div = $( '<div>' ).css( {
+				"position" :"absolute",
+				"box-sizing": "border-box",
+				"border" : "3px solid #cd5e3c",
+				"width" : this.options.width +"px",
+				"height" : this.options.height +"px",
+				"margin-left" : -parseInt( this.options.width / 2 ) +"px",
+				"margin-top" : -parseInt( this.options.height / 2 ) +"px"
+			} );
+			
+			this._leftTopMark = $( '<div>' ).css( {
+				"position" :"absolute",
+				"box-sizing": "border-box",
+				"background": "#fff",
+				"width" : "12px",
+				"height" : "12px",
+				"left" : 0,
+				"top"  : 0,
+				"margin-left" : "-6px",
+				"margin-top" : "-6px",
+				"border" : "1px solid #cd5e3c",
+				"cursor" : "nw-resize"
+			} );
+			
+			this._rightTopMark = $( '<div>' ).css( {
+				"position" :"absolute",
+				"box-sizing": "border-box",
+				"background": "#fff",
+				"width" : "12px",
+				"height" : "12px",
+				"right" : 0,
+				"top"  : 0,
+				"margin-right" : "-6px",
+				"margin-top" : "-6px",
+				"border" : "1px solid #cd5e3c",
+				"cursor" : "ne-resize"
+			} );
+			this._leftBottomMark = $( '<div>' ).css( {
+				"position" :"absolute",
+				"box-sizing": "border-box",
+				"background": "#fff",
+				"width" : "12px",
+				"height" : "12px",
+				"left" : 0,
+				"bottom"  : 0,
+				"margin-left" : "-6px",
+				"margin-bottom" : "-6px",
+				"border" : "1px solid #cd5e3c",
+				"cursor" : "ne-resize"
+			} );
+			this._rightBottomMark = $( '<div>' ).css( {
+				"position" :"absolute",
+				"box-sizing": "border-box",
+				"background": "#fff",
+				"width" : "12px",
+				"height" : "12px",
+				"right" : 0,
+				"bottom"  : 0,
+				"margin-right" : "-6px",
+				"margin-bottom" : "-6px",
+				"border" : "1px solid #cd5e3c",
+				"cursor" : "nw-resize"
+			} );
+			
+			this._moveMark = $( '<div>' ).css( {
+				"position" :"absolute",
+				"box-sizing": "border-box",
+				"width" : "24px",
+				"height" : "24px",
+				"left" : "50%",
+				"top"  : "50%",
+				"margin-left" : "-12px",
+				"margin-top" : "-12px",
+				"cursor" : "move",
+				"background-image" : "url(image/system/move.png)",
+				"background-position" : "50% 50%",
+				"background-repeat" : "no-repeat"
+			} );
+			
+			
+			this._div.append(this._leftTopMark);
+			this._div.append(this._rightTopMark);
+			this._div.append(this._leftBottomMark);
+			this._div.append(this._rightBottomMark);
+			this._div.append(this._moveMark);
+			
+			L.DomEvent.on(this._leftTopMark[0], "touchstart", this._onDownLT, this);
+			L.DomEvent.on(this._leftTopMark[0], "mousedown", this._onDownLT, this);
+			L.DomEvent.on(this._leftTopMark[0], "MSPointerDown", this._onDownLT, this);
+			L.DomEvent.on(this._rightTopMark[0], "touchstart", this._onDownRT, this);
+			L.DomEvent.on(this._rightTopMark[0], "mousedown", this._onDownRT, this);
+			L.DomEvent.on(this._rightTopMark[0], "MSPointerDown", this._onDownRT, this);
+			L.DomEvent.on(this._leftBottomMark[0], "touchstart", this._onDownLB, this);
+			L.DomEvent.on(this._leftBottomMark[0], "mousedown", this._onDownLB, this);
+			L.DomEvent.on(this._leftBottomMark[0], "MSPointerDown", this._onDownLB, this);
+			L.DomEvent.on(this._rightBottomMark[0], "touchstart", this._onDownRB, this);
+			L.DomEvent.on(this._rightBottomMark[0], "mousedown", this._onDownRB, this);
+			L.DomEvent.on(this._rightBottomMark[0], "MSPointerDown", this._onDownRB, this);
+			L.DomEvent.on(this._moveMark[0], "touchstart", this._onDownMove, this);
+			L.DomEvent.on(this._moveMark[0], "mousedown", this._onDownMove, this);
+			L.DomEvent.on(this._moveMark[0], "MSPointerDown", this._onDownMove, this);
+			
+			
+			this._map._panes.markerPane.appendChild(this._div[0]);
+		}
+		this._div.css( {
+			"width" : this.options.width +"px",
+			"height" : this.options.height +"px",
+			"margin-left" : -parseInt( this.options.width / 2 ) +"px",
+			"margin-top" : -parseInt( this.options.height / 2 ) +"px"
+		} );
+		
+		
+		
+		var pos = this._map.latLngToLayerPoint(this._latLngBounds.getCenter()).round();
+		this._setPos(pos);
+	
+	},
+	
+	_onDownLT : function( e )
+	{
+		this._onDown(e);
+		this._dragTarget = this._leftTopMark;
+	},
+	
+	_onDownRT : function( e )
+	{
+		this._onDown(e);
+		this._dragTarget = this._rightTopMark;
+	},
+	
+	_onDownLB : function( e )
+	{
+		this._onDown(e);
+		this._dragTarget = this._leftBottomMark;
+	},
+	_onDownRB : function( e )
+	{
+		this._onDown(e);
+		this._dragTarget = this._rightBottomMark;
+	},
+	_onDownMove : function( e )
+	{
+		this._onDown(e);
+		this._dragTarget = this._moveMark;
+	},
+	
+	_onDown : function(e)
+	{
+		this._moved = false;
+
+		if (e.shiftKey || ((e.which !== 1) && (e.button !== 1) && !e.touches)) { return; }
+
+		L.DomEvent.stopPropagation(e);
+
+		L.DomUtil.disableImageDrag();
+		L.DomUtil.disableTextSelection();
+
+		if (this._moving) { return; }
+
+		var first = e.touches ? e.touches[0] : e;
+		
+		
+		L.DomEvent.on(document, "touchmove", this._onMove, this);
+		L.DomEvent.on(document, "mousemove", this._onMove, this);
+		L.DomEvent.on(document, "touchend", this._onUp, this);
+		L.DomEvent.on(document, "mouseup", this._onUp, this);
+		
+		
+		this._startPoint = new L.Point(first.clientX, first.clientY);
+		
+	},
+	
+	
+	
+	_onMove : function( e )
+	{
+		if (e.touches && e.touches.length > 1) {
+			this._moved = true;
+			return;
+		}
+
+		var first = (e.touches && e.touches.length === 1 ? e.touches[0] : e),
+		    newPoint = new L.Point(first.clientX, first.clientY);
+
+		L.DomEvent.preventDefault(e);
+
+		if (!this._moved) {
+			this.fire('dragstart');
+
+			this._moved = true;
+
+			L.DomUtil.addClass(document.body, 'leaflet-dragging');
+			this._lastTarget = e.target || e.srcElement;
+			this._startPoint = new L.Point(first.clientX, first.clientY);
+			L.DomUtil.addClass(this._lastTarget, 'leaflet-drag-target');
+		}
+		
+		//var point = this._map.latLngToContainerPoint(this._latlng);
+		var offset = {
+			x : ( this._startPoint.x- first.clientX  ),
+			y : ( this._startPoint.y- first.clientY  )
+		};
+		
+		if ( this._dragTarget == this._moveMark )
+		{
+			var point = this._map.latLngToContainerPoint(this._latlng);
+			point.x -= offset.x;
+			point.y -= offset.y;
+			
+			this._latlng = this._map.containerPointToLatLng(point);
+			this._refreshLatLngBounds();
+		}
+		else
+		{
+			if ( this._dragTarget == this._leftTopMark )
+			{
+				
+				//var newW = parseInt(this._div.css("width") ) + offset.x;
+				//var newH = parseInt(this._div.css("height") ) + offset.y;
+				var point = this._map.latLngToContainerPoint(this._latLngBounds.getNorthWest());
+				var containerOffset = $( this._map.getContainer() ).offset();
+				
+				var newPoint = {
+					x:first.clientX - containerOffset.left,
+					y:first.clientY - containerOffset.top
+				};
+				
+				var newW = parseInt(this._div.css("width") ) + ( point.x - newPoint.x  );
+				var newH = parseInt(this._div.css("height") ) + ( point.y - newPoint.y  );
+				//console.log( newW, newH );
+				
+				if ( newW < 256 ) newW = 256;
+				if ( newW > 2048 ) newW = 2048;
+				if ( newH < 256 ) newH = 256;
+				if ( newH > 2048 ) newH = 2048;
+				
+				var northWest = this._map.containerPointToLatLng(
+						L.point( point.x - ( newW - this.options.width ), point.y-(newH - this.options.height )) );
+				var southEast = this._latLngBounds.getSouthEast();
+				
+				this._latLngBounds = L.latLngBounds(
+					L.latLng( southEast.lat, northWest.lng ),
+					L.latLng( northWest.lat, southEast.lng )
+				);
+		
+				
+				this._latlng = this._latLngBounds.getCenter();
+				this.options.width = newW;
+				this.options.height = newH;
+				
+			}
+			else if ( this._dragTarget == this._rightTopMark )
+			{
+			
+				//var newW = parseInt(this._div.css("width") ) - offset.x;
+				//var newH = parseInt(this._div.css("height") ) + offset.y;
+				var point = this._map.latLngToContainerPoint(this._latLngBounds.getNorthEast());
+				var containerOffset = $( this._map.getContainer() ).offset();
+				
+				var newPoint = {
+					x:first.clientX - containerOffset.left,
+					y:first.clientY - containerOffset.top
+				};
+				
+				var newW = parseInt(this._div.css("width") ) - ( point.x - newPoint.x  );
+				var newH = parseInt(this._div.css("height") ) + ( point.y - newPoint.y  );
+				
+				if ( newW < 256 ) newW = 256;
+				if ( newW > 2048 ) newW = 2048;
+				if ( newH < 256 ) newH = 256;
+				if ( newH > 2048 ) newH = 2048;
+				
+				var northEast = this._map.containerPointToLatLng(
+						L.point( point.x + ( newW - this.options.width ), point.y-(newH - this.options.height )) );
+				
+				this._latLngBounds = L.latLngBounds(
+					this._latLngBounds.getSouthWest(),
+					L.latLng( northEast.lat, northEast.lng )
+				);
+		
+				
+				this._latlng = this._latLngBounds.getCenter();
+				this.options.width = newW;
+				this.options.height = newH;
+				
+			}
+			else if ( this._dragTarget == this._leftBottomMark )
+			{
+			
+				//var newW = parseInt(this._div.css("width") ) + offset.x;
+				//var newH = parseInt(this._div.css("height") ) - offset.y;
+				var point = this._map.latLngToContainerPoint(this._latLngBounds.getSouthWest());
+				var containerOffset = $( this._map.getContainer() ).offset();
+				
+				var newPoint = {
+					x:first.clientX - containerOffset.left,
+					y:first.clientY - containerOffset.top
+				};
+				
+				var newW = parseInt(this._div.css("width") ) + ( point.x - newPoint.x  );
+				var newH = parseInt(this._div.css("height") ) - ( point.y - newPoint.y  );
+				
+				if ( newW < 256 ) newW = 256;
+				if ( newW > 2048 ) newW = 2048;
+				if ( newH < 256 ) newH = 256;
+				if ( newH > 2048 ) newH = 2048;
+				
+				
+				if ( newW < 256 ) newW = 256;
+				if ( newW > 2048 ) newW = 2048;
+				if ( newH < 256 ) newH = 256;
+				if ( newH > 2048 ) newH = 2048;
+				
+				var southWest = this._map.containerPointToLatLng(
+						L.point( point.x - ( newW - this.options.width ), point.y+(newH - this.options.height )) );
+				
+				this._latLngBounds = L.latLngBounds(
+					L.latLng( southWest.lat, southWest.lng ),
+					this._latLngBounds.getNorthEast()
+				);
+		
+				
+				this._latlng = this._latLngBounds.getCenter();
+				this.options.width = newW;
+				this.options.height = newH;
+			}
+			else if ( this._dragTarget == this._rightBottomMark )
+			{
+				//var newW = parseInt(this._div.css("width") ) - offset.x;
+				//var newH = parseInt(this._div.css("height") ) - offset.y;
+				var point = this._map.latLngToContainerPoint(this._latLngBounds.getSouthEast());
+				var containerOffset = $( this._map.getContainer() ).offset();
+				
+				var newPoint = {
+					x:first.clientX - containerOffset.left,
+					y:first.clientY - containerOffset.top
+				};
+				
+				var newW = parseInt(this._div.css("width") ) - ( point.x - newPoint.x  );
+				var newH = parseInt(this._div.css("height") ) - ( point.y - newPoint.y  );
+				
+				
+				if ( newW < 256 ) newW = 256;
+				if ( newW > 2048 ) newW = 2048;
+				if ( newH < 256 ) newH = 256;
+				if ( newH > 2048 ) newH = 2048;
+				
+				var southEast = this._map.containerPointToLatLng(
+						L.point( point.x + ( newW - this.options.width ), point.y+(newH - this.options.height )) );
+				var northWest = this._latLngBounds.getNorthWest();
+				this._latLngBounds = L.latLngBounds(
+					L.latLng( southEast.lat, northWest.lng ),
+					L.latLng( northWest.lat, southEast.lng )
+				);
+		
+				
+				this._latlng = this._latLngBounds.getCenter();
+				this.options.width = newW;
+				this.options.height = newH;
+			}
+			
+			//if (this.options.width % 2 != 0) this.options.width++;
+			//if (this.options.height % 2 != 0) this.options.height++;
+			if ( this.options.width < 256 ) this.options.width = 256;
+			if ( this.options.width > 2048 ) this.options.width = 2048;
+			if ( this.options.height < 256 ) this.options.height = 256;
+			if ( this.options.height > 2048 ) this.options.height = 2048;
+		}
+		
+		this.update();
+		this.fire('change', {
+			latlng : this._latlng,
+			width : this.options.width,
+			height : this.options.height
+		});
+		this._startPoint = new L.Point(first.clientX, first.clientY);
+		this._moving = true;
+
+	},
+	
+	_onUp: function () {
+		L.DomUtil.removeClass(document.body, 'leaflet-dragging');
+
+		if (this._lastTarget) {
+			L.DomUtil.removeClass(this._lastTarget, 'leaflet-drag-target');
+			this._lastTarget = null;
+		}
+
+		
+		L.DomEvent.off(document, "touchmove", this._onMove, this);
+		L.DomEvent.off(document, "mousemove", this._onMove, this);
+		L.DomEvent.off(document, "touchend", this._onUp, this);
+		L.DomEvent.off(document, "mouseup", this._onUp, this);
+		
+
+		L.DomUtil.enableImageDrag();
+		L.DomUtil.enableTextSelection();
+		
+		
+		this.fire('change', {
+			latlng : this._latlng,
+			width : this.options.width,
+			width : this.options.height
+		});
+		
+		if (this._moved && this._moving) {
+			this.fire('dragend', {
+			});
+		}
+
+		this._moving = false;
+	},
+	
+	_setPos : function( pos )
+	{
+		L.DomUtil.setPosition(this._div[0], pos);
+		
+		this._div.css( {"z-index":0} );
+	}
+	
+} );
+
+
+
+
+
+
+
+
 /************************************************************************
   postMessage
  ************************************************************************/
@@ -18973,6 +22048,7 @@ window.addEventListener('message', function(event){
         GSI.ClientMode.queryString += location.hash;
 
         GSI.GLOBALS.queryParams = new GSI.QueryParams({ queryString: GSI.ClientMode.queryString });
+		//console.log( )
         initialize_proc();
     }
     catch(e){
@@ -18998,9 +22074,27 @@ var startUpZoom   = "";
 
 function initialize_proc()
 {
+	GSI.GLOBALS.evacManager = new GSI.EvacuationManager(GSI.GLOBALS.queryParams);
+
+	if ((GSI.GLOBALS.queryParams.params["ls"] && GSI.GLOBALS.queryParams.params["ls"].indexOf(CONFIG.layerEvacuationHeader)>=0) || 
+	        (GSI.GLOBALS.queryParams.params["lcd"] && GSI.GLOBALS.queryParams.params["lcd"].indexOf(CONFIG.layerEvacuationHeader)>=0) ) 
+	{
+		var cfdlg = new GSI.Modal.confirmDialog();
+		cfdlg.onPositiveButtonClick = L.bind(confirmOKClick, this, cfdlg);
+		cfdlg.onNegativeButtonClick = L.bind(confirmCancelClick, this, cfdlg);
+		cfdlg.show();
+	}
+	else
+	{
+		this.initialize_proc_sub();
+	}
+};
+
+function initialize_proc_sub()
+{
 	ctrlSetting = GSI.GLOBALS.queryParams.getControlSetting();
 	viewSetting = GSI.GLOBALS.queryParams.getViewSetting();
-
+	
 	// Hash analysis
 	var hashPosition  = L.Hash.parseHash(location.hash);
 	startUpCenter = GSI.GLOBALS.queryParams.getPosition(hashPosition && hashPosition.center ? hashPosition.center : CONFIG.DEFAULT.CENTER);
@@ -19022,8 +22116,9 @@ function initialize_proc()
     );
     var vBaseBrankLayer = L.tileLayer('', { minZoom: 2, maxZoom: 18 });
 	GSI.GLOBALS.map.addLayer(vBaseBrankLayer);
-
 	
+	GSI.GLOBALS.evacDialog = new GSI.EvacDialog();
+
 	// Move to the correct position when scrolling
 	GSI.GLOBALS.map.on( 'moveend', function()
     {
@@ -19037,17 +22132,14 @@ function initialize_proc()
 	GSI.GLOBALS.bottomRightSpacer = ( new GSI.Control.Spacer({position:"bottomright"})).addTo(GSI.GLOBALS.map);
 	GSI.GLOBALS.bottomLeftSpacer  = ( new GSI.Control.Spacer()                        ).addTo(GSI.GLOBALS.map);
 
-	// Access counter
-	if( CONFIG.USEACCESSCOUNTER ){
-        ( new GSI.Control.AccessCounter({url:CONFIG.SERVERAPI.ACCESSCOUNTER, refreshInterval:0}) ).addTo(GSI.GLOBALS.map);
-    }
 	L.control.scale({imperial:false}).addTo(GSI.GLOBALS.map);
 
 	GSI.GLOBALS.mapLayerList = new GSI.MapLayerList(GSI.GLOBALS.map);
 
-    // Load Layers.txt 
+    // Load Layers.txt
 	GSI.GLOBALS.layersJSON = new GSI.LayersJSON( {
-		 layers        : CONFIG.layerBase
+		 layers        : CONFIG.layerBase,
+		 layersTab     : CONFIG.layersTab 
 	});
 
 	GSI.GLOBALS.layersJSON.on("load", function(e){
@@ -19055,6 +22147,7 @@ function initialize_proc()
         if(!GSI.GLOBALS.layersJSON.loadBase()){
             var n = 0;
             var v = GSI.GLOBALS.layersJSON.getBase();
+			
             for(n = 0; n < v.length; n++){
                 CONFIG.BASETILES[CONFIG.BASETILES.length] = v[n];
             }
@@ -19110,6 +22203,17 @@ function initialize_proc_map()
 	GSI.GLOBALS.onoffObjects[CONFIG.PARAMETERNAMES.LATLNGGRID ] = { obj : new GSI.LatLngGrid (GSI.GLOBALS.map, { visible: viewSetting.latLngGrid, lineStyle:CONFIG.LATLNGGRIDSTYLE , condition: CONFIG.LATLNGGRID.CONDITION, labelClassName: CONFIG.LATLNGGRIDLABELCLASSNAME} ), setter : 'setVisible', getter : 'getVisible' };
 	// UTM grid
 	GSI.GLOBALS.onoffObjects[CONFIG.PARAMETERNAMES.UTMGRID    ] = { obj : new GSI.UTM.Grid   (GSI.GLOBALS.map, { visible: viewSetting.utmGrid   , lineStyle:CONFIG.UTMGRIDSTYLE    , condition: CONFIG.UTMGRID.CONDITION   , labelClassName: CONFIG.UTMGRIDLABELCLASSNAME   } ), setter : 'setVisible', getter : 'getVisible' };
+	
+	
+	// Tile coordinates
+	GSI.GLOBALS.onoffObjects[CONFIG.PARAMETERNAMES.TILEGRID    ] = { obj : new GSI.TileGrid   (GSI.GLOBALS.map, { visible: viewSetting.tileGrid   , lineStyle:CONFIG.UTMGRIDSTYLE    , condition: CONFIG.UTMGRID.CONDITION   , labelClassName: CONFIG.UTMGRIDLABELCLASSNAME   } ), setter : 'setVisible', getter : 'getVisible' };
+	
+	// Regional Mesh
+	GSI.GLOBALS.onoffObjects[CONFIG.PARAMETERNAMES.CHIIKIMESH    ] = { obj : new GSI.ChiikiMesh   (GSI.GLOBALS.map, { visible: viewSetting.chiikiMesh   , lineStyle:CONFIG.UTMGRIDSTYLE    , condition: CONFIG.UTMGRID.CONDITION   , labelClassName: CONFIG.UTMGRIDLABELCLASSNAME   } ), setter : 'setVisible', getter : 'getVisible' };
+	
+	// 1/25000
+	GSI.GLOBALS.onoffObjects[CONFIG.PARAMETERNAMES.T25000GRID    ] = { obj : new GSI.T25000Grid   (GSI.GLOBALS.map, { visible: viewSetting.t25000Grid   , lineStyle:CONFIG.UTMGRIDSTYLE    , condition: CONFIG.UTMGRID.CONDITION   , labelClassName: CONFIG.UTMGRIDLABELCLASSNAME   } ), setter : 'setVisible', getter : 'getVisible' };
+	
 	// Mini Map
 	GSI.GLOBALS.onoffObjects[CONFIG.PARAMETERNAMES.MINIMAP    ] = { obj : new GSI.MiniMap    (GSI.GLOBALS.map, { visible: viewSetting.miniMap                                                                                                                               } ), setter : 'setVisible', getter : 'getVisible' };
 
@@ -19135,7 +22239,25 @@ function initialize_proc_map()
       }
     );
 	GSI.GLOBALS.onoffObjects[ CONFIG.PARAMETERNAMES.CLICKMOVE ] = { obj : GSI.GLOBALS.mapMouse    , setter : 'setClickMoveVisible', getter  : 'getClickMoveVisible' };
-
+	
+	GSI.GLOBALS.multiPopup = {};
+	GSI.GLOBALS.multiPopup.setMultiPopupVisible =function(val){
+		return GSI.GLOBALS.map.setMultiPopup( val );
+	};
+	GSI.GLOBALS.multiPopup.getMultiPopupVisible =function(){
+		return GSI.GLOBALS.map.options.multipopup;
+	};
+	
+	GSI.GLOBALS.onoffObjects[ CONFIG.PARAMETERNAMES.MULTIPOPUP ] = { obj : GSI.GLOBALS.multiPopup    , setter : 'setMultiPopupVisible', getter  : 'getMultiPopupVisible' };
+	
+	
+	GSI.GLOBALS.onoffObjects[ CONFIG.PARAMETERNAMES.USEGSIDISTANCE ] = { obj : 
+		{
+			setUseGSIDistance : function( on ) { CONFIG.USEGSIDISTANCE = on; } ,
+			getUseGSIDistance : function() { return CONFIG.USEGSIDISTANCE; } 
+		}   , setter : 'setUseGSIDistance', getter  : 'getUseGSIDistance' };
+	
+	
 	// header
 	GSI.GLOBALS.header
     = new GSI.Header(
@@ -19165,13 +22287,15 @@ function initialize_proc_map()
         , otherEffect     : CONFIG.EFFECTS.MENU.OTHER
         , onMenuItemClick : function(id)
         {
-            GSI.GLOBALS.viewListDialog.show();
+			
+			GSI.GLOBALS.viewListDialog.show();
+			GSI.GLOBALS.layerTreeDialog.show();
         }
 	  }
     );
 
 	// Function menu
-	new GSI.MapMenu(
+	GSI.GLOBALS.funcMenu = new GSI.MapMenu(
       GSI.GLOBALS.map
     , CONFIG.FUNCMENU
     , {
@@ -19187,6 +22311,58 @@ function initialize_proc_map()
 		onCheckItemClick : function( id, checked )
 		{
 			if ( GSI.GLOBALS.onoffObjects[ id ] ) GSI.GLOBALS.onoffObjects[ id]['obj'][GSI.GLOBALS.onoffObjects[id]['setter']]( checked );
+		},
+		onMenuItemMouseOver : function( id )
+		{
+			if ( id == 'gsi3d_s' )
+			{
+				if ( GSI.GLOBALS._area3D ) GSI.GLOBALS.map.removeLayer( GSI.GLOBALS._area3D );
+				var icon = L.divIcon({
+					className: 'my-div-icon', 
+					html:'<div style="position:absolute;margin-top:-512px;margin-left:-512px;border:3px solid #cd5e3c;width:1024px; height:1024px"></div>'});
+				
+				GSI.GLOBALS._area3D = L.marker(GSI.GLOBALS.map.getCenter(), {icon: icon}).addTo(GSI.GLOBALS.map);
+				
+			}
+			else if ( id == 'gsi3d_l' )
+			{
+				if ( GSI.GLOBALS._area3D ) GSI.GLOBALS.map.removeLayer( GSI.GLOBALS._area3D );
+				var icon = L.divIcon({
+					className: 'my-div-icon', 
+					html:'<div style="position:absolute;margin-top:-1024px;margin-left:-1024px;border:3px solid #cd5e3c;width:2048px; height:2048px"></div>'});
+				
+				GSI.GLOBALS._area3D = L.marker(GSI.GLOBALS.map.getCenter(), {icon: icon}).addTo(GSI.GLOBALS.map);
+				
+			}
+			else if ( id == 'gsi3d_view' )
+			{
+				if ( GSI.GLOBALS._area3D ) GSI.GLOBALS.map.removeLayer( GSI.GLOBALS._area3D );
+				
+				var size = GSI.GLOBALS.map.getSize();
+				
+				if ( size.x > 2048 ) size.x = 2048;
+				if ( size.y > 2048 ) size.y = 2048;
+				
+				if( size.x % 2 == 1 ) size.x-=1;
+				if( size.y % 2 == 1 ) size.y-=1;
+				
+				var icon = L.divIcon({
+					className: 'my-div-icon', 
+					html:'<div style="position:absolute;' + 
+						'margin-top:-' + parseInt(size.y / 2 ) + 'px;margin-left:-' + parseInt(size.x / 2 ) + 'px;border:3px solid #cd5e3c;width:' + 
+						size.x + 'px; height:' + size.y + 'px;"></div>'});
+				GSI.GLOBALS._area3D = L.marker(GSI.GLOBALS.map.getCenter(), {icon: icon}).addTo(GSI.GLOBALS.map);
+				
+			}
+			
+		},
+		onMenuItemMouseOut : function( id )
+		{
+			if ( id == 'gsi3d_s' || id == 'gsi3d_l' || id == 'gsi3d_view')
+			{
+				if ( GSI.GLOBALS._area3D ) GSI.GLOBALS.map.removeLayer( GSI.GLOBALS._area3D );
+				GSI.GLOBALS._area3D = null;
+			}
 		},
 		onMenuItemClick : function( id )
 		{
@@ -19234,7 +22410,7 @@ function initialize_proc_map()
 				GSI.GLOBALS.geoLocation.getLocation();
 
 				break;
-
+			
 			case 'share_file':
 		    case 'share_link':
 			case 'share_builtin':
@@ -19259,29 +22435,231 @@ function initialize_proc_map()
 						{
 							latLngGrid : GSI.GLOBALS.onoffObjects[ CONFIG.PARAMETERNAMES.LATLNGGRID ].obj ,
 							utmGrid : GSI.GLOBALS.onoffObjects[ CONFIG.PARAMETERNAMES.UTMGRID ].obj,
+							tileGrid : GSI.GLOBALS.onoffObjects[ CONFIG.PARAMETERNAMES.TILEGRID ].obj,
+							t25000Grid : GSI.GLOBALS.onoffObjects[ CONFIG.PARAMETERNAMES.T25000GRID ].obj,
+							chiikiMesh : GSI.GLOBALS.onoffObjects[ CONFIG.PARAMETERNAMES.CHIIKIMESH ].obj,
 							jihokuLine : GSI.GLOBALS.onoffObjects[ CONFIG.PARAMETERNAMES.JIHOKULINE ].obj
 						} );
 				GSI.GLOBALS.pagePrinter.show();
 				break;
-
+			
+			case 'saveimage':
+			// Save Images
+				//GSI.GLOBALS.map._resetView( GSI.GLOBALS.map.getCenter(), GSI.GLOBALS.map.getZoom(), true );
+				var list = [];
+				var tileList = $.extend( [], GSI.GLOBALS.mapLayerList.getTileList() );
+				var otherList = GSI.GLOBALS.mapLayerList.getList();
+				var multiTileList = [];
+				if ( GSI.GLOBALS.onoffObjects[CONFIG.PARAMETERNAMES.TILEGRID ].obj 
+					&& GSI.GLOBALS.onoffObjects[CONFIG.PARAMETERNAMES.TILEGRID ].obj.getVisible() )
+				{
+					list.push( {
+							type : "system",
+							layer : GSI.GLOBALS.onoffObjects[CONFIG.PARAMETERNAMES.TILEGRID ].obj,
+							opacity : 1,
+							grayscale : false
+						} );
+				}
+				if ( GSI.GLOBALS.onoffObjects[CONFIG.PARAMETERNAMES.JIHOKULINE ].obj 
+					&& GSI.GLOBALS.onoffObjects[CONFIG.PARAMETERNAMES.JIHOKULINE ].obj.getVisible() )
+				{
+					list.push( {
+							type : "system",
+							layer : GSI.GLOBALS.onoffObjects[CONFIG.PARAMETERNAMES.JIHOKULINE ].obj,
+							opacity : 1,
+							grayscale : false
+						} );
+				}
+				if ( GSI.GLOBALS.onoffObjects[CONFIG.PARAMETERNAMES.LATLNGGRID ].obj 
+					&& GSI.GLOBALS.onoffObjects[CONFIG.PARAMETERNAMES.LATLNGGRID ].obj.getVisible() )
+				{
+					list.push( {
+							type : "system",
+							layer : GSI.GLOBALS.onoffObjects[CONFIG.PARAMETERNAMES.LATLNGGRID ].obj,
+							opacity : 1,
+							grayscale : false
+						} );
+				}
+				if ( GSI.GLOBALS.onoffObjects[CONFIG.PARAMETERNAMES.UTMGRID ].obj 
+					&& GSI.GLOBALS.onoffObjects[CONFIG.PARAMETERNAMES.UTMGRID ].obj.getVisible() )
+				{
+					list.push( {
+							type : "system",
+							layer : GSI.GLOBALS.onoffObjects[CONFIG.PARAMETERNAMES.UTMGRID ].obj,
+							opacity : 1,
+							grayscale : false
+						} );
+				}
+				
+				if ( GSI.GLOBALS.onoffObjects[CONFIG.PARAMETERNAMES.CHIIKIMESH ].obj 
+					&& GSI.GLOBALS.onoffObjects[CONFIG.PARAMETERNAMES.CHIIKIMESH ].obj.getVisible() )
+				{
+					list.push( {
+							type : "geojson_tile",
+							layer : GSI.GLOBALS.onoffObjects[CONFIG.PARAMETERNAMES.CHIIKIMESH ].obj._layer,
+							opacity : 1,
+							grayscale : false
+						} );
+				}
+				if ( GSI.GLOBALS.onoffObjects[CONFIG.PARAMETERNAMES.T25000GRID ].obj 
+					&& GSI.GLOBALS.onoffObjects[CONFIG.PARAMETERNAMES.T25000GRID ].obj.getVisible() )
+				{
+					list.push( {
+							type : "geojson_tile",
+							layer : GSI.GLOBALS.onoffObjects[CONFIG.PARAMETERNAMES.T25000GRID ].obj._layer,
+							opacity : 1,
+							grayscale : false
+						} );
+				}
+				
+				
+				for( var i=0; i<GSI.GLOBALS.sakuzuList.getLength(); i++ )
+				{
+					list.push( {
+							type : "geojson",
+							layer : GSI.GLOBALS.sakuzuList.get(i)._layer,
+							opacity : 1,
+							grayscale : false
+						} );
+					
+					
+				}
+				
+				for( var i=0; i<otherList.length; i++ )
+				{
+					if ( !otherList[i]._visibleInfo || otherList[i]._visibleInfo._isHidden ) continue;
+					
+					if ( otherList[i].layerType == "multiLayer" )
+					{
+						var layers = otherList[i]._visibleInfo.layer.getLayers();
+						for( var j=0; j<layers.length; j++ )
+						{
+							if ( layers[j]._info.layerType == "" || layers[j]._info.layerType == "tile" )
+							{
+								multiTileList.push( {
+									type : layers[j]._info.layerType,
+									layer : layers[j],
+									opacity : otherList[i]._visibleInfo.opacity,
+									grayscale : otherList[i]._visibleInfo.grayscale
+								} );
+								continue;
+							}
+							// not tile
+							if ( layers[j]._info.layerType != "tile" )
+							{
+								list.push( {
+									type : layers[j]._info.layerType,
+									layer : layers[j],
+									opacity : otherList[i]._visibleInfo.opacity,
+									grayscale : otherList[i]._visibleInfo.grayscale
+								} );
+							}
+							
+						}
+					}
+					else
+					{
+						list.push( {
+							type : otherList[i].layerType,
+							layer : otherList[i]._visibleInfo.layer,
+							opacity : otherList[i]._visibleInfo.opacity,
+							grayscale : otherList[i]._visibleInfo.grayscale
+						} );
+					}
+					
+					//list.push( otherList[i] );
+				}
+				
+				
+				for( var i=0; i<multiTileList.length; i++ )list.push(multiTileList[i]);
+				
+				for( var i=0; i<tileList.length; i++ )
+				{
+					
+					if ( !tileList[i]._visibleInfo || tileList[i]._visibleInfo._isHidden ) continue;
+					list.push( {
+						type : tileList[i].layerType,
+						layer : tileList[i]._visibleInfo.layer,
+						opacity : tileList[i]._visibleInfo.opacity,
+						grayscale : tileList[i]._visibleInfo.grayscale,
+						blend : tileList[i]._visibleInfo.blend
+					} );
+				}
+				
+				
+				if ( !GSI.GLOBALS.mapToImageWindow )
+				{
+					GSI.GLOBALS.mapToImageWindow = new GSI.MapToImageWindow( GSI.GLOBALS.map );
+					GSI.GLOBALS.mapToImage = new GSI.MapToImage(GSI.GLOBALS.map, list);
+					GSI.GLOBALS.mapToImage.on( "finish", function(e) {
+						GSI.GLOBALS.mapToImageWindow.setCanvas(e.canvas[0]);
+					} );
+				}
+				else
+					GSI.GLOBALS.mapToImage.setList( list );
+				GSI.GLOBALS.mapToImageWindow.show(L.bind(function(){
+					GSI.GLOBALS.mapToImage.start();
+				
+				}, this));
+				
+				
+		
+	
+				break;
+				
+			case 'gsi3d_custom':
+				
+				if ( ! GSI.GLOBALS.threeDAreaSelectLayer )
+					GSI.GLOBALS.threeDAreaSelectLayer 
+						= new GSI.ThreeDAreaSelectLayer(GSI.GLOBALS.map.getCenter(),{zoomControl:GSI.GLOBALS.zoomControl});
+				GSI.GLOBALS.threeDAreaSelectLayer.setLatLng(GSI.GLOBALS.map.getCenter());
+				GSI.GLOBALS.map.addLayer( GSI.GLOBALS.threeDAreaSelectLayer );
+				
+				
+				break;
 			}
 		}
 	});
-
+	GSI.GLOBALS.funcMenu.on("hide", function(){
+		if ( GSI.GLOBALS._area3D ) GSI.GLOBALS.map.removeLayer( GSI.GLOBALS._area3D );
+			GSI.GLOBALS._area3D = null;
+		
+	} );
+	
+	GSI.GLOBALS.funcMenu.disableMenuItem( 'gps_end' );
+	GSI.GLOBALS.funcMenu.disableMenuItem( 'gps_save' );
+	
 	// Zoom control
-	GSI.GLOBALS.map.addControl(new L.Control.Zoom({position:"bottomleft"}));
+	GSI.GLOBALS.zoomControl = new L.Control.Zoom({position:"bottomleft"});
+	GSI.GLOBALS.map.addControl(GSI.GLOBALS.zoomControl);
 
-	// Showing Layers dialog
+	//GSI.GLOBALS.confirmDlg
+	//= new GSI.Modal.confirmDialog();
+	
+	var cs = GSI.GLOBALS.queryParams.getControlSetting();
+	if(cs.header.visible == false)
+	{
+		GSI.GLOBALS.map.addControl(new GSI.Control.CopyrightPanel({position:"bottomright"}));
+	}
+
+	//  Showing Layers dialog
 	var left = 8;
-	var top  = GSI.GLOBALS.header.getHeight() + 8;
+	//var top  = GSI.GLOBALS.header.getHeight() + 8;
+	var top  = GSI.GLOBALS.header.getHeight() + 400;
 	var dlgVisible = GSI.GLOBALS.queryParams.getViewListDialogVisible();
 	if(dlgVisible){
 		left = 8;
-		top  = GSI.GLOBALS.header.getHeight() + 8;
+		top  = GSI.GLOBALS.header.getHeight() + 400;
 	}
+	
+	
+	top = GSI.Utils.getScreenSize().h-240;
+	
+	
 	GSI.GLOBALS.viewListDialog
     = new GSI.ViewListDialog(
       GSI.GLOBALS.map
+    , GSI.GLOBALS.layersJSON
     , GSI.GLOBALS.mapLayerList
     , GSI.GLOBALS.cocoTileLayer
     , {
@@ -19296,17 +22674,20 @@ function initialize_proc_map()
 
 	// Display possible Layers dialog
 	left = 8;
-	top  = GSI.GLOBALS.header.getHeight() + 136;
+	//top  = GSI.GLOBALS.header.getHeight() + 136;
+	top  = GSI.GLOBALS.header.getHeight() + 8;
+	
 	dlgVisible = GSI.GLOBALS.queryParams.getLayerTreeDialogVisible();
 	if(dlgVisible){
         left = 8;
-		top  = GSI.GLOBALS.header.getHeight() + 136;
+		top  = GSI.GLOBALS.header.getHeight() + 8;
 	}
 	GSI.GLOBALS.layerTreeDialog
     = new GSI.LayerTreeDialog(      
-      GSI.GLOBALS.mapLayerList
-    , GSI.GLOBALS.cocoTileLayer
-    , {
+      GSI.GLOBALS.mapLayerList, 
+	  GSI.GLOBALS.cocoTileLayer, 
+	  CONFIG.layersTab, 
+	  {
           left        : left
         , top         : top
         , width       : 320
@@ -19342,7 +22723,7 @@ function initialize_proc_map()
         );
 	}
 
-	// If you have a shared drawing information, dialog generation
+	// If you have a shared drawing information, dialog generation.
 	GSI.GLOBALS.sakuzuList
     =  new GSI.SakuzuList(
       GSI.GLOBALS.map
@@ -19357,10 +22738,12 @@ function initialize_proc_map()
           defaultList : GSI.ClientMode.sakuzuList
       }
     );
-
-    // Add Layers.txt 
-    GSI.GLOBALS.layersJSON.add(CONFIG.layers);
-
+	
+	
+	// Add Layers.txt 
+	GSI.GLOBALS.layersJSON.add(CONFIG.layers);
+    
+	
 	// Adjustment of the screen size
 	var adjustWindow = function(){
 		var size = GSI.Utils.getScreenSize();
@@ -19415,6 +22798,26 @@ function initialize_proc_map()
     GSI.GLOBALS.hash_options = new GSI.HashOptions(GSI.GLOBALS.map);
     GSI.GLOBALS.hash.bind(GSI.GLOBALS.hash_options, GSI.GLOBALS.hash_options.Callback);
 };
+function confirmOKClick( dlg )
+{
+	dlg.hide();
+	GSI.GLOBALS.evacManager.accept();
+	initialize_proc_sub();
+
+	if ( GSI.GLOBALS.evacManager.isVisibleDialog() == true)
+	{	
+		GSI.GLOBALS.evacDialog.show();
+	}
+	CONFIG.layerEvacuationIsConfirmOK = true;
+};
+
+function confirmCancelClick( dlg )
+{
+	dlg.hide();
+	GSI.GLOBALS.evacManager.cancel();
+	initialize_proc_sub();
+	CONFIG.layerEvacuationIsConfirmOK = false;
+};
 
 function Vectors(){
     var ret = null;
@@ -19435,4917 +22838,4447 @@ function HelpButton(){
     if ( GSI.GLOBALS.HelpDialog && GSI.GLOBALS.HelpDialog.getVisible() ){
      GSI.GLOBALS.HelpDialog.hide();
     }
-    GSI.GLOBALS.HelpDialog = new GSI.HelpDialog( GSI.GLOBALS.map,GSI.GLOBALS.mapMouse,{ left :windowSize.w - 215, top :45,effect : CONFIG.EFFECTS.DIALOG } );
+    GSI.GLOBALS.HelpDialog = new GSI.HelpDialog( GSI.GLOBALS.map,GSI.GLOBALS.mapMouse,{ left :"center", top :45,effect : CONFIG.EFFECTS.DIALOG } );
     GSI.GLOBALS.HelpDialog.show();
 };
 
-GSI.MeshDeclination ={
-"684827":"8.30,8°20′",
-"684826":"8.34,8°20′",
-"684825":"8.37,8°20′",
-"684824":"8.41,8°20′",
-"684817":"8.28,8°20′",
-"684816":"8.31,8°20′",
-"684815":"8.35,8°20′",
-"684814":"8.38,8°20′",
-"684813":"8.42,8°30′",
-"684807":"8.25,8°20′",
-"684806":"8.29,8°20′",
-"684805":"8.32,8°20′",
-"684804":"8.36,8°20′",
-"684803":"8.39,8°20′",
-"684802":"8.43,8°30′",
-"684800":"8.50,8°30′",
-"684717":"8.56,8°30′",
-"684707":"8.53,8°30′",
-"684706":"8.57,8°30′",
-"684210":"9.95,10° 0′",
-"684201":"10.31,10°20′",
-"684200":"10.03,10° 0′",
-"684127":"10.15,10°10′",
-"684126":"10.25,10°20′",
-"684117":"10.10,10°10′",
-"684116":"10.29,10°20′",
-"684115":"10.31,10°20′",
-"684110":"8.97,9° 0′",
-"684107":"10.08,10° 0′",
-"684106":"10.29,10°20′",
-"684105":"10.38,10°20′",
-"684100":"9.05,9° 0′",
-"684027":"9.15,9°10′",
-"684017":"8.95,9° 0′",
-"684007":"8.98,9° 0′",
-"674876":"8.26,8°20′",
-"674875":"8.30,8°20′",
-"674874":"8.33,8°20′",
-"674873":"8.37,8°20′",
-"674872":"8.40,8°20′",
-"674871":"8.44,8°30′",
-"674870":"8.47,8°30′",
-"674863":"8.34,8°20′",
-"674862":"8.38,8°20′",
-"674861":"8.41,8°20′",
-"674860":"8.45,8°30′",
-"674851":"8.39,8°20′",
-"674850":"8.42,8°30′",
-"674840":"8.40,8°20′",
-"674777":"8.51,8°30′",
-"674776":"8.54,8°30′",
-"674767":"8.48,8°30′",
-"674766":"8.52,8°30′",
-"674765":"8.55,8°30′",
-"674757":"8.46,8°30′",
-"674756":"8.49,8°30′",
-"674755":"8.52,8°30′",
-"674754":"8.56,8°30′",
-"674753":"8.59,8°40′",
-"674747":"8.43,8°30′",
-"674746":"8.46,8°30′",
-"674745":"8.50,8°30′",
-"674744":"8.53,8°30′",
-"674737":"8.41,8°20′",
-"674736":"8.44,8°30′",
-"674735":"8.47,8°30′",
-"674734":"8.50,8°30′",
-"674733":"8.54,8°30′",
-"674725":"8.45,8°30′",
-"674724":"8.48,8°30′",
-"674723":"8.51,8°30′",
-"674722":"8.54,8°30′",
-"674721":"8.57,8°30′",
-"674714":"8.45,8°30′",
-"674713":"8.48,8°30′",
-"674712":"8.51,8°30′",
-"674711":"8.55,8°30′",
-"674710":"8.58,8°30′",
-"674703":"8.46,8°30′",
-"674702":"8.49,8°30′",
-"674701":"8.52,8°30′",
-"674272":"10.78,10°50′",
-"674271":"10.66,10°40′",
-"674270":"10.29,10°20′",
-"674262":"10.72,10°40′",
-"674261":"10.77,10°50′",
-"674260":"10.47,10°30′",
-"674253":"10.15,10°10′",
-"674252":"10.51,10°30′",
-"674251":"10.65,10°40′",
-"674250":"10.44,10°30′",
-"674244":"9.74,9°40′",
-"674243":"10.10,10°10′",
-"674242":"10.55,10°30′",
-"674241":"10.68,10°40′",
-"674240":"10.38,10°20′",
-"674234":"9.90,9°50′",
-"674233":"10.30,10°20′",
-"674232":"10.85,10°50′",
-"674231":"10.90,10°50′",
-"674230":"10.31,10°20′",
-"674225":"10.02,10° 0′",
-"674224":"10.19,10°10′",
-"674223":"10.50,10°30′",
-"674222":"10.96,11° 0′",
-"674221":"10.89,10°50′",
-"674220":"10.15,10°10′",
-"674216":"9.58,9°30′",
-"674215":"9.92,10° 0′",
-"674214":"10.23,10°10′",
-"674213":"10.44,10°30′",
-"674212":"10.71,10°40′",
-"674211":"10.54,10°30′",
-"674210":"9.82,9°50′",
-"674207":"9.53,9°30′",
-"674206":"9.38,9°20′",
-"674205":"9.62,9°40′",
-"674204":"10.01,10° 0′",
-"674203":"10.31,10°20′",
-"674202":"10.61,10°40′",
-"674201":"10.37,10°20′",
-"674200":"9.66,9°40′",
-"674177":"10.14,10°10′",
-"674176":"10.26,10°20′",
-"674175":"10.41,10°20′",
-"674174":"10.41,10°20′",
-"674171":"9.75,9°50′",
-"674170":"9.35,9°20′",
-"674167":"10.22,10°10′",
-"674166":"10.23,10°10′",
-"674165":"10.36,10°20′",
-"674164":"10.38,10°20′",
-"674162":"10.16,10°10′",
-"674161":"9.91,9°50′",
-"674157":"10.20,10°10′",
-"674156":"10.16,10°10′",
-"674155":"10.24,10°10′",
-"674154":"10.26,10°20′",
-"674152":"10.06,10° 0′",
-"674151":"9.88,9°50′",
-"674147":"10.07,10° 0′",
-"674146":"10.04,10° 0′",
-"674145":"10.14,10°10′",
-"674137":"9.84,9°50′",
-"674136":"9.90,9°50′",
-"674135":"10.10,10°10′",
-"674127":"9.63,9°40′",
-"674126":"9.79,9°50′",
-"674125":"10.06,10° 0′",
-"674117":"9.47,9°30′",
-"674116":"9.76,9°50′",
-"674107":"9.43,9°30′",
-"674106":"9.73,9°40′",
-"674077":"9.19,9°10′",
-"664772":"8.46,8°30′",
-"664771":"8.49,8°30′",
-"664770":"8.52,8°30′",
-"664762":"8.44,8°30′",
-"664761":"8.47,8°30′",
-"664760":"8.50,8°30′",
-"664750":"8.47,8°30′",
-"664677":"8.55,8°30′",
-"664667":"8.53,8°30′",
-"664661":"8.72,8°40′",
-"664660":"8.75,8°50′",
-"664657":"8.50,8°30′",
-"664656":"8.53,8°30′",
-"664654":"8.60,8°40′",
-"664653":"8.63,8°40′",
-"664652":"8.67,8°40′",
-"664651":"8.70,8°40′",
-"664650":"8.73,8°40′",
-"664644":"8.57,8°30′",
-"664643":"8.61,8°40′",
-"664642":"8.65,8°40′",
-"664641":"8.68,8°40′",
-"664640":"8.72,8°40′",
-"664632":"8.62,8°40′",
-"664631":"8.67,8°40′",
-"664630":"8.70,8°40′",
-"664620":"8.70,8°40′",
-"664547":"8.74,8°40′",
-"664542":"8.80,8°50′",
-"664537":"8.73,8°40′",
-"664532":"8.76,8°50′",
-"664531":"8.76,8°50′",
-"664527":"8.73,8°40′",
-"664526":"8.74,8°40′",
-"664522":"8.73,8°40′",
-"664521":"8.72,8°40′",
-"664517":"8.74,8°40′",
-"664516":"8.74,8°40′",
-"664515":"8.74,8°40′",
-"664512":"8.71,8°40′",
-"664511":"8.70,8°40′",
-"664510":"8.67,8°40′",
-"664507":"8.73,8°40′",
-"664506":"8.72,8°40′",
-"664505":"8.72,8°40′",
-"664501":"8.75,8°50′",
-"664500":"8.73,8°40′",
-"664412":"8.74,8°40′",
-"664411":"8.82,8°50′",
-"664410":"8.94,9° 0′",
-"664407":"8.66,8°40′",
-"664402":"8.69,8°40′",
-"664401":"8.80,8°50′",
-"664400":"8.93,9° 0′",
-"664360":"9.86,9°50′",
-"664351":"9.61,9°40′",
-"664350":"9.73,9°40′",
-"664343":"9.54,9°30′",
-"664342":"9.55,9°30′",
-"664341":"9.56,9°30′",
-"664340":"9.63,9°40′",
-"664334":"9.54,9°30′",
-"664333":"9.54,9°30′",
-"664332":"9.54,9°30′",
-"664331":"9.55,9°30′",
-"664330":"9.59,9°40′",
-"664326":"9.32,9°20′",
-"664325":"9.44,9°30′",
-"664324":"9.45,9°30′",
-"664323":"9.47,9°30′",
-"664322":"9.50,9°30′",
-"664321":"9.51,9°30′",
-"664320":"9.56,9°30′",
-"664317":"9.11,9°10′",
-"664316":"9.27,9°20′",
-"664315":"9.32,9°20′",
-"664314":"9.25,9°20′",
-"664313":"9.29,9°20′",
-"664312":"9.41,9°20′",
-"664311":"9.47,9°30′",
-"664310":"9.53,9°30′",
-"664307":"9.07,9° 0′",
-"664306":"9.22,9°10′",
-"664305":"9.25,9°20′",
-"664304":"9.18,9°10′",
-"664303":"9.24,9°10′",
-"664302":"9.38,9°20′",
-"664301":"9.43,9°30′",
-"664300":"9.47,9°30′",
-"664277":"9.75,9°50′",
-"664276":"9.52,9°30′",
-"664275":"9.58,9°30′",
-"664274":"9.92,10° 0′",
-"664273":"10.36,10°20′",
-"664272":"10.80,10°50′",
-"664271":"10.64,10°40′",
-"664270":"9.90,9°50′",
-"664267":"9.90,9°50′",
-"664266":"9.75,9°50′",
-"664265":"9.71,9°40′",
-"664264":"9.91,9°50′",
-"664263":"10.25,10°20′",
-"664262":"10.68,10°40′",
-"664261":"10.66,10°40′",
-"664260":"10.11,10°10′",
-"664257":"9.82,9°50′",
-"664256":"9.79,9°50′",
-"664255":"9.81,9°50′",
-"664254":"9.93,10° 0′",
-"664253":"10.08,10° 0′",
-"664252":"10.24,10°10′",
-"664251":"10.24,10°10′",
-"664250":"10.01,10° 0′",
-"664247":"9.71,9°40′",
-"664246":"9.76,9°50′",
-"664245":"9.85,9°50′",
-"664244":"10.02,10° 0′",
-"664243":"10.12,10°10′",
-"664242":"10.08,10° 0′",
-"664241":"9.95,10° 0′",
-"664240":"9.84,9°50′",
-"664237":"9.65,9°40′",
-"664236":"9.72,9°40′",
-"664235":"9.86,9°50′",
-"664234":"10.07,10° 0′",
-"664233":"10.21,10°10′",
-"664232":"10.07,10° 0′",
-"664231":"9.82,9°50′",
-"664230":"9.73,9°40′",
-"664227":"9.62,9°40′",
-"664226":"9.66,9°40′",
-"664225":"9.80,9°50′",
-"664224":"10.05,10° 0′",
-"664223":"10.21,10°10′",
-"664222":"10.07,10° 0′",
-"664221":"9.80,9°50′",
-"664220":"9.70,9°40′",
-"664217":"9.56,9°30′",
-"664216":"9.55,9°30′",
-"664215":"9.70,9°40′",
-"664214":"10.06,10° 0′",
-"664213":"10.26,10°20′",
-"664212":"10.19,10°10′",
-"664211":"9.90,9°50′",
-"664210":"9.71,9°40′",
-"664207":"9.47,9°30′",
-"664206":"9.41,9°20′",
-"664205":"9.64,9°40′",
-"664204":"10.11,10°10′",
-"664203":"10.36,10°20′",
-"664202":"10.42,10°30′",
-"664201":"10.19,10°10′",
-"664200":"9.68,9°40′",
-"664177":"9.56,9°30′",
-"664176":"9.69,9°40′",
-"664167":"9.73,9°40′",
-"664166":"9.68,9°40′",
-"664157":"9.80,9°50′",
-"664156":"9.75,9°50′",
-"664155":"9.83,9°50′",
-"664153":"9.91,9°50′",
-"664152":"9.91,9°50′",
-"664147":"9.82,9°50′",
-"664146":"9.87,9°50′",
-"664145":"9.95,10° 0′",
-"664142":"9.91,9°50′",
-"664137":"9.82,9°50′",
-"664136":"9.96,10° 0′",
-"664135":"10.03,10° 0′",
-"664127":"9.84,9°50′",
-"664126":"9.98,10° 0′",
-"664125":"10.02,10° 0′",
-"664117":"9.80,9°50′",
-"664116":"9.93,10° 0′",
-"664115":"9.93,10° 0′",
-"664107":"9.54,9°30′",
-"664106":"9.65,9°40′",
-"664105":"9.72,9°40′",
-"654667":"8.25,8°20′",
-"654666":"8.27,8°20′",
-"654665":"8.30,8°20′",
-"654657":"8.20,8°10′",
-"654656":"8.22,8°10′",
-"654655":"8.24,8°10′",
-"654654":"8.27,8°20′",
-"654646":"8.17,8°10′",
-"654645":"8.19,8°10′",
-"654644":"8.21,8°10′",
-"654633":"8.15,8°10′",
-"654632":"8.15,8°10′",
-"654623":"8.07,8° 0′",
-"654621":"8.05,8° 0′",
-"654620":"8.02,8° 0′",
-"654611":"7.94,8° 0′",
-"654610":"7.89,7°50′",
-"654601":"7.86,7°50′",
-"654600":"7.78,7°50′",
-"654576":"8.68,8°40′",
-"654575":"8.68,8°40′",
-"654574":"8.71,8°40′",
-"654571":"8.92,9° 0′",
-"654570":"8.94,9° 0′",
-"654565":"8.63,8°40′",
-"654564":"8.69,8°40′",
-"654563":"8.78,8°50′",
-"654560":"9.16,9°10′",
-"654554":"8.63,8°40′",
-"654553":"8.76,8°50′",
-"654550":"9.18,9°10′",
-"654544":"8.55,8°30′",
-"654543":"8.70,8°40′",
-"654541":"8.92,9° 0′",
-"654540":"8.92,9° 0′",
-"654534":"8.42,8°30′",
-"654532":"8.80,8°50′",
-"654531":"8.76,8°50′",
-"654530":"8.55,8°30′",
-"654522":"8.80,8°50′",
-"654521":"8.73,8°40′",
-"654520":"8.37,8°20′",
-"654517":"7.83,7°50′",
-"654516":"7.77,7°50′",
-"654512":"8.64,8°40′",
-"654511":"8.70,8°40′",
-"654510":"8.45,8°30′",
-"654507":"7.68,7°40′",
-"654506":"7.56,7°30′",
-"654505":"7.46,7°30′",
-"654504":"7.47,7°30′",
-"654502":"8.19,8°10′",
-"654501":"8.40,8°20′",
-"654500":"8.43,8°30′",
-"654477":"8.83,8°50′",
-"654476":"8.74,8°40′",
-"654475":"8.74,8°40′",
-"654474":"8.75,8°50′",
-"654473":"8.71,8°40′",
-"654472":"8.74,8°40′",
-"654471":"8.88,8°50′",
-"654470":"8.98,9° 0′",
-"654467":"9.06,9° 0′",
-"654466":"8.95,9° 0′",
-"654465":"8.98,9° 0′",
-"654464":"9.04,9° 0′",
-"654463":"8.94,9° 0′",
-"654462":"8.81,8°50′",
-"654461":"8.85,8°50′",
-"654460":"8.98,9° 0′",
-"654457":"9.14,9°10′",
-"654456":"9.10,9°10′",
-"654455":"9.22,9°10′",
-"654454":"9.37,9°20′",
-"654453":"9.21,9°10′",
-"654452":"8.82,8°50′",
-"654451":"8.69,8°40′",
-"654450":"8.90,8°50′",
-"654447":"8.90,8°50′",
-"654446":"8.98,9° 0′",
-"654445":"9.21,9°10′",
-"654444":"9.45,9°30′",
-"654443":"9.28,9°20′",
-"654442":"8.77,8°50′",
-"654441":"8.55,8°30′",
-"654440":"8.82,8°50′",
-"654437":"8.47,8°30′",
-"654436":"8.63,8°40′",
-"654435":"8.97,9° 0′",
-"654434":"9.29,9°20′",
-"654433":"9.19,9°10′",
-"654432":"8.69,8°40′",
-"654431":"8.41,8°20′",
-"654430":"8.65,8°40′",
-"654427":"8.19,8°10′",
-"654426":"8.33,8°20′",
-"654425":"8.73,8°40′",
-"654424":"9.19,9°10′",
-"654423":"9.19,9°10′",
-"654422":"8.66,8°40′",
-"654421":"8.19,8°10′",
-"654420":"8.28,8°20′",
-"654417":"8.30,8°20′",
-"654416":"8.35,8°20′",
-"654415":"8.69,8°40′",
-"654414":"9.20,9°10′",
-"654413":"9.29,9°20′",
-"654412":"8.74,8°40′",
-"654411":"8.08,8° 0′",
-"654410":"7.98,8° 0′",
-"654407":"8.47,8°30′",
-"654406":"8.54,8°30′",
-"654405":"8.82,8°50′",
-"654404":"9.23,9°10′",
-"654403":"9.33,9°20′",
-"654402":"8.90,8°50′",
-"654401":"8.28,8°20′",
-"654400":"8.08,8° 0′",
-"654377":"9.05,9° 0′",
-"654376":"9.20,9°10′",
-"654375":"9.34,9°20′",
-"654374":"9.40,9°20′",
-"654373":"9.45,9°30′",
-"654372":"9.45,9°30′",
-"654371":"9.39,9°20′",
-"654370":"9.39,9°20′",
-"654367":"9.09,9°10′",
-"654366":"9.20,9°10′",
-"654365":"9.39,9°20′",
-"654364":"9.59,9°40′",
-"654363":"9.67,9°40′",
-"654362":"9.53,9°30′",
-"654361":"9.37,9°20′",
-"654360":"9.38,9°20′",
-"654357":"9.14,9°10′",
-"654356":"9.21,9°10′",
-"654355":"9.32,9°20′",
-"654354":"9.57,9°30′",
-"654353":"9.69,9°40′",
-"654352":"9.55,9°30′",
-"654351":"9.38,9°20′",
-"654350":"9.40,9°20′",
-"654347":"9.15,9°10′",
-"654346":"9.19,9°10′",
-"654345":"9.20,9°10′",
-"654344":"9.33,9°20′",
-"654343":"9.40,9°20′",
-"654342":"9.34,9°20′",
-"654341":"9.31,9°20′",
-"654340":"9.39,9°20′",
-"654337":"9.01,9° 0′",
-"654336":"9.15,9°10′",
-"654335":"9.14,9°10′",
-"654334":"9.07,9° 0′",
-"654333":"9.00,9° 0′",
-"654332":"9.03,9° 0′",
-"654331":"9.17,9°10′",
-"654330":"9.34,9°20′",
-"654327":"8.73,8°40′",
-"654326":"9.10,9°10′",
-"654325":"9.19,9°10′",
-"654324":"9.01,9° 0′",
-"654323":"8.84,8°50′",
-"654322":"8.90,8°50′",
-"654321":"9.10,9°10′",
-"654320":"9.29,9°20′",
-"654317":"8.47,8°30′",
-"654316":"9.03,9° 0′",
-"654315":"9.25,9°20′",
-"654314":"9.13,9°10′",
-"654313":"8.97,9° 0′",
-"654312":"9.00,9° 0′",
-"654311":"9.13,9°10′",
-"654310":"9.28,9°20′",
-"654307":"8.44,8°30′",
-"654306":"8.94,9° 0′",
-"654305":"9.20,9°10′",
-"654304":"9.21,9°10′",
-"654303":"9.16,9°10′",
-"654302":"9.16,9°10′",
-"654301":"9.20,9°10′",
-"654300":"9.28,9°20′",
-"654277":"9.41,9°20′",
-"654276":"9.35,9°20′",
-"654275":"9.58,9°30′",
-"654274":"10.00,10° 0′",
-"654273":"10.16,10°10′",
-"654272":"10.62,10°40′",
-"654271":"10.70,10°40′",
-"654270":"9.68,9°40′",
-"654267":"9.47,9°30′",
-"654266":"9.48,9°30′",
-"654265":"9.62,9°40′",
-"654264":"9.75,9°50′",
-"654263":"9.72,9°40′",
-"654262":"10.36,10°20′",
-"654261":"10.78,10°50′",
-"654260":"9.78,9°50′",
-"654257":"9.55,9°30′",
-"654256":"9.64,9°40′",
-"654255":"9.70,9°40′",
-"654254":"9.67,9°40′",
-"654253":"9.42,9°30′",
-"654252":"9.73,9°40′",
-"654251":"10.31,10°20′",
-"654250":"10.22,10°10′",
-"654247":"9.54,9°30′",
-"654246":"9.64,9°40′",
-"654245":"9.67,9°40′",
-"654244":"9.65,9°40′",
-"654243":"9.45,9°30′",
-"654242":"9.15,9°10′",
-"654241":"9.69,9°40′",
-"654240":"10.59,10°40′",
-"654237":"9.48,9°30′",
-"654236":"9.58,9°30′",
-"654235":"9.64,9°40′",
-"654234":"9.71,9°40′",
-"654233":"9.58,9°30′",
-"654232":"9.00,9° 0′",
-"654231":"8.95,9° 0′",
-"654230":"9.95,10° 0′",
-"654227":"9.44,9°30′",
-"654226":"9.57,9°30′",
-"654225":"9.70,9°40′",
-"654224":"9.84,9°50′",
-"654223":"9.73,9°40′",
-"654222":"9.10,9°10′",
-"654221":"8.50,8°30′",
-"654220":"9.01,9° 0′",
-"654217":"9.43,9°30′",
-"654216":"9.58,9°30′",
-"654215":"9.75,9°50′",
-"654214":"9.90,9°50′",
-"654213":"9.75,9°50′",
-"654212":"9.19,9°10′",
-"654211":"8.68,8°40′",
-"654210":"8.72,8°40′",
-"654207":"9.40,9°20′",
-"654206":"9.55,9°30′",
-"654205":"9.72,9°40′",
-"654204":"9.80,9°50′",
-"654203":"9.61,9°40′",
-"654202":"9.19,9°10′",
-"654201":"8.89,8°50′",
-"654200":"8.87,8°50′",
-"654177":"9.01,9° 0′",
-"654176":"9.12,9°10′",
-"654175":"9.38,9°20′",
-"654174":"9.58,9°30′",
-"654167":"8.78,8°50′",
-"654166":"8.72,8°40′",
-"654165":"9.09,9°10′",
-"654164":"9.44,9°30′",
-"654163":"9.65,9°40′",
-"654157":"9.39,9°20′",
-"654156":"8.78,8°50′",
-"654155":"8.98,9° 0′",
-"654154":"9.41,9°20′",
-"654153":"9.67,9°40′",
-"654152":"9.78,9°50′",
-"654147":"10.25,10°20′",
-"654146":"9.03,9° 0′",
-"654145":"9.01,9° 0′",
-"654144":"9.54,9°30′",
-"654143":"9.79,9°50′",
-"654142":"9.84,9°50′",
-"654137":"10.08,10° 0′",
-"654136":"9.17,9°10′",
-"654135":"9.22,9°10′",
-"654134":"9.80,9°50′",
-"654133":"9.92,10° 0′",
-"654132":"9.88,9°50′",
-"654127":"9.34,9°20′",
-"654126":"9.16,9°10′",
-"654125":"9.38,9°20′",
-"654124":"9.87,9°50′",
-"654123":"9.88,9°50′",
-"654122":"9.84,9°50′",
-"654117":"9.01,9° 0′",
-"654116":"9.06,9° 0′",
-"654115":"9.34,9°20′",
-"654114":"9.65,9°40′",
-"654113":"9.67,9°40′",
-"654112":"9.72,9°40′",
-"654107":"8.97,9° 0′",
-"654106":"9.06,9° 0′",
-"654105":"9.31,9°20′",
-"654104":"9.49,9°30′",
-"654103":"9.58,9°30′",
-"654004":"9.80,9°50′",
-"654003":"9.71,9°40′",
-"654002":"9.64,9°40′",
-"644576":"7.42,7°30′",
-"644575":"7.23,7°10′",
-"644574":"7.11,7°10′",
-"644573":"7.28,7°20′",
-"644572":"7.65,7°40′",
-"644571":"7.90,7°50′",
-"644570":"8.11,8°10′",
-"644565":"7.18,7°10′",
-"644564":"7.02,7° 0′",
-"644563":"7.10,7°10′",
-"644562":"7.33,7°20′",
-"644561":"7.50,7°30′",
-"644560":"7.71,7°40′",
-"644554":"7.16,7°10′",
-"644553":"7.19,7°10′",
-"644552":"7.29,7°20′",
-"644551":"7.38,7°20′",
-"644550":"7.56,7°30′",
-"644541":"7.47,7°30′",
-"644540":"7.61,7°40′",
-"644530":"7.72,7°40′",
-"644477":"8.35,8°20′",
-"644476":"8.56,8°30′",
-"644475":"8.83,8°50′",
-"644474":"9.11,9°10′",
-"644473":"9.23,9°10′",
-"644472":"9.01,9° 0′",
-"644471":"8.58,8°30′",
-"644470":"8.37,8°20′",
-"644467":"8.04,8° 0′",
-"644466":"8.34,8°20′",
-"644465":"8.57,8°30′",
-"644464":"8.74,8°40′",
-"644463":"8.87,8°50′",
-"644462":"8.78,8°50′",
-"644461":"8.57,8°30′",
-"644460":"8.49,8°30′",
-"644457":"7.86,7°50′",
-"644456":"8.13,8°10′",
-"644455":"8.31,8°20′",
-"644454":"8.39,8°20′",
-"644453":"8.46,8°30′",
-"644452":"8.42,8°30′",
-"644451":"8.38,8°20′",
-"644450":"8.48,8°30′",
-"644447":"7.83,7°50′",
-"644446":"8.05,8° 0′",
-"644445":"8.20,8°10′",
-"644444":"8.28,8°20′",
-"644443":"8.30,8°20′",
-"644442":"8.26,8°20′",
-"644441":"8.30,8°20′",
-"644440":"8.47,8°30′",
-"644437":"7.88,7°50′",
-"644436":"8.05,8° 0′",
-"644435":"8.21,8°10′",
-"644434":"8.31,8°20′",
-"644433":"8.33,8°20′",
-"644432":"8.30,8°20′",
-"644431":"8.33,8°20′",
-"644430":"8.48,8°30′",
-"644377":"8.51,8°30′",
-"644376":"8.78,8°50′",
-"644375":"9.00,9° 0′",
-"644374":"9.17,9°10′",
-"644373":"9.26,9°20′",
-"644372":"9.24,9°10′",
-"644371":"9.21,9°10′",
-"644370":"9.26,9°20′",
-"644367":"8.53,8°30′",
-"644366":"8.57,8°30′",
-"644365":"8.67,8°40′",
-"644364":"8.93,9° 0′",
-"644363":"9.14,9°10′",
-"644362":"9.13,9°10′",
-"644361":"9.11,9°10′",
-"644360":"9.19,9°10′",
-"644357":"8.54,8°30′",
-"644356":"8.48,8°30′",
-"644355":"8.49,8°30′",
-"644354":"8.73,8°40′",
-"644353":"8.95,9° 0′",
-"644352":"8.95,9° 0′",
-"644351":"8.99,9° 0′",
-"644350":"9.13,9°10′",
-"644347":"8.60,8°40′",
-"644346":"8.61,8°40′",
-"644345":"8.61,8°40′",
-"644344":"8.77,8°50′",
-"644343":"8.91,8°50′",
-"644342":"8.88,8°50′",
-"644341":"8.94,9° 0′",
-"644340":"9.11,9°10′",
-"644337":"8.70,8°40′",
-"644336":"8.83,8°50′",
-"644335":"8.81,8°50′",
-"644334":"8.83,8°50′",
-"644333":"8.88,8°50′",
-"644332":"8.89,8°50′",
-"644331":"8.95,9° 0′",
-"644330":"9.12,9°10′",
-"644327":"8.81,8°50′",
-"644326":"8.93,9° 0′",
-"644325":"8.77,8°50′",
-"644324":"8.60,8°40′",
-"644323":"8.68,8°40′",
-"644322":"8.85,8°50′",
-"644321":"8.97,9° 0′",
-"644320":"9.12,9°10′",
-"644316":"8.85,8°50′",
-"644315":"8.57,8°30′",
-"644314":"8.32,8°20′",
-"644313":"8.48,8°30′",
-"644312":"8.81,8°50′",
-"644311":"8.99,9° 0′",
-"644310":"9.11,9°10′",
-"644305":"8.46,8°30′",
-"644304":"8.31,8°20′",
-"644303":"8.53,8°30′",
-"644302":"8.83,8°50′",
-"644301":"8.98,9° 0′",
-"644300":"9.10,9°10′",
-"644277":"9.36,9°20′",
-"644276":"9.50,9°30′",
-"644275":"9.64,9°40′",
-"644274":"9.65,9°40′",
-"644273":"9.42,9°30′",
-"644272":"9.14,9°10′",
-"644271":"9.03,9° 0′",
-"644270":"9.05,9° 0′",
-"644267":"9.30,9°20′",
-"644266":"9.45,9°30′",
-"644265":"9.60,9°40′",
-"644264":"9.60,9°40′",
-"644263":"9.41,9°20′",
-"644262":"9.22,9°10′",
-"644261":"9.19,9°10′",
-"644260":"9.25,9°20′",
-"644257":"9.26,9°20′",
-"644256":"9.41,9°20′",
-"644255":"9.58,9°30′",
-"644254":"9.65,9°40′",
-"644253":"9.59,9°40′",
-"644252":"9.46,9°30′",
-"644251":"9.41,9°20′",
-"644250":"9.46,9°30′",
-"644247":"9.26,9°20′",
-"644246":"9.40,9°20′",
-"644245":"9.55,9°30′",
-"644244":"9.68,9°40′",
-"644243":"9.72,9°40′",
-"644242":"9.66,9°40′",
-"644241":"9.57,9°30′",
-"644240":"9.59,9°40′",
-"644237":"9.28,9°20′",
-"644236":"9.38,9°20′",
-"644235":"9.47,9°30′",
-"644234":"9.56,9°30′",
-"644233":"9.63,9°40′",
-"644232":"9.61,9°40′",
-"644231":"9.55,9°30′",
-"644230":"9.56,9°30′",
-"644227":"9.26,9°20′",
-"644226":"9.34,9°20′",
-"644225":"9.35,9°20′",
-"644224":"9.36,9°20′",
-"644223":"9.37,9°20′",
-"644222":"9.37,9°20′",
-"644221":"9.39,9°20′",
-"644220":"9.46,9°30′",
-"644217":"9.23,9°10′",
-"644216":"9.28,9°20′",
-"644215":"9.25,9°20′",
-"644214":"9.20,9°10′",
-"644213":"9.15,9°10′",
-"644212":"9.15,9°10′",
-"644211":"9.20,9°10′",
-"644210":"9.40,9°20′",
-"644207":"9.19,9°10′",
-"644206":"9.21,9°10′",
-"644205":"9.17,9°10′",
-"644204":"9.13,9°10′",
-"644203":"9.09,9°10′",
-"644202":"9.06,9° 0′",
-"644201":"9.09,9°10′",
-"644200":"9.39,9°20′",
-"644177":"9.11,9°10′",
-"644176":"9.19,9°10′",
-"644175":"9.30,9°20′",
-"644174":"9.43,9°30′",
-"644173":"9.61,9°40′",
-"644172":"9.80,9°50′",
-"644167":"9.30,9°20′",
-"644166":"9.29,9°20′",
-"644165":"9.26,9°20′",
-"644164":"9.32,9°20′",
-"644163":"9.55,9°30′",
-"644162":"9.80,9°50′",
-"644161":"9.91,9°50′",
-"644160":"9.89,9°50′",
-"644157":"9.51,9°30′",
-"644156":"9.42,9°30′",
-"644155":"9.23,9°10′",
-"644154":"9.16,9°10′",
-"644153":"9.35,9°20′",
-"644152":"9.66,9°40′",
-"644151":"9.86,9°50′",
-"644150":"9.81,9°50′",
-"644147":"9.62,9°40′",
-"644146":"9.45,9°30′",
-"644145":"9.17,9°10′",
-"644144":"9.06,9° 0′",
-"644143":"9.16,9°10′",
-"644142":"9.47,9°30′",
-"644141":"9.82,9°50′",
-"644140":"9.79,9°50′",
-"644137":"9.53,9°30′",
-"644136":"9.31,9°20′",
-"644135":"9.08,9° 0′",
-"644134":"9.07,9° 0′",
-"644133":"9.06,9° 0′",
-"644132":"9.25,9°20′",
-"644131":"9.66,9°40′",
-"644130":"9.78,9°50′",
-"644127":"9.45,9°30′",
-"644126":"9.23,9°10′",
-"644125":"9.01,9° 0′",
-"644124":"9.02,9° 0′",
-"644123":"8.96,9° 0′",
-"644122":"9.02,9° 0′",
-"644121":"9.41,9°20′",
-"644120":"9.69,9°40′",
-"644117":"9.57,9°30′",
-"644116":"9.38,9°20′",
-"644115":"9.03,9° 0′",
-"644114":"8.88,8°50′",
-"644113":"8.83,8°50′",
-"644112":"8.87,8°50′",
-"644111":"9.20,9°10′",
-"644110":"9.53,9°30′",
-"644107":"9.71,9°40′",
-"644106":"9.58,9°30′",
-"644105":"9.16,9°10′",
-"644104":"8.87,8°50′",
-"644103":"8.78,8°50′",
-"644102":"8.83,8°50′",
-"644101":"9.06,9° 0′",
-"644100":"9.36,9°20′",
-"644075":"9.73,9°40′",
-"644074":"9.79,9°50′",
-"644073":"9.70,9°40′",
-"644072":"9.63,9°40′",
-"644067":"9.72,9°40′",
-"644066":"9.57,9°30′",
-"644065":"9.64,9°40′",
-"644064":"9.76,9°50′",
-"644063":"9.73,9°40′",
-"644062":"9.69,9°40′",
-"644057":"9.59,9°40′",
-"644056":"9.48,9°30′",
-"644055":"9.64,9°40′",
-"644054":"9.84,9°50′",
-"644053":"9.88,9°50′",
-"644047":"9.52,9°30′",
-"644046":"9.43,9°30′",
-"644045":"9.70,9°40′",
-"644044":"10.05,10° 0′",
-"644043":"10.14,10°10′",
-"644037":"9.56,9°30′",
-"644036":"9.48,9°30′",
-"644035":"9.78,9°50′",
-"644034":"10.20,10°10′",
-"644033":"10.29,10°20′",
-"644027":"9.68,9°40′",
-"644026":"9.68,9°40′",
-"644025":"9.94,10° 0′",
-"644024":"10.20,10°10′",
-"644023":"10.13,10°10′",
-"644022":"9.96,10° 0′",
-"644017":"9.69,9°40′",
-"644016":"9.76,9°50′",
-"644015":"9.90,9°50′",
-"644014":"9.89,9°50′",
-"644013":"9.66,9°40′",
-"644012":"9.52,9°30′",
-"644011":"9.63,9°40′",
-"644007":"9.53,9°30′",
-"644006":"9.48,9°30′",
-"644005":"9.29,9°20′",
-"644004":"9.06,9° 0′",
-"644003":"8.94,9° 0′",
-"644002":"9.02,9° 0′",
-"644001":"9.31,9°20′",
-"644000":"9.60,9°40′",
-"643907":"9.69,9°40′",
-"643906":"9.70,9°40′",
-"634375":"8.52,8°30′",
-"634374":"8.54,8°30′",
-"634373":"8.71,8°40′",
-"634372":"8.83,8°50′",
-"634371":"8.91,8°50′",
-"634370":"9.04,9° 0′",
-"634364":"8.69,8°40′",
-"634363":"8.79,8°50′",
-"634362":"8.80,8°50′",
-"634361":"8.83,8°50′",
-"634360":"8.97,9° 0′",
-"634353":"8.76,8°50′",
-"634352":"8.78,8°50′",
-"634351":"8.85,8°50′",
-"634350":"8.99,9° 0′",
-"634343":"8.71,8°40′",
-"634342":"8.76,8°50′",
-"634341":"8.87,8°50′",
-"634340":"9.01,9° 0′",
-"634332":"8.72,8°40′",
-"634331":"8.84,8°50′",
-"634330":"8.99,9° 0′",
-"634322":"8.72,8°40′",
-"634321":"8.82,8°50′",
-"634320":"8.96,9° 0′",
-"634312":"8.78,8°50′",
-"634311":"8.84,8°50′",
-"634310":"8.94,9° 0′",
-"634302":"8.87,8°50′",
-"634301":"8.93,9° 0′",
-"634300":"8.97,9° 0′",
-"634277":"9.13,9°10′",
-"634276":"9.14,9°10′",
-"634275":"9.11,9°10′",
-"634274":"9.08,9° 0′",
-"634273":"9.10,9°10′",
-"634272":"9.12,9°10′",
-"634271":"9.13,9°10′",
-"634270":"9.35,9°20′",
-"634267":"9.08,9° 0′",
-"634266":"9.11,9°10′",
-"634265":"9.05,9° 0′",
-"634264":"8.98,9° 0′",
-"634263":"9.04,9° 0′",
-"634262":"9.19,9°10′",
-"634261":"9.23,9°10′",
-"634260":"9.31,9°20′",
-"634257":"9.09,9°10′",
-"634256":"9.14,9°10′",
-"634255":"9.07,9° 0′",
-"634254":"8.89,8°50′",
-"634253":"8.91,8°50′",
-"634252":"9.15,9°10′",
-"634251":"9.28,9°20′",
-"634250":"9.29,9°20′",
-"634247":"9.13,9°10′",
-"634246":"9.25,9°20′",
-"634245":"9.27,9°20′",
-"634244":"9.07,9° 0′",
-"634243":"8.95,9° 0′",
-"634242":"9.13,9°10′",
-"634241":"9.27,9°20′",
-"634237":"9.15,9°10′",
-"634236":"9.35,9°20′",
-"634235":"9.51,9°30′",
-"634234":"9.39,9°20′",
-"634233":"9.18,9°10′",
-"634232":"9.18,9°10′",
-"634227":"9.13,9°10′",
-"634226":"9.34,9°20′",
-"634225":"9.54,9°30′",
-"634224":"9.51,9°30′",
-"634217":"9.09,9°10′",
-"634216":"9.25,9°20′",
-"634177":"9.66,9°40′",
-"634176":"9.60,9°40′",
-"634175":"9.24,9°10′",
-"634174":"8.96,9° 0′",
-"634173":"8.81,8°50′",
-"634172":"8.79,8°50′",
-"634171":"8.95,9° 0′",
-"634170":"9.30,9°20′",
-"634167":"9.47,9°30′",
-"634166":"9.44,9°30′",
-"634163":"8.84,8°50′",
-"634162":"8.76,8°50′",
-"634161":"8.85,8°50′",
-"634160":"9.29,9°20′",
-"634152":"8.76,8°50′",
-"634151":"8.79,8°50′",
-"634150":"9.19,9°10′",
-"634140":"9.07,9° 0′",
-"634130":"9.04,9° 0′",
-"634077":"9.54,9°30′",
-"634076":"9.24,9°10′",
-"634075":"8.58,8°30′",
-"634074":"8.22,8°10′",
-"634073":"8.45,8°30′",
-"634072":"8.89,8°50′",
-"634071":"9.27,9°20′",
-"634070":"9.56,9°30′",
-"634067":"9.66,9°40′",
-"634066":"9.28,9°20′",
-"634065":"8.40,8°20′",
-"634064":"8.06,8° 0′",
-"634063":"8.57,8°30′",
-"634062":"9.23,9°10′",
-"634061":"9.59,9°40′",
-"634060":"9.70,9°40′",
-"634057":"9.59,9°40′",
-"634056":"9.35,9°20′",
-"634052":"9.75,9°50′",
-"634051":"9.99,10° 0′",
-"634050":"9.85,9°50′",
-"634047":"9.35,9°20′",
-"634042":"10.05,10° 0′",
-"634041":"10.17,10°10′",
-"634040":"9.75,9°50′",
-"634037":"9.15,9°10′",
-"634032":"9.94,10° 0′",
-"634031":"10.02,10° 0′",
-"634030":"9.63,9°40′",
-"634023":"9.16,9°10′",
-"634022":"9.51,9°30′",
-"634021":"9.63,9°40′",
-"634020":"9.73,9°40′",
-"634016":"8.84,8°50′",
-"634015":"8.73,8°40′",
-"634014":"8.71,8°40′",
-"634013":"8.91,8°50′",
-"634012":"9.18,9°10′",
-"634011":"9.29,9°20′",
-"634010":"9.70,9°40′",
-"634007":"8.83,8°50′",
-"634006":"8.70,8°40′",
-"634005":"8.62,8°40′",
-"634004":"8.61,8°40′",
-"634003":"8.81,8°50′",
-"634002":"9.19,9°10′",
-"634001":"9.32,9°20′",
-"634000":"9.60,9°40′",
-"633977":"9.64,9°40′",
-"633976":"9.65,9°40′",
-"633967":"9.64,9°40′",
-"633966":"9.59,9°40′",
-"633957":"9.60,9°40′",
-"633956":"9.50,9°30′",
-"633947":"9.39,9°20′",
-"633946":"9.40,9°20′",
-"633937":"9.42,9°30′",
-"633936":"9.52,9°30′",
-"633934":"9.74,9°40′",
-"633927":"9.97,10° 0′",
-"633926":"10.01,10° 0′",
-"633924":"9.85,9°50′",
-"633923":"9.80,9°50′",
-"633917":"10.30,10°20′",
-"633914":"9.93,10° 0′",
-"633913":"9.84,9°50′",
-"633903":"9.85,9°50′",
-"624372":"8.94,9° 0′",
-"624371":"9.02,9° 0′",
-"624362":"8.92,9° 0′",
-"624161":"9.25,9°20′",
-"624160":"9.38,9°20′",
-"624151":"8.91,8°50′",
-"624150":"9.14,9°10′",
-"624140":"8.92,9° 0′",
-"624113":"8.69,8°40′",
-"624111":"9.30,9°20′",
-"624110":"9.47,9°30′",
-"624103":"8.63,8°40′",
-"624102":"8.97,9° 0′",
-"624101":"9.33,9°20′",
-"624100":"9.49,9°30′",
-"624077":"8.89,8°50′",
-"624076":"8.59,8°40′",
-"624075":"8.66,8°40′",
-"624074":"8.69,8°40′",
-"624073":"8.85,8°50′",
-"624072":"9.29,9°20′",
-"624071":"9.60,9°40′",
-"624070":"9.70,9°40′",
-"624067":"9.07,9° 0′",
-"624066":"8.75,8°50′",
-"624065":"8.81,8°50′",
-"624064":"8.80,8°50′",
-"624063":"8.83,8°50′",
-"624062":"9.20,9°10′",
-"624061":"9.63,9°40′",
-"624060":"9.80,9°50′",
-"624057":"9.12,9°10′",
-"624056":"8.99,9° 0′",
-"624055":"8.96,9° 0′",
-"624054":"8.84,8°50′",
-"624053":"8.74,8°40′",
-"624052":"9.02,9° 0′",
-"624051":"9.49,9°30′",
-"624050":"9.77,9°50′",
-"624047":"9.11,9°10′",
-"624045":"9.12,9°10′",
-"624044":"8.99,9° 0′",
-"624043":"8.90,8°50′",
-"624042":"9.07,9° 0′",
-"624041":"9.43,9°30′",
-"624040":"9.70,9°40′",
-"624033":"9.47,9°30′",
-"624032":"9.43,9°30′",
-"624031":"9.43,9°30′",
-"624030":"9.60,9°40′",
-"624027":"9.41,9°20′",
-"624023":"9.88,9°50′",
-"624022":"9.63,9°40′",
-"624021":"9.27,9°20′",
-"624020":"9.32,9°20′",
-"624017":"9.44,9°30′",
-"624016":"9.38,9°20′",
-"624012":"9.38,9°20′",
-"624011":"8.95,9° 0′",
-"624010":"8.96,9° 0′",
-"624007":"9.39,9°20′",
-"624006":"9.28,9°20′",
-"624002":"9.13,9°10′",
-"624001":"8.80,8°50′",
-"624000":"8.81,8°50′",
-"623937":"9.74,9°40′",
-"623927":"9.54,9°30′",
-"623923":"9.56,9°30′",
-"623922":"9.55,9°30′",
-"623913":"9.49,9°30′",
-"623912":"9.50,9°30′",
-"623906":"9.27,9°20′",
-"614173":"8.53,8°30′",
-"614172":"8.84,8°50′",
-"614171":"9.21,9°10′",
-"614170":"9.40,9°20′",
-"614163":"8.36,8°20′",
-"614162":"8.64,8°40′",
-"614161":"9.02,9° 0′",
-"614160":"9.24,9°10′",
-"614153":"8.19,8°10′",
-"614152":"8.52,8°30′",
-"614151":"8.93,9° 0′",
-"614143":"8.05,8° 0′",
-"614142":"8.54,8°30′",
-"614141":"9.03,9° 0′",
-"614133":"7.95,8° 0′",
-"614132":"8.57,8°30′",
-"614131":"9.11,9°10′",
-"614130":"9.04,9° 0′",
-"614123":"7.84,7°50′",
-"614122":"8.45,8°30′",
-"614121":"9.04,9° 0′",
-"614120":"9.00,9° 0′",
-"614113":"7.70,7°40′",
-"614112":"8.27,8°20′",
-"614111":"8.90,8°50′",
-"614110":"8.98,9° 0′",
-"614103":"7.62,7°40′",
-"614102":"8.16,8°10′",
-"614101":"8.79,8°50′",
-"614100":"8.91,8°50′",
-"614077":"9.32,9°20′",
-"614076":"9.17,9°10′",
-"614072":"9.02,9° 0′",
-"614067":"9.17,9°10′",
-"614066":"8.98,9° 0′",
-"614065":"8.92,9° 0′",
-"614064":"8.99,9° 0′",
-"614063":"9.04,9° 0′",
-"614062":"9.00,9° 0′",
-"614057":"8.98,9° 0′",
-"614056":"8.77,8°50′",
-"614055":"8.70,8°40′",
-"614054":"8.83,8°50′",
-"614053":"8.99,9° 0′",
-"614052":"9.03,9° 0′",
-"614051":"9.02,9° 0′",
-"614047":"8.81,8°50′",
-"614046":"8.60,8°40′",
-"614045":"8.56,8°30′",
-"614044":"8.77,8°50′",
-"614043":"9.04,9° 0′",
-"614042":"9.12,9°10′",
-"614037":"8.71,8°40′",
-"614036":"8.51,8°30′",
-"614035":"8.51,8°30′",
-"614034":"8.80,8°50′",
-"614033":"9.13,9°10′",
-"614032":"9.20,9°10′",
-"614027":"8.68,8°40′",
-"614026":"8.46,8°30′",
-"614025":"8.47,8°30′",
-"614024":"8.75,8°50′",
-"614023":"9.08,9° 0′",
-"614022":"9.16,9°10′",
-"614017":"8.68,8°40′",
-"614016":"8.42,8°30′",
-"614015":"8.37,8°20′",
-"614014":"8.61,8°40′",
-"614013":"8.92,9° 0′",
-"614012":"9.04,9° 0′",
-"614011":"8.95,9° 0′",
-"614010":"8.93,9° 0′",
-"614007":"8.61,8°40′",
-"614006":"8.29,8°20′",
-"614005":"8.21,8°10′",
-"614004":"8.44,8°30′",
-"614003":"8.78,8°50′",
-"614002":"8.94,9° 0′",
-"614001":"8.87,8°50′",
-"614000":"8.94,9° 0′",
-"613907":"9.25,9°20′",
-"604173":"7.80,7°50′",
-"604172":"8.26,8°20′",
-"604171":"8.72,8°40′",
-"604170":"8.73,8°40′",
-"604164":"7.93,8° 0′",
-"604163":"8.09,8°10′",
-"604162":"8.41,8°20′",
-"604161":"8.62,8°40′",
-"604160":"8.45,8°30′",
-"604155":"7.89,7°50′",
-"604154":"8.10,8°10′",
-"604153":"8.23,8°10′",
-"604152":"8.44,8°30′",
-"604151":"8.47,8°30′",
-"604150":"8.12,8°10′",
-"604146":"7.84,7°50′",
-"604145":"7.90,7°50′",
-"604144":"7.96,8° 0′",
-"604143":"8.08,8° 0′",
-"604142":"8.36,8°20′",
-"604141":"8.38,8°20′",
-"604140":"8.03,8° 0′",
-"604136":"8.07,8° 0′",
-"604135":"7.90,7°50′",
-"604134":"7.74,7°40′",
-"604133":"7.89,7°50′",
-"604132":"8.32,8°20′",
-"604131":"8.41,8°20′",
-"604130":"8.15,8°10′",
-"604126":"8.40,8°20′",
-"604125":"8.08,8° 0′",
-"604124":"7.76,7°50′",
-"604123":"7.94,8° 0′",
-"604122":"8.41,8°20′",
-"604121":"8.53,8°30′",
-"604120":"8.33,8°20′",
-"604117":"8.67,8°40′",
-"604116":"8.66,8°40′",
-"604115":"8.31,8°20′",
-"604114":"7.93,8° 0′",
-"604113":"8.01,8° 0′",
-"604112":"8.46,8°30′",
-"604111":"8.65,8°40′",
-"604110":"8.50,8°30′",
-"604107":"8.70,8°40′",
-"604106":"8.67,8°40′",
-"604105":"8.34,8°20′",
-"604104":"7.98,8° 0′",
-"604103":"8.03,8° 0′",
-"604102":"8.50,8°30′",
-"604101":"8.80,8°50′",
-"604100":"8.71,8°40′",
-"604077":"8.42,8°30′",
-"604076":"8.12,8°10′",
-"604075":"8.12,8°10′",
-"604074":"8.41,8°20′",
-"604073":"8.75,8°50′",
-"604072":"8.90,8°50′",
-"604071":"8.87,8°50′",
-"604070":"9.05,9° 0′",
-"604067":"8.07,8° 0′",
-"604066":"7.96,8° 0′",
-"604065":"8.24,8°10′",
-"604064":"8.61,8°40′",
-"604063":"8.84,8°50′",
-"604062":"8.85,8°50′",
-"604061":"8.79,8°50′",
-"604060":"8.96,9° 0′",
-"604057":"7.73,7°40′",
-"604056":"7.86,7°50′",
-"604055":"8.47,8°30′",
-"604054":"8.93,9° 0′",
-"604053":"9.01,9° 0′",
-"604052":"8.77,8°50′",
-"604051":"8.51,8°30′",
-"604050":"8.56,8°30′",
-"604047":"7.70,7°40′",
-"604046":"7.93,8° 0′",
-"604045":"8.61,8°40′",
-"604044":"9.12,9°10′",
-"604043":"9.18,9°10′",
-"604042":"8.73,8°40′",
-"604041":"8.33,8°20′",
-"604040":"8.39,8°20′",
-"604037":"7.94,8° 0′",
-"604036":"8.14,8°10′",
-"604035":"8.66,8°40′",
-"604034":"9.15,9°10′",
-"604033":"9.26,9°20′",
-"604032":"8.80,8°50′",
-"604031":"8.46,8°30′",
-"604030":"8.65,8°40′",
-"604027":"8.20,8°10′",
-"604026":"8.33,8°20′",
-"604025":"8.69,8°40′",
-"604024":"9.09,9°10′",
-"604023":"9.24,9°10′",
-"604022":"8.94,9° 0′",
-"604021":"8.71,8°40′",
-"604020":"8.90,8°50′",
-"604017":"8.40,8°20′",
-"604016":"8.49,8°30′",
-"604015":"8.72,8°40′",
-"604014":"8.99,9° 0′",
-"604013":"9.10,9°10′",
-"604012":"8.94,9° 0′",
-"604011":"8.74,8°40′",
-"604010":"8.76,8°50′",
-"604007":"8.62,8°40′",
-"604006":"8.67,8°40′",
-"604005":"8.80,8°50′",
-"604004":"8.89,8°50′",
-"604003":"8.87,8°50′",
-"604002":"8.77,8°50′",
-"604001":"8.64,8°40′",
-"604000":"8.59,8°40′",
-"603977":"9.43,9°30′",
-"603976":"9.54,9°30′",
-"603967":"9.34,9°20′",
-"603966":"9.47,9°30′",
-"603964":"9.28,9°20′",
-"603963":"9.22,9°10′",
-"603957":"8.92,9° 0′",
-"603947":"8.71,8°40′",
-"603927":"9.04,9° 0′",
-"603917":"8.85,8°50′",
-"603907":"8.65,8°40′",
-"603905":"8.77,8°50′",
-"594250":"8.48,8°30′",
-"594240":"8.48,8°30′",
-"594230":"8.42,8°30′",
-"594220":"8.17,8°10′",
-"594210":"7.74,7°40′",
-"594200":"7.45,7°30′",
-"594177":"8.58,8°30′",
-"594176":"8.48,8°30′",
-"594175":"8.19,8°10′",
-"594174":"7.99,8° 0′",
-"594173":"8.13,8°10′",
-"594172":"8.60,8°40′",
-"594171":"8.94,9° 0′",
-"594170":"8.91,8°50′",
-"594167":"8.49,8°30′",
-"594166":"8.33,8°20′",
-"594165":"8.10,8°10′",
-"594164":"8.04,8° 0′",
-"594163":"8.24,8°10′",
-"594162":"8.61,8°40′",
-"594161":"8.89,8°50′",
-"594160":"8.91,8°50′",
-"594157":"8.47,8°30′",
-"594156":"8.31,8°20′",
-"594155":"8.12,8°10′",
-"594154":"8.09,8°10′",
-"594153":"8.24,8°10′",
-"594152":"8.44,8°30′",
-"594151":"8.62,8°40′",
-"594150":"8.71,8°40′",
-"594147":"8.50,8°30′",
-"594146":"8.35,8°20′",
-"594145":"8.19,8°10′",
-"594144":"8.15,8°10′",
-"594143":"8.16,8°10′",
-"594142":"8.20,8°10′",
-"594141":"8.29,8°20′",
-"594140":"8.39,8°20′",
-"594137":"8.47,8°30′",
-"594136":"8.37,8°20′",
-"594135":"8.28,8°20′",
-"594134":"8.25,8°20′",
-"594133":"8.15,8°10′",
-"594132":"8.03,8° 0′",
-"594131":"8.00,8° 0′",
-"594130":"8.07,8° 0′",
-"594127":"8.19,8°10′",
-"594126":"8.23,8°10′",
-"594125":"8.38,8°20′",
-"594124":"8.44,8°30′",
-"594123":"8.24,8°10′",
-"594122":"7.97,8° 0′",
-"594121":"7.86,7°50′",
-"594120":"7.92,8° 0′",
-"594117":"7.64,7°40′",
-"594116":"7.90,7°50′",
-"594115":"8.47,8°30′",
-"594114":"8.70,8°40′",
-"594113":"8.34,8°20′",
-"594112":"7.96,8° 0′",
-"594111":"7.91,7°50′",
-"594110":"8.06,8° 0′",
-"594107":"7.28,7°20′",
-"594106":"7.66,7°40′",
-"594105":"8.42,8°30′",
-"594104":"8.63,8°40′",
-"594103":"8.11,8°10′",
-"594102":"7.80,7°50′",
-"594101":"8.03,8° 0′",
-"594100":"8.34,8°20′",
-"594077":"8.81,8°50′",
-"594076":"8.84,8°50′",
-"594075":"8.92,9° 0′",
-"594074":"8.87,8°50′",
-"594073":"8.67,8°40′",
-"594072":"8.58,8°30′",
-"594071":"8.63,8°40′",
-"594070":"8.70,8°40′",
-"594067":"8.86,8°50′",
-"594066":"8.91,8°50′",
-"594065":"9.04,9° 0′",
-"594064":"8.97,9° 0′",
-"594063":"8.67,8°40′",
-"594062":"8.52,8°30′",
-"594061":"8.64,8°40′",
-"594060":"8.81,8°50′",
-"594057":"8.73,8°40′",
-"594056":"8.83,8°50′",
-"594055":"9.01,9° 0′",
-"594054":"9.00,9° 0′",
-"594053":"8.71,8°40′",
-"594052":"8.50,8°30′",
-"594051":"8.56,8°30′",
-"594050":"8.74,8°40′",
-"594047":"8.46,8°30′",
-"594046":"8.57,8°30′",
-"594045":"8.77,8°50′",
-"594044":"8.82,8°50′",
-"594043":"8.62,8°40′",
-"594042":"8.41,8°20′",
-"594041":"8.42,8°30′",
-"594040":"8.57,8°30′",
-"594037":"8.14,8°10′",
-"594036":"8.25,8°20′",
-"594035":"8.48,8°30′",
-"594034":"8.60,8°40′",
-"594033":"8.48,8°30′",
-"594032":"8.33,8°20′",
-"594031":"8.34,8°20′",
-"594030":"8.48,8°30′",
-"594027":"7.97,8° 0′",
-"594026":"8.06,8° 0′",
-"594025":"8.30,8°20′",
-"594024":"8.46,8°30′",
-"594023":"8.39,8°20′",
-"594022":"8.30,8°20′",
-"594021":"8.35,8°20′",
-"594020":"8.48,8°30′",
-"594017":"8.11,8°10′",
-"594016":"8.15,8°10′",
-"594015":"8.31,8°20′",
-"594014":"8.41,8°20′",
-"594013":"8.34,8°20′",
-"594012":"8.30,8°20′",
-"594011":"8.40,8°20′",
-"594010":"8.54,8°30′",
-"594007":"8.44,8°30′",
-"594006":"8.44,8°30′",
-"594005":"8.45,8°30′",
-"594004":"8.38,8°20′",
-"594003":"8.29,8°20′",
-"594002":"8.31,8°20′",
-"594001":"8.45,8°30′",
-"594000":"8.62,8°40′",
-"593977":"8.73,8°40′",
-"593976":"8.71,8°40′",
-"593975":"8.72,8°40′",
-"593967":"8.83,8°50′",
-"593966":"8.75,8°50′",
-"593965":"8.72,8°40′",
-"593907":"8.71,8°40′",
-"584177":"7.43,7°30′",
-"584176":"7.71,7°40′",
-"584175":"8.12,8°10′",
-"584174":"8.02,8° 0′",
-"584173":"7.46,7°30′",
-"584172":"7.45,7°30′",
-"584171":"8.07,8° 0′",
-"584170":"8.52,8°30′",
-"584167":"7.90,7°50′",
-"584166":"7.97,8° 0′",
-"584165":"7.71,7°40′",
-"584164":"7.25,7°20′",
-"584163":"6.95,7° 0′",
-"584162":"7.33,7°20′",
-"584161":"8.09,8°10′",
-"584160":"8.54,8°30′",
-"584157":"8.18,8°10′",
-"584156":"8.11,8°10′",
-"584155":"7.59,7°40′",
-"584154":"7.15,7°10′",
-"584153":"7.21,7°10′",
-"584152":"7.67,7°40′",
-"584151":"8.17,8°10′",
-"584150":"8.47,8°30′",
-"584147":"8.19,8°10′",
-"584146":"8.11,8°10′",
-"584145":"7.75,7°50′",
-"584144":"7.61,7°40′",
-"584143":"7.87,7°50′",
-"584142":"8.07,8° 0′",
-"584141":"8.13,8°10′",
-"584140":"8.30,8°20′",
-"584135":"8.00,8° 0′",
-"584134":"8.07,8° 0′",
-"584133":"8.25,8°20′",
-"584132":"8.17,8°10′",
-"584131":"7.98,8° 0′",
-"584130":"8.11,8°10′",
-"584125":"8.09,8°10′",
-"584124":"8.20,8°10′",
-"584123":"8.27,8°20′",
-"584122":"8.14,8°10′",
-"584121":"7.95,8° 0′",
-"584120":"8.00,8° 0′",
-"584115":"8.06,8° 0′",
-"584114":"8.13,8°10′",
-"584113":"8.18,8°10′",
-"584112":"8.18,8°10′",
-"584111":"8.09,8°10′",
-"584110":"7.96,8° 0′",
-"584104":"8.01,8° 0′",
-"584103":"8.10,8°10′",
-"584102":"8.27,8°20′",
-"584101":"8.26,8°20′",
-"584100":"7.93,8° 0′",
-"584077":"8.69,8°40′",
-"584076":"8.70,8°40′",
-"584075":"8.57,8°30′",
-"584074":"8.29,8°20′",
-"584073":"8.17,8°10′",
-"584072":"8.29,8°20′",
-"584071":"8.48,8°30′",
-"584070":"8.66,8°40′",
-"584067":"8.75,8°50′",
-"584066":"8.84,8°50′",
-"584065":"8.67,8°40′",
-"584064":"8.22,8°10′",
-"584063":"8.03,8° 0′",
-"584062":"8.24,8°10′",
-"584061":"8.45,8°30′",
-"584060":"8.59,8°40′",
-"584057":"8.66,8°40′",
-"584056":"8.76,8°50′",
-"584055":"8.60,8°40′",
-"584054":"8.22,8°10′",
-"584053":"8.08,8° 0′",
-"584052":"8.28,8°20′",
-"584051":"8.43,8°30′",
-"584050":"8.48,8°30′",
-"584047":"8.49,8°30′",
-"584046":"8.47,8°30′",
-"584045":"8.30,8°20′",
-"584044":"8.15,8°10′",
-"584043":"8.26,8°20′",
-"584042":"8.44,8°30′",
-"584041":"8.47,8°30′",
-"584040":"8.41,8°20′",
-"584037":"8.34,8°20′",
-"584036":"8.27,8°20′",
-"584035":"8.09,8°10′",
-"584034":"8.14,8°10′",
-"584033":"8.42,8°30′",
-"584032":"8.57,8°30′",
-"584031":"8.52,8°30′",
-"584030":"8.40,8°20′",
-"584027":"8.18,8°10′",
-"584026":"8.22,8°10′",
-"584025":"8.22,8°10′",
-"584024":"8.31,8°20′",
-"584023":"8.43,8°30′",
-"584022":"8.48,8°30′",
-"584021":"8.45,8°30′",
-"584020":"8.41,8°20′",
-"584017":"7.91,7°50′",
-"584016":"8.06,8° 0′",
-"584015":"8.31,8°20′",
-"584014":"8.39,8°20′",
-"584013":"8.31,8°20′",
-"584012":"8.25,8°20′",
-"584011":"8.31,8°20′",
-"584010":"8.42,8°30′",
-"584007":"7.65,7°40′",
-"584006":"7.81,7°50′",
-"584005":"8.19,8°10′",
-"584004":"8.34,8°20′",
-"584003":"8.24,8°10′",
-"584002":"8.16,8°10′",
-"584001":"8.26,8°20′",
-"584000":"8.41,8°20′",
-"583977":"8.74,8°40′",
-"583967":"8.63,8°40′",
-"583964":"8.51,8°30′",
-"583957":"8.44,8°30′",
-"583956":"8.38,8°20′",
-"583947":"8.30,8°20′",
-"583946":"8.25,8°20′",
-"583937":"8.28,8°20′",
-"583936":"8.23,8°10′",
-"583927":"8.36,8°20′",
-"583926":"8.29,8°20′",
-"583917":"8.45,8°30′",
-"583916":"8.37,8°20′",
-"583915":"8.30,8°20′",
-"583907":"8.45,8°30′",
-"583906":"8.38,8°20′",
-"583905":"8.29,8°20′",
-"583904":"8.26,8°20′",
-"574174":"7.93,8° 0′",
-"574173":"8.07,8° 0′",
-"574172":"8.32,8°20′",
-"574171":"8.35,8°20′",
-"574170":"7.96,8° 0′",
-"574164":"7.88,7°50′",
-"574163":"8.05,8° 0′",
-"574162":"8.31,8°20′",
-"574161":"8.35,8°20′",
-"574160":"8.01,8° 0′",
-"574154":"7.79,7°50′",
-"574153":"7.96,8° 0′",
-"574152":"8.21,8°10′",
-"574151":"8.26,8°20′",
-"574150":"8.00,8° 0′",
-"574144":"7.67,7°40′",
-"574143":"7.81,7°50′",
-"574142":"8.05,8° 0′",
-"574141":"8.16,8°10′",
-"574140":"8.06,8° 0′",
-"574134":"7.58,7°30′",
-"574133":"7.71,7°40′",
-"574131":"8.14,8°10′",
-"574130":"8.24,8°10′",
-"574124":"7.59,7°40′",
-"574123":"7.70,7°40′",
-"574120":"8.37,8°20′",
-"574077":"7.61,7°40′",
-"574076":"7.73,7°40′",
-"574075":"8.08,8° 0′",
-"574074":"8.28,8°20′",
-"574073":"8.29,8°20′",
-"574072":"8.25,8°20′",
-"574071":"8.26,8°20′",
-"574070":"8.30,8°20′",
-"574067":"7.71,7°40′",
-"574066":"7.80,7°50′",
-"574065":"8.04,8° 0′",
-"574064":"8.23,8°10′",
-"574063":"8.32,8°20′",
-"574062":"8.26,8°20′",
-"574061":"8.14,8°10′",
-"574060":"8.09,8°10′",
-"574057":"7.81,7°50′",
-"574056":"7.88,7°50′",
-"574055":"8.02,8° 0′",
-"574054":"8.12,8°10′",
-"574053":"8.15,8°10′",
-"574052":"8.05,8° 0′",
-"574051":"7.92,8° 0′",
-"574050":"7.90,7°50′",
-"574047":"7.98,8° 0′",
-"574046":"8.00,8° 0′",
-"574045":"7.99,8° 0′",
-"574044":"7.95,8° 0′",
-"574043":"7.84,7°50′",
-"574042":"7.71,7°40′",
-"574041":"7.76,7°50′",
-"574040":"7.92,8° 0′",
-"574037":"8.25,8°20′",
-"574036":"8.14,8°10′",
-"574035":"7.99,8° 0′",
-"574034":"7.79,7°50′",
-"574033":"7.55,7°30′",
-"574032":"7.40,7°20′",
-"574031":"7.64,7°40′",
-"574030":"7.97,8° 0′",
-"574027":"8.42,8°30′",
-"574026":"8.25,8°20′",
-"574025":"8.01,8° 0′",
-"574024":"7.70,7°40′",
-"574023":"7.33,7°20′",
-"574022":"7.12,7°10′",
-"574021":"7.45,7°30′",
-"574020":"7.91,7°50′",
-"574017":"8.37,8°20′",
-"574016":"8.25,8°20′",
-"574015":"8.04,8° 0′",
-"574014":"7.71,7°40′",
-"574013":"7.25,7°20′",
-"574012":"7.02,7° 0′",
-"574011":"7.33,7°20′",
-"574010":"7.81,7°50′",
-"574007":"8.21,8°10′",
-"574006":"8.19,8°10′",
-"574005":"8.09,8°10′",
-"574004":"7.80,7°50′",
-"574003":"7.37,7°20′",
-"574002":"7.16,7°10′",
-"574001":"7.41,7°20′",
-"574000":"7.80,7°50′",
-"573977":"8.32,8°20′",
-"573976":"8.28,8°20′",
-"573975":"8.22,8°10′",
-"573974":"8.22,8°10′",
-"573967":"8.12,8°10′",
-"573966":"8.15,8°10′",
-"573965":"8.14,8°10′",
-"573964":"8.16,8°10′",
-"573957":"7.98,8° 0′",
-"573956":"8.06,8° 0′",
-"573955":"8.09,8°10′",
-"573954":"8.12,8°10′",
-"573953":"8.18,8°10′",
-"573952":"8.23,8°10′",
-"573951":"8.28,8°20′",
-"573947":"7.99,8° 0′",
-"573946":"8.04,8° 0′",
-"573945":"8.06,8° 0′",
-"573944":"8.10,8°10′",
-"573943":"8.16,8°10′",
-"573937":"8.05,8° 0′",
-"573936":"8.05,8° 0′",
-"573935":"8.07,8° 0′",
-"573934":"8.11,8°10′",
-"573933":"8.18,8°10′",
-"573927":"8.05,8° 0′",
-"573926":"8.05,8° 0′",
-"573925":"8.08,8° 0′",
-"573924":"8.14,8°10′",
-"573923":"8.20,8°10′",
-"573917":"8.01,8° 0′",
-"573916":"8.03,8° 0′",
-"573915":"8.07,8° 0′",
-"573914":"8.13,8°10′",
-"573913":"8.17,8°10′",
-"573912":"8.22,8°10′",
-"573907":"7.96,8° 0′",
-"573906":"7.99,8° 0′",
-"573905":"8.04,8° 0′",
-"573904":"8.07,8° 0′",
-"573903":"8.09,8°10′",
-"573902":"8.17,8°10′",
-"573901":"8.27,8°20′",
-"573844":"8.36,8°20′",
-"573843":"8.37,8°20′",
-"573834":"8.33,8°20′",
-"573833":"8.34,8°20′",
-"573824":"8.30,8°20′",
-"573823":"8.30,8°20′",
-"573822":"8.32,8°20′",
-"573814":"8.27,8°20′",
-"573813":"8.27,8°20′",
-"573812":"8.28,8°20′",
-"573811":"8.31,8°20′",
-"573804":"8.25,8°20′",
-"573803":"8.24,8°10′",
-"573802":"8.26,8°20′",
-"573801":"8.29,8°20′",
-"564150":"7.89,7°50′",
-"564140":"7.89,7°50′",
-"564130":"7.58,7°30′",
-"564120":"7.25,7°20′",
-"564110":"7.26,7°20′",
-"564100":"7.36,7°20′",
-"564077":"8.04,8° 0′",
-"564076":"8.09,8°10′",
-"564075":"8.08,8° 0′",
-"564074":"7.89,7°50′",
-"564073":"7.58,7°30′",
-"564072":"7.45,7°30′",
-"564071":"7.61,7°40′",
-"564070":"7.83,7°50′",
-"564067":"7.91,7°50′",
-"564066":"7.96,8° 0′",
-"564065":"8.02,8° 0′",
-"564064":"7.90,7°50′",
-"564063":"7.70,7°40′",
-"564062":"7.64,7°40′",
-"564061":"7.74,7°40′",
-"564060":"7.85,7°50′",
-"564057":"7.87,7°50′",
-"564056":"7.83,7°50′",
-"564055":"7.88,7°50′",
-"564054":"7.84,7°50′",
-"564053":"7.74,7°40′",
-"564052":"7.74,7°40′",
-"564051":"7.80,7°50′",
-"564050":"7.84,7°50′",
-"564047":"7.80,7°50′",
-"564046":"7.64,7°40′",
-"564045":"7.59,7°40′",
-"564044":"7.66,7°40′",
-"564043":"7.74,7°40′",
-"564042":"7.82,7°50′",
-"564041":"7.86,7°50′",
-"564040":"7.84,7°50′",
-"564037":"7.43,7°30′",
-"564036":"7.29,7°20′",
-"564035":"7.30,7°20′",
-"564034":"7.50,7°30′",
-"564033":"7.76,7°50′",
-"564032":"7.91,7°50′",
-"564031":"7.94,8° 0′",
-"564030":"7.89,7°50′",
-"564027":"7.09,7°10′",
-"564026":"7.13,7°10′",
-"564025":"7.31,7°20′",
-"564024":"7.52,7°30′",
-"564023":"7.82,7°50′",
-"564022":"7.99,8° 0′",
-"564021":"8.01,8° 0′",
-"564020":"7.96,8° 0′",
-"564017":"7.21,7°10′",
-"564016":"7.39,7°20′",
-"564015":"7.54,7°30′",
-"564014":"7.66,7°40′",
-"564013":"7.86,7°50′",
-"564012":"8.02,8° 0′",
-"564011":"8.05,8° 0′",
-"564010":"8.01,8° 0′",
-"564007":"7.44,7°30′",
-"564006":"7.56,7°30′",
-"564005":"7.61,7°40′",
-"564004":"7.66,7°40′",
-"564003":"7.84,7°50′",
-"564002":"7.99,8° 0′",
-"564001":"8.03,8° 0′",
-"564000":"8.03,8° 0′",
-"563977":"7.93,8° 0′",
-"563976":"7.96,8° 0′",
-"563975":"7.98,8° 0′",
-"563974":"7.99,8° 0′",
-"563973":"8.02,8° 0′",
-"563972":"8.17,8°10′",
-"563971":"8.31,8°20′",
-"563970":"8.35,8°20′",
-"563967":"7.89,7°50′",
-"563966":"7.92,8° 0′",
-"563965":"7.95,8° 0′",
-"563964":"7.95,8° 0′",
-"563963":"8.02,8° 0′",
-"563962":"8.25,8°20′",
-"563961":"8.37,8°20′",
-"563960":"8.34,8°20′",
-"563957":"7.85,7°50′",
-"563956":"7.89,7°50′",
-"563955":"7.94,8° 0′",
-"563954":"7.97,8° 0′",
-"563953":"8.09,8°10′",
-"563952":"8.33,8°20′",
-"563951":"8.38,8°20′",
-"563950":"8.21,8°10′",
-"563947":"7.82,7°50′",
-"563946":"7.89,7°50′",
-"563945":"7.99,8° 0′",
-"563944":"8.05,8° 0′",
-"563943":"8.15,8°10′",
-"563942":"8.33,8°20′",
-"563941":"8.27,8°20′",
-"563940":"8.05,8° 0′",
-"563937":"7.86,7°50′",
-"563936":"7.97,8° 0′",
-"563935":"8.12,8°10′",
-"563934":"8.18,8°10′",
-"563933":"8.20,8°10′",
-"563932":"8.25,8°20′",
-"563931":"8.17,8°10′",
-"563930":"8.00,8° 0′",
-"563927":"7.94,8° 0′",
-"563926":"8.10,8°10′",
-"563925":"8.31,8°20′",
-"563924":"8.32,8°20′",
-"563923":"8.24,8°10′",
-"563922":"8.19,8°10′",
-"563921":"8.12,8°10′",
-"563920":"8.03,8° 0′",
-"563917":"7.98,8° 0′",
-"563916":"8.13,8°10′",
-"563915":"8.37,8°20′",
-"563914":"8.38,8°20′",
-"563913":"8.24,8°10′",
-"563912":"8.14,8°10′",
-"563911":"8.08,8° 0′",
-"563910":"8.01,8° 0′",
-"563907":"7.97,8° 0′",
-"563906":"8.03,8° 0′",
-"563905":"8.23,8°10′",
-"563904":"8.27,8°20′",
-"563903":"8.17,8°10′",
-"563902":"8.08,8° 0′",
-"563901":"8.01,8° 0′",
-"563900":"7.93,8° 0′",
-"563874":"8.24,8°10′",
-"563873":"8.23,8°10′",
-"563872":"8.24,8°10′",
-"563871":"8.27,8°20′",
-"563867":"8.34,8°20′",
-"563866":"8.33,8°20′",
-"563863":"8.23,8°10′",
-"563862":"8.24,8°10′",
-"563861":"8.27,8°20′",
-"563857":"8.20,8°10′",
-"563856":"8.25,8°20′",
-"563852":"8.25,8°20′",
-"563851":"8.26,8°20′",
-"563847":"8.04,8° 0′",
-"563846":"8.14,8°10′",
-"563837":"7.99,8° 0′",
-"563836":"8.06,8° 0′",
-"563835":"8.12,8°10′",
-"563827":"7.99,8° 0′",
-"563826":"8.00,8° 0′",
-"563825":"8.07,8° 0′",
-"563817":"7.92,8° 0′",
-"563816":"7.90,7°50′",
-"563815":"8.06,8° 0′",
-"563814":"8.28,8°20′",
-"563807":"7.81,7°50′",
-"563806":"7.76,7°50′",
-"563805":"7.99,8° 0′",
-"563804":"8.29,8°20′",
-"563803":"8.38,8°20′",
-"563722":"8.32,8°20′",
-"563721":"8.29,8°20′",
-"563712":"8.26,8°20′",
-"563711":"8.21,8°10′",
-"563710":"8.20,8°10′",
-"563702":"8.15,8°10′",
-"563701":"8.09,8°10′",
-"563700":"8.09,8°10′",
-"563667":"8.40,8°20′",
-"563657":"8.38,8°20′",
-"563637":"8.33,8°20′",
-"563636":"8.35,8°20′",
-"563626":"8.33,8°20′",
-"563617":"8.25,8°20′",
-"563607":"8.16,8°10′",
-"563606":"8.25,8°20′",
-"563605":"8.32,8°20′",
-"554170":"7.31,7°20′",
-"554160":"7.19,7°10′",
-"554150":"7.13,7°10′",
-"554077":"7.41,7°20′",
-"554076":"7.52,7°30′",
-"554075":"7.51,7°30′",
-"554074":"7.51,7°30′",
-"554073":"7.70,7°40′",
-"554072":"7.88,7°50′",
-"554071":"7.95,8° 0′",
-"554070":"7.99,8° 0′",
-"554067":"7.28,7°20′",
-"554066":"7.46,7°30′",
-"554065":"7.40,7°20′",
-"554064":"7.29,7°20′",
-"554063":"7.46,7°30′",
-"554062":"7.67,7°40′",
-"554061":"7.77,7°50′",
-"554060":"7.86,7°50′",
-"554057":"7.23,7°10′",
-"554056":"7.41,7°20′",
-"554055":"7.29,7°20′",
-"554054":"7.10,7°10′",
-"554053":"7.24,7°10′",
-"554052":"7.47,7°30′",
-"554051":"7.63,7°40′",
-"554050":"7.74,7°40′",
-"554047":"7.22,7°10′",
-"554046":"7.33,7°20′",
-"554045":"7.21,7°10′",
-"554044":"7.06,7° 0′",
-"554043":"7.19,7°10′",
-"554042":"7.41,7°20′",
-"554041":"7.63,7°40′",
-"554040":"7.77,7°50′",
-"554037":"7.20,7°10′",
-"554036":"7.24,7°10′",
-"554035":"7.19,7°10′",
-"554034":"7.18,7°10′",
-"554033":"7.29,7°20′",
-"554032":"7.39,7°20′",
-"554031":"7.74,7°40′",
-"554030":"8.02,8° 0′",
-"554027":"7.17,7°10′",
-"554026":"7.18,7°10′",
-"554025":"7.19,7°10′",
-"554024":"7.28,7°20′",
-"554023":"7.38,7°20′",
-"554022":"7.41,7°20′",
-"554021":"7.82,7°50′",
-"554020":"8.20,8°10′",
-"554016":"7.14,7°10′",
-"554015":"7.17,7°10′",
-"554014":"7.31,7°20′",
-"554013":"7.46,7°30′",
-"554012":"7.51,7°30′",
-"554011":"7.82,7°50′",
-"554010":"8.12,8°10′",
-"554005":"7.21,7°10′",
-"554004":"7.34,7°20′",
-"554003":"7.47,7°30′",
-"554002":"7.58,7°30′",
-"554001":"7.74,7°40′",
-"554000":"7.88,7°50′",
-"553977":"7.93,8° 0′",
-"553976":"7.90,7°50′",
-"553975":"8.01,8° 0′",
-"553974":"8.07,8° 0′",
-"553973":"8.05,8° 0′",
-"553972":"8.01,8° 0′",
-"553971":"7.96,8° 0′",
-"553970":"7.88,7°50′",
-"553967":"7.85,7°50′",
-"553966":"7.79,7°50′",
-"553965":"7.83,7°50′",
-"553964":"7.90,7°50′",
-"553963":"7.94,8° 0′",
-"553962":"7.95,8° 0′",
-"553961":"7.94,8° 0′",
-"553960":"7.92,8° 0′",
-"553957":"7.73,7°40′",
-"553956":"7.67,7°40′",
-"553955":"7.68,7°40′",
-"553954":"7.77,7°50′",
-"553953":"7.85,7°50′",
-"553952":"7.90,7°50′",
-"553951":"7.95,8° 0′",
-"553950":"8.04,8° 0′",
-"553947":"7.69,7°40′",
-"553946":"7.56,7°30′",
-"553945":"7.56,7°30′",
-"553944":"7.67,7°40′",
-"553943":"7.79,7°50′",
-"553942":"7.86,7°50′",
-"553941":"7.95,8° 0′",
-"553940":"8.14,8°10′",
-"553937":"7.78,7°50′",
-"553936":"7.53,7°30′",
-"553935":"7.51,7°30′",
-"553934":"7.63,7°40′",
-"553933":"7.74,7°40′",
-"553932":"7.78,7°50′",
-"553931":"7.88,7°50′",
-"553930":"8.16,8°10′",
-"553927":"7.91,7°50′",
-"553926":"7.58,7°30′",
-"553925":"7.53,7°30′",
-"553924":"7.65,7°40′",
-"553923":"7.73,7°40′",
-"553922":"7.68,7°40′",
-"553921":"7.75,7°50′",
-"553920":"8.07,8° 0′",
-"553917":"7.89,7°50′",
-"553916":"7.62,7°40′",
-"553915":"7.57,7°30′",
-"553914":"7.69,7°40′",
-"553913":"7.76,7°50′",
-"553912":"7.65,7°40′",
-"553911":"7.65,7°40′",
-"553910":"7.94,8° 0′",
-"553907":"7.76,7°50′",
-"553906":"7.61,7°40′",
-"553905":"7.59,7°40′",
-"553904":"7.69,7°40′",
-"553903":"7.76,7°50′",
-"553902":"7.71,7°40′",
-"553901":"7.71,7°40′",
-"553900":"7.87,7°50′",
-"553877":"7.76,7°50′",
-"553876":"7.69,7°40′",
-"553875":"7.87,7°50′",
-"553874":"8.16,8°10′",
-"553873":"8.31,8°20′",
-"553872":"8.31,8°20′",
-"553867":"7.88,7°50′",
-"553866":"7.79,7°50′",
-"553865":"7.77,7°50′",
-"553864":"7.91,7°50′",
-"553863":"8.13,8°10′",
-"553862":"8.22,8°10′",
-"553861":"8.10,8°10′",
-"553860":"7.99,8° 0′",
-"553857":"8.10,8°10′",
-"553856":"7.98,8° 0′",
-"553855":"7.68,7°40′",
-"553854":"7.65,7°40′",
-"553853":"7.92,8° 0′",
-"553852":"8.08,8° 0′",
-"553851":"7.96,8° 0′",
-"553850":"7.88,7°50′",
-"553847":"8.33,8°20′",
-"553846":"8.20,8°10′",
-"553845":"7.70,7°40′",
-"553844":"7.52,7°30′",
-"553843":"7.79,7°50′",
-"553842":"7.98,8° 0′",
-"553841":"7.89,7°50′",
-"553840":"7.85,7°50′",
-"553837":"8.50,8°30′",
-"553836":"8.52,8°30′",
-"553835":"8.02,8° 0′",
-"553834":"7.69,7°40′",
-"553833":"7.85,7°50′",
-"553832":"7.97,8° 0′",
-"553831":"7.89,7°50′",
-"553830":"7.83,7°50′",
-"553827":"8.48,8°30′",
-"553826":"8.65,8°40′",
-"553825":"8.27,8°20′",
-"553824":"7.94,8° 0′",
-"553823":"8.00,8° 0′",
-"553822":"8.03,8° 0′",
-"553821":"7.84,7°50′",
-"553820":"7.68,7°40′",
-"553817":"8.27,8°20′",
-"553816":"8.37,8°20′",
-"553815":"8.08,8° 0′",
-"553814":"7.92,8° 0′",
-"553813":"8.15,8°10′",
-"553812":"8.13,8°10′",
-"553811":"7.73,7°40′",
-"553810":"7.44,7°30′",
-"553807":"8.02,8° 0′",
-"553806":"7.92,8° 0′",
-"553805":"7.55,7°30′",
-"553804":"7.55,7°30′",
-"553803":"8.09,8°10′",
-"553802":"8.17,8°10′",
-"553801":"7.64,7°40′",
-"553800":"7.27,7°20′",
-"553772":"8.05,8° 0′",
-"553771":"7.99,8° 0′",
-"553770":"7.99,8° 0′",
-"553760":"7.97,8° 0′",
-"553757":"8.03,8° 0′",
-"553750":"8.03,8° 0′",
-"553747":"8.04,8° 0′",
-"553746":"8.12,8°10′",
-"553745":"8.02,8° 0′",
-"553740":"8.08,8° 0′",
-"553737":"7.97,8° 0′",
-"553736":"8.01,8° 0′",
-"553735":"7.91,7°50′",
-"553734":"7.84,7°50′",
-"553733":"7.83,7°50′",
-"553730":"8.06,8° 0′",
-"553727":"7.75,7°50′",
-"553726":"7.81,7°50′",
-"553725":"7.80,7°50′",
-"553724":"7.76,7°50′",
-"553723":"7.77,7°50′",
-"553720":"7.98,8° 0′",
-"553717":"7.49,7°30′",
-"553716":"7.64,7°40′",
-"553715":"7.72,7°40′",
-"553714":"7.74,7°40′",
-"553713":"7.78,7°50′",
-"553712":"7.84,7°50′",
-"553711":"7.83,7°50′",
-"553710":"7.88,7°50′",
-"553707":"7.33,7°20′",
-"553706":"7.55,7°30′",
-"553705":"7.70,7°40′",
-"553704":"7.79,7°50′",
-"553703":"7.90,7°50′",
-"553702":"7.99,8° 0′",
-"553701":"7.95,8° 0′",
-"553700":"7.92,8° 0′",
-"553677":"8.06,8° 0′",
-"553676":"8.19,8°10′",
-"553675":"8.31,8°20′",
-"553667":"8.01,8° 0′",
-"553666":"8.12,8°10′",
-"553665":"8.27,8°20′",
-"553657":"8.02,8° 0′",
-"553656":"8.05,8° 0′",
-"553655":"8.18,8°10′",
-"553647":"8.08,8° 0′",
-"553646":"8.05,8° 0′",
-"553645":"8.12,8°10′",
-"553637":"8.13,8°10′",
-"553636":"8.12,8°10′",
-"553635":"8.13,8°10′",
-"553627":"8.11,8°10′",
-"553626":"8.16,8°10′",
-"553625":"8.15,8°10′",
-"553617":"8.07,8° 0′",
-"553616":"8.15,8°10′",
-"553615":"8.12,8°10′",
-"553607":"8.06,8° 0′",
-"553606":"8.13,8°10′",
-"553605":"8.08,8° 0′",
-"553166":"8.37,8°20′",
-"544075":"7.31,7°20′",
-"544074":"7.38,7°20′",
-"544073":"7.40,7°20′",
-"544072":"7.51,7°30′",
-"544071":"7.68,7°40′",
-"544070":"7.75,7°50′",
-"544065":"7.36,7°20′",
-"544064":"7.36,7°20′",
-"544063":"7.34,7°20′",
-"544062":"7.47,7°30′",
-"544061":"7.68,7°40′",
-"544060":"7.74,7°40′",
-"544055":"7.28,7°20′",
-"544054":"7.27,7°20′",
-"544053":"7.30,7°20′",
-"544052":"7.46,7°30′",
-"544051":"7.66,7°40′",
-"544050":"7.69,7°40′",
-"544045":"7.19,7°10′",
-"544044":"7.18,7°10′",
-"544043":"7.25,7°20′",
-"544042":"7.40,7°20′",
-"544041":"7.56,7°30′",
-"544040":"7.62,7°40′",
-"544034":"7.16,7°10′",
-"544033":"7.21,7°10′",
-"544032":"7.31,7°20′",
-"544031":"7.46,7°30′",
-"544030":"7.59,7°40′",
-"544024":"7.18,7°10′",
-"544023":"7.18,7°10′",
-"544022":"7.24,7°10′",
-"544021":"7.39,7°20′",
-"544020":"7.59,7°40′",
-"544014":"7.23,7°10′",
-"544013":"7.19,7°10′",
-"544012":"7.22,7°10′",
-"544011":"7.37,7°20′",
-"544010":"7.55,7°30′",
-"544005":"7.29,7°20′",
-"544004":"7.32,7°20′",
-"544003":"7.25,7°20′",
-"544002":"7.23,7°10′",
-"544001":"7.37,7°20′",
-"544000":"7.48,7°30′",
-"543977":"7.67,7°40′",
-"543976":"7.60,7°40′",
-"543975":"7.59,7°40′",
-"543974":"7.58,7°30′",
-"543973":"7.66,7°40′",
-"543972":"7.84,7°50′",
-"543971":"7.91,7°50′",
-"543970":"7.93,8° 0′",
-"543967":"7.62,7°40′",
-"543966":"7.54,7°30′",
-"543965":"7.50,7°30′",
-"543964":"7.40,7°20′",
-"543963":"7.55,7°30′",
-"543962":"7.94,8° 0′",
-"543961":"8.07,8° 0′",
-"543960":"7.98,8° 0′",
-"543957":"7.56,7°30′",
-"543956":"7.42,7°30′",
-"543955":"7.36,7°20′",
-"543954":"7.40,7°20′",
-"543953":"7.63,7°40′",
-"543952":"7.95,8° 0′",
-"543951":"7.97,8° 0′",
-"543950":"7.85,7°50′",
-"543947":"7.54,7°30′",
-"543946":"7.37,7°20′",
-"543945":"7.29,7°20′",
-"543944":"7.51,7°30′",
-"543943":"7.79,7°50′",
-"543942":"7.85,7°50′",
-"543941":"7.71,7°40′",
-"543940":"7.61,7°40′",
-"543937":"7.64,7°40′",
-"543936":"7.40,7°20′",
-"543935":"7.21,7°10′",
-"543934":"7.51,7°30′",
-"543933":"7.76,7°50′",
-"543932":"7.67,7°40′",
-"543931":"7.52,7°30′",
-"543930":"7.47,7°30′",
-"543927":"7.69,7°40′",
-"543926":"7.41,7°20′",
-"543925":"7.18,7°10′",
-"543924":"7.40,7°20′",
-"543923":"7.60,7°40′",
-"543922":"7.55,7°30′",
-"543921":"7.52,7°30′",
-"543920":"7.55,7°30′",
-"543917":"7.58,7°30′",
-"543916":"7.38,7°20′",
-"543915":"7.25,7°20′",
-"543914":"7.41,7°20′",
-"543913":"7.53,7°30′",
-"543912":"7.52,7°30′",
-"543911":"7.53,7°30′",
-"543910":"7.61,7°40′",
-"543907":"7.44,7°30′",
-"543906":"7.36,7°20′",
-"543905":"7.37,7°20′",
-"543904":"7.46,7°30′",
-"543903":"7.50,7°30′",
-"543902":"7.47,7°30′",
-"543901":"7.44,7°30′",
-"543900":"7.51,7°30′",
-"543877":"7.92,8° 0′",
-"543876":"7.68,7°40′",
-"543875":"7.19,7°10′",
-"543874":"7.12,7°10′",
-"543873":"7.71,7°40′",
-"543872":"7.96,8° 0′",
-"543871":"7.57,7°30′",
-"543870":"7.23,7°10′",
-"543867":"7.92,8° 0′",
-"543866":"7.70,7°40′",
-"543865":"7.23,7°10′",
-"543864":"6.99,7° 0′",
-"543863":"7.34,7°20′",
-"543862":"7.70,7°40′",
-"543861":"7.52,7°30′",
-"543860":"7.24,7°10′",
-"543857":"7.87,7°50′",
-"543856":"7.84,7°50′",
-"543855":"7.60,7°40′",
-"543854":"7.35,7°20′",
-"543853":"7.43,7°30′",
-"543852":"7.75,7°50′",
-"543851":"7.63,7°40′",
-"543850":"7.31,7°20′",
-"543847":"7.72,7°40′",
-"543846":"7.91,7°50′",
-"543845":"7.97,8° 0′",
-"543844":"7.83,7°50′",
-"543843":"7.77,7°50′",
-"543842":"7.97,8° 0′",
-"543841":"7.84,7°50′",
-"543840":"7.48,7°30′",
-"543837":"7.59,7°40′",
-"543836":"7.95,8° 0′",
-"543835":"8.18,8°10′",
-"543834":"7.98,8° 0′",
-"543833":"7.82,7°50′",
-"543832":"7.98,8° 0′",
-"543831":"7.92,8° 0′",
-"543830":"7.59,7°40′",
-"543827":"7.64,7°40′",
-"543826":"8.02,8° 0′",
-"543825":"8.21,8°10′",
-"543824":"7.83,7°50′",
-"543823":"7.58,7°30′",
-"543822":"7.73,7°40′",
-"543821":"7.72,7°40′",
-"543820":"7.51,7°30′",
-"543817":"7.72,7°40′",
-"543816":"8.03,8° 0′",
-"543815":"8.11,8°10′",
-"543814":"7.72,7°40′",
-"543813":"7.45,7°30′",
-"543812":"7.42,7°30′",
-"543811":"7.29,7°20′",
-"543810":"7.23,7°10′",
-"543807":"7.68,7°40′",
-"543806":"7.89,7°50′",
-"543805":"7.87,7°50′",
-"543804":"7.58,7°30′",
-"543803":"7.31,7°20′",
-"543802":"7.10,7°10′",
-"543801":"6.88,6°50′",
-"543800":"6.98,7° 0′",
-"543777":"7.31,7°20′",
-"543776":"7.54,7°30′",
-"543775":"7.72,7°40′",
-"543774":"7.85,7°50′",
-"543773":"8.02,8° 0′",
-"543772":"8.19,8°10′",
-"543771":"8.17,8°10′",
-"543770":"8.07,8° 0′",
-"543767":"7.32,7°20′",
-"543766":"7.58,7°30′",
-"543765":"7.74,7°40′",
-"543764":"7.86,7°50′",
-"543763":"8.03,8° 0′",
-"543762":"8.20,8°10′",
-"543761":"8.23,8°10′",
-"543760":"8.12,8°10′",
-"543757":"7.39,7°20′",
-"543756":"7.64,7°40′",
-"543755":"7.74,7°40′",
-"543754":"7.80,7°50′",
-"543753":"7.92,8° 0′",
-"543752":"8.03,8° 0′",
-"543751":"8.04,8° 0′",
-"543750":"7.97,8° 0′",
-"543747":"7.47,7°30′",
-"543746":"7.64,7°40′",
-"543745":"7.67,7°40′",
-"543744":"7.66,7°40′",
-"543743":"7.79,7°50′",
-"543742":"7.89,7°50′",
-"543741":"7.83,7°50′",
-"543740":"7.77,7°50′",
-"543737":"7.50,7°30′",
-"543736":"7.61,7°40′",
-"543735":"7.55,7°30′",
-"543734":"7.46,7°30′",
-"543733":"7.66,7°40′",
-"543732":"7.83,7°50′",
-"543731":"7.76,7°50′",
-"543730":"7.69,7°40′",
-"543727":"7.51,7°30′",
-"543726":"7.63,7°40′",
-"543725":"7.50,7°30′",
-"543724":"7.34,7°20′",
-"543723":"7.58,7°30′",
-"543722":"7.84,7°50′",
-"543721":"7.81,7°50′",
-"543720":"7.77,7°50′",
-"543717":"7.50,7°30′",
-"543716":"7.72,7°40′",
-"543715":"7.60,7°40′",
-"543714":"7.45,7°30′",
-"543713":"7.66,7°40′",
-"543712":"7.88,7°50′",
-"543711":"7.89,7°50′",
-"543710":"7.90,7°50′",
-"543707":"7.48,7°30′",
-"543706":"7.79,7°50′",
-"543705":"7.73,7°40′",
-"543704":"7.66,7°40′",
-"543703":"7.79,7°50′",
-"543702":"7.85,7°50′",
-"543701":"7.87,7°50′",
-"543700":"7.94,8° 0′",
-"543677":"8.08,8° 0′",
-"543676":"8.08,8° 0′",
-"543675":"8.01,8° 0′",
-"543674":"7.96,8° 0′",
-"543667":"8.04,8° 0′",
-"543666":"8.00,8° 0′",
-"543665":"7.95,8° 0′",
-"543664":"7.91,7°50′",
-"543663":"7.92,8° 0′",
-"543657":"7.93,8° 0′",
-"543656":"7.93,8° 0′",
-"543655":"7.91,7°50′",
-"543654":"7.89,7°50′",
-"543653":"7.92,8° 0′",
-"543647":"7.82,7°50′",
-"543646":"7.89,7°50′",
-"543645":"7.92,8° 0′",
-"543644":"7.92,8° 0′",
-"543643":"7.97,8° 0′",
-"543642":"7.95,8° 0′",
-"543637":"7.78,7°50′",
-"543636":"7.91,7°50′",
-"543635":"7.97,8° 0′",
-"543634":"8.00,8° 0′",
-"543633":"8.07,8° 0′",
-"543632":"8.03,8° 0′",
-"543631":"7.73,7°40′",
-"543630":"7.59,7°40′",
-"543627":"7.87,7°50′",
-"543626":"7.99,8° 0′",
-"543625":"8.06,8° 0′",
-"543624":"8.07,8° 0′",
-"543623":"8.18,8°10′",
-"543622":"8.11,8°10′",
-"543621":"7.67,7°40′",
-"543620":"7.49,7°30′",
-"543617":"7.97,8° 0′",
-"543616":"8.04,8° 0′",
-"543615":"8.06,8° 0′",
-"543614":"8.03,8° 0′",
-"543613":"8.17,8°10′",
-"543612":"8.22,8°10′",
-"543611":"7.83,7°50′",
-"543610":"7.67,7°40′",
-"543607":"7.97,8° 0′",
-"543606":"7.97,8° 0′",
-"543605":"7.90,7°50′",
-"543604":"7.82,7°50′",
-"543603":"8.07,8° 0′",
-"543602":"8.37,8°20′",
-"543601":"8.12,8°10′",
-"543600":"7.94,8° 0′",
-"543507":"7.99,8° 0′",
-"543342":"8.28,8°20′",
-"543341":"8.27,8°20′",
-"543333":"8.28,8°20′",
-"543332":"8.28,8°20′",
-"543331":"8.27,8°20′",
-"543323":"8.27,8°20′",
-"543322":"8.27,8°20′",
-"543321":"8.26,8°20′",
-"543312":"8.25,8°20′",
-"543311":"8.24,8°10′",
-"543310":"8.21,8°10′",
-"543301":"8.20,8°10′",
-"543300":"8.17,8°10′",
-"543217":"8.17,8°10′",
-"543207":"8.14,8°10′",
-"534075":"7.35,7°20′",
-"534074":"7.45,7°30′",
-"534073":"7.28,7°20′",
-"534072":"7.21,7°10′",
-"534071":"7.33,7°20′",
-"534070":"7.41,7°20′",
-"534066":"7.14,7°10′",
-"534065":"7.26,7°20′",
-"534064":"7.37,7°20′",
-"534063":"7.25,7°20′",
-"534062":"7.17,7°10′",
-"534061":"7.27,7°20′",
-"534060":"7.34,7°20′",
-"534056":"7.04,7° 0′",
-"534055":"7.07,7° 0′",
-"534054":"7.20,7°10′",
-"534053":"7.22,7°10′",
-"534052":"7.19,7°10′",
-"534051":"7.24,7°10′",
-"534050":"7.27,7°20′",
-"534047":"7.02,7° 0′",
-"534046":"7.00,7° 0′",
-"534045":"7.00,7° 0′",
-"534044":"7.14,7°10′",
-"534043":"7.25,7°20′",
-"534042":"7.25,7°20′",
-"534041":"7.21,7°10′",
-"534040":"7.21,7°10′",
-"534034":"7.16,7°10′",
-"534033":"7.24,7°10′",
-"534032":"7.23,7°10′",
-"534031":"7.18,7°10′",
-"534030":"7.15,7°10′",
-"534024":"7.11,7°10′",
-"534023":"7.16,7°10′",
-"534022":"7.19,7°10′",
-"534021":"7.16,7°10′",
-"534020":"7.12,7°10′",
-"534013":"7.13,7°10′",
-"534012":"7.16,7°10′",
-"534011":"7.15,7°10′",
-"534010":"7.11,7°10′",
-"534003":"7.07,7° 0′",
-"534002":"7.07,7° 0′",
-"534001":"7.09,7°10′",
-"534000":"7.12,7°10′",
-"533977":"7.37,7°20′",
-"533976":"7.35,7°20′",
-"533975":"7.38,7°20′",
-"533974":"7.43,7°30′",
-"533973":"7.45,7°30′",
-"533972":"7.42,7°30′",
-"533971":"7.35,7°20′",
-"533970":"7.38,7°20′",
-"533967":"7.34,7°20′",
-"533966":"7.34,7°20′",
-"533965":"7.34,7°20′",
-"533964":"7.35,7°20′",
-"533963":"7.38,7°20′",
-"533962":"7.39,7°20′",
-"533961":"7.37,7°20′",
-"533960":"7.42,7°30′",
-"533957":"7.30,7°20′",
-"533956":"7.32,7°20′",
-"533955":"7.32,7°20′",
-"533954":"7.31,7°20′",
-"533953":"7.33,7°20′",
-"533952":"7.36,7°20′",
-"533951":"7.46,7°30′",
-"533950":"7.61,7°40′",
-"533947":"7.24,7°10′",
-"533946":"7.28,7°20′",
-"533945":"7.31,7°20′",
-"533944":"7.32,7°20′",
-"533943":"7.31,7°20′",
-"533942":"7.37,7°20′",
-"533941":"7.59,7°40′",
-"533940":"7.81,7°50′",
-"533937":"7.18,7°10′",
-"533936":"7.23,7°10′",
-"533935":"7.30,7°20′",
-"533934":"7.36,7°20′",
-"533933":"7.38,7°20′",
-"533932":"7.49,7°30′",
-"533931":"7.68,7°40′",
-"533930":"7.78,7°50′",
-"533926":"7.19,7°10′",
-"533925":"7.29,7°20′",
-"533924":"7.39,7°20′",
-"533923":"7.50,7°30′",
-"533922":"7.64,7°40′",
-"533921":"7.71,7°40′",
-"533920":"7.61,7°40′",
-"533917":"7.09,7°10′",
-"533916":"7.18,7°10′",
-"533915":"7.27,7°20′",
-"533914":"7.40,7°20′",
-"533913":"7.60,7°40′",
-"533912":"7.79,7°50′",
-"533911":"7.81,7°50′",
-"533910":"7.61,7°40′",
-"533907":"7.10,7°10′",
-"533906":"7.21,7°10′",
-"533905":"7.32,7°20′",
-"533904":"7.48,7°30′",
-"533903":"7.73,7°40′",
-"533902":"7.93,8° 0′",
-"533901":"7.96,8° 0′",
-"533900":"7.75,7°50′",
-"533877":"7.58,7°30′",
-"533876":"7.72,7°40′",
-"533875":"7.55,7°30′",
-"533874":"7.23,7°10′",
-"533873":"6.99,7° 0′",
-"533872":"6.82,6°50′",
-"533871":"6.77,6°50′",
-"533870":"7.04,7° 0′",
-"533867":"7.60,7°40′",
-"533866":"7.63,7°40′",
-"533865":"7.21,7°10′",
-"533864":"6.75,6°50′",
-"533863":"6.60,6°40′",
-"533862":"6.65,6°40′",
-"533861":"6.90,6°50′",
-"533860":"7.30,7°20′",
-"533857":"7.74,7°40′",
-"533856":"7.54,7°30′",
-"533855":"6.84,6°50′",
-"533854":"6.29,6°20′",
-"533853":"6.33,6°20′",
-"533852":"6.60,6°40′",
-"533851":"7.02,7° 0′",
-"533850":"7.44,7°30′",
-"533847":"7.84,7°50′",
-"533846":"7.43,7°30′",
-"533845":"6.62,6°40′",
-"533844":"6.15,6°10′",
-"533843":"6.32,6°20′",
-"533842":"6.67,6°40′",
-"533841":"7.06,7° 0′",
-"533840":"7.37,7°20′",
-"533837":"7.73,7°40′",
-"533836":"7.31,7°20′",
-"533835":"6.69,6°40′",
-"533834":"6.38,6°20′",
-"533833":"6.52,6°30′",
-"533832":"6.80,6°50′",
-"533831":"7.09,7°10′",
-"533830":"7.29,7°20′",
-"533827":"7.49,7°30′",
-"533826":"7.21,7°10′",
-"533825":"6.84,6°50′",
-"533824":"6.67,6°40′",
-"533823":"6.76,6°50′",
-"533822":"6.93,7° 0′",
-"533821":"7.11,7°10′",
-"533820":"7.25,7°20′",
-"533817":"7.39,7°20′",
-"533816":"7.14,7°10′",
-"533815":"6.89,6°50′",
-"533814":"6.82,6°50′",
-"533813":"6.90,6°50′",
-"533812":"7.01,7° 0′",
-"533811":"7.12,7°10′",
-"533810":"7.23,7°10′",
-"533807":"7.42,7°30′",
-"533806":"7.07,7° 0′",
-"533805":"6.82,6°50′",
-"533804":"6.77,6°50′",
-"533803":"6.88,6°50′",
-"533802":"7.01,7° 0′",
-"533801":"7.11,7°10′",
-"533800":"7.19,7°10′",
-"533777":"7.54,7°30′",
-"533776":"7.80,7°50′",
-"533775":"7.80,7°50′",
-"533774":"7.80,7°50′",
-"533773":"7.83,7°50′",
-"533772":"7.78,7°50′",
-"533771":"7.78,7°50′",
-"533770":"7.85,7°50′",
-"533767":"7.64,7°40′",
-"533766":"7.77,7°50′",
-"533765":"7.81,7°50′",
-"533764":"7.84,7°50′",
-"533763":"7.83,7°50′",
-"533762":"7.74,7°40′",
-"533761":"7.75,7°50′",
-"533760":"7.76,7°50′",
-"533757":"7.62,7°40′",
-"533756":"7.68,7°40′",
-"533755":"7.74,7°40′",
-"533754":"7.79,7°50′",
-"533753":"7.75,7°50′",
-"533752":"7.73,7°40′",
-"533751":"7.79,7°50′",
-"533750":"7.76,7°50′",
-"533747":"7.49,7°30′",
-"533746":"7.56,7°30′",
-"533745":"7.63,7°40′",
-"533744":"7.67,7°40′",
-"533743":"7.63,7°40′",
-"533742":"7.68,7°40′",
-"533741":"7.79,7°50′",
-"533740":"7.70,7°40′",
-"533737":"7.38,7°20′",
-"533736":"7.46,7°30′",
-"533735":"7.55,7°30′",
-"533734":"7.58,7°30′",
-"533733":"7.57,7°30′",
-"533732":"7.61,7°40′",
-"533731":"7.61,7°40′",
-"533730":"7.38,7°20′",
-"533727":"7.33,7°20′",
-"533726":"7.42,7°30′",
-"533725":"7.51,7°30′",
-"533724":"7.54,7°30′",
-"533723":"7.54,7°30′",
-"533722":"7.50,7°30′",
-"533721":"7.32,7°20′",
-"533720":"7.05,7° 0′",
-"533717":"7.31,7°20′",
-"533716":"7.41,7°20′",
-"533715":"7.48,7°30′",
-"533714":"7.51,7°30′",
-"533713":"7.52,7°30′",
-"533712":"7.46,7°30′",
-"533711":"7.28,7°20′",
-"533710":"7.25,7°20′",
-"533707":"7.27,7°20′",
-"533706":"7.36,7°20′",
-"533705":"7.43,7°30′",
-"533704":"7.47,7°30′",
-"533703":"7.50,7°30′",
-"533702":"7.49,7°30′",
-"533701":"7.48,7°30′",
-"533700":"7.68,7°40′",
-"533677":"7.82,7°50′",
-"533676":"7.77,7°50′",
-"533675":"7.69,7°40′",
-"533674":"7.62,7°40′",
-"533673":"8.02,8° 0′",
-"533672":"8.43,8°30′",
-"533671":"8.18,8°10′",
-"533670":"7.94,8° 0′",
-"533667":"7.69,7°40′",
-"533666":"7.64,7°40′",
-"533665":"7.61,7°40′",
-"533664":"7.62,7°40′",
-"533663":"8.00,8° 0′",
-"533662":"8.28,8°20′",
-"533661":"7.95,8° 0′",
-"533660":"7.73,7°40′",
-"533657":"7.65,7°40′",
-"533656":"7.63,7°40′",
-"533655":"7.65,7°40′",
-"533654":"7.69,7°40′",
-"533653":"7.91,7°50′",
-"533652":"8.00,8° 0′",
-"533651":"7.74,7°40′",
-"533650":"7.62,7°40′",
-"533647":"7.61,7°40′",
-"533646":"7.69,7°40′",
-"533645":"7.71,7°40′",
-"533644":"7.69,7°40′",
-"533643":"7.71,7°40′",
-"533642":"7.76,7°50′",
-"533641":"7.70,7°40′",
-"533640":"7.68,7°40′",
-"533637":"7.41,7°20′",
-"533636":"7.69,7°40′",
-"533635":"7.74,7°40′",
-"533634":"7.64,7°40′",
-"533633":"7.58,7°30′",
-"533632":"7.66,7°40′",
-"533631":"7.74,7°40′",
-"533630":"7.76,7°50′",
-"533627":"7.31,7°20′",
-"533626":"7.72,7°40′",
-"533625":"7.73,7°40′",
-"533624":"7.60,7°40′",
-"533623":"7.56,7°30′",
-"533622":"7.69,7°40′",
-"533621":"7.80,7°50′",
-"533620":"7.78,7°50′",
-"533617":"7.65,7°40′",
-"533616":"7.89,7°50′",
-"533615":"7.72,7°40′",
-"533614":"7.57,7°30′",
-"533613":"7.59,7°40′",
-"533612":"7.73,7°40′",
-"533611":"7.79,7°50′",
-"533610":"7.72,7°40′",
-"533607":"8.04,8° 0′",
-"533606":"8.00,8° 0′",
-"533605":"7.72,7°40′",
-"533604":"7.57,7°30′",
-"533603":"7.59,7°40′",
-"533602":"7.69,7°40′",
-"533601":"7.71,7°40′",
-"533600":"7.64,7°40′",
-"533577":"7.96,8° 0′",
-"533567":"7.82,7°50′",
-"533557":"7.74,7°40′",
-"533552":"7.92,8° 0′",
-"533551":"7.92,8° 0′",
-"533547":"7.76,7°50′",
-"533543":"7.86,7°50′",
-"533542":"7.86,7°50′",
-"533541":"7.84,7°50′",
-"533540":"7.84,7°50′",
-"533537":"7.80,7°50′",
-"533536":"7.83,7°50′",
-"533533":"7.80,7°50′",
-"533532":"7.77,7°50′",
-"533531":"7.77,7°50′",
-"533530":"7.81,7°50′",
-"533527":"7.80,7°50′",
-"533526":"7.83,7°50′",
-"533525":"7.82,7°50′",
-"533524":"7.79,7°50′",
-"533523":"7.76,7°50′",
-"533522":"7.74,7°40′",
-"533521":"7.81,7°50′",
-"533520":"7.86,7°50′",
-"533517":"7.72,7°40′",
-"533516":"7.77,7°50′",
-"533515":"7.78,7°50′",
-"533514":"7.76,7°50′",
-"533513":"7.74,7°40′",
-"533512":"7.77,7°50′",
-"533511":"7.92,8° 0′",
-"533510":"7.96,8° 0′",
-"533507":"7.62,7°40′",
-"533506":"7.68,7°40′",
-"533505":"7.71,7°40′",
-"533504":"7.71,7°40′",
-"533503":"7.71,7°40′",
-"533502":"7.77,7°50′",
-"533501":"7.91,7°50′",
-"533500":"7.93,8° 0′",
-"533447":"7.85,7°50′",
-"533446":"7.87,7°50′",
-"533445":"7.90,7°50′",
-"533444":"7.96,8° 0′",
-"533437":"7.79,7°50′",
-"533436":"7.77,7°50′",
-"533435":"7.79,7°50′",
-"533434":"7.84,7°50′",
-"533433":"7.96,8° 0′",
-"533432":"8.29,8°20′",
-"533427":"7.73,7°40′",
-"533426":"7.63,7°40′",
-"533425":"7.65,7°40′",
-"533424":"7.70,7°40′",
-"533423":"7.77,7°50′",
-"533422":"8.09,8°10′",
-"533421":"8.93,9° 0′",
-"533420":"9.03,9° 0′",
-"533417":"7.69,7°40′",
-"533416":"7.49,7°30′",
-"533415":"7.54,7°30′",
-"533414":"7.60,7°40′",
-"533413":"7.59,7°40′",
-"533412":"7.82,7°50′",
-"533411":"8.55,8°30′",
-"533410":"7.97,8° 0′",
-"533407":"7.65,7°40′",
-"533406":"7.48,7°30′",
-"533405":"7.54,7°30′",
-"533404":"7.58,7°30′",
-"533403":"7.58,7°30′",
-"533402":"7.77,7°50′",
-"533401":"8.07,8° 0′",
-"533400":"7.03,7° 0′",
-"533370":"8.14,8°10′",
-"533332":"8.04,8° 0′",
-"533331":"8.07,8° 0′",
-"533330":"8.07,8° 0′",
-"533327":"7.97,8° 0′",
-"533326":"7.64,7°40′",
-"533325":"7.82,7°50′",
-"533324":"7.91,7°50′",
-"533323":"7.97,8° 0′",
-"533322":"8.03,8° 0′",
-"533321":"8.07,8° 0′",
-"533320":"8.07,8° 0′",
-"533317":"6.76,6°50′",
-"533316":"7.24,7°10′",
-"533315":"7.86,7°50′",
-"533314":"7.96,8° 0′",
-"533313":"7.97,8° 0′",
-"533312":"8.02,8° 0′",
-"533311":"8.08,8° 0′",
-"533310":"8.06,8° 0′",
-"533307":"6.24,6°10′",
-"533306":"7.50,7°30′",
-"533305":"8.21,8°10′",
-"533304":"8.10,8°10′",
-"533303":"8.00,8° 0′",
-"533302":"8.02,8° 0′",
-"533301":"8.09,8°10′",
-"533300":"8.01,8° 0′",
-"533227":"8.03,8° 0′",
-"533226":"7.93,8° 0′",
-"533217":"7.97,8° 0′",
-"533216":"7.84,7°50′",
-"533215":"7.65,7°40′",
-"533214":"7.58,7°30′",
-"533207":"7.83,7°50′",
-"533206":"7.72,7°40′",
-"533205":"7.60,7°40′",
-"524073":"7.02,7° 0′",
-"524072":"6.99,7° 0′",
-"524071":"7.05,7° 0′",
-"524070":"7.12,7°10′",
-"524063":"7.01,7° 0′",
-"524062":"7.00,7° 0′",
-"524061":"7.02,7° 0′",
-"524060":"7.04,7° 0′",
-"524052":"7.02,7° 0′",
-"524051":"6.99,7° 0′",
-"524050":"7.00,7° 0′",
-"524040":"7.15,7°10′",
-"523977":"7.10,7°10′",
-"523976":"7.22,7°10′",
-"523975":"7.44,7°30′",
-"523974":"7.67,7°40′",
-"523973":"7.87,7°50′",
-"523972":"8.01,8° 0′",
-"523971":"8.01,8° 0′",
-"523970":"7.84,7°50′",
-"523967":"7.06,7° 0′",
-"523966":"7.17,7°10′",
-"523965":"7.48,7°30′",
-"523964":"7.81,7°50′",
-"523961":"7.97,8° 0′",
-"523960":"7.82,7°50′",
-"523957":"7.07,7° 0′",
-"523956":"7.22,7°10′",
-"523955":"7.51,7°30′",
-"523954":"7.83,7°50′",
-"523951":"7.87,7°50′",
-"523950":"7.73,7°40′",
-"523947":"7.20,7°10′",
-"523946":"7.41,7°20′",
-"523941":"7.75,7°50′",
-"523940":"7.61,7°40′",
-"523937":"7.24,7°10′",
-"523936":"7.45,7°30′",
-"523931":"7.64,7°40′",
-"523930":"7.52,7°30′",
-"523927":"7.15,7°10′",
-"523926":"7.28,7°20′",
-"523921":"7.56,7°30′",
-"523920":"7.46,7°30′",
-"523913":"7.60,7°40′",
-"523912":"7.55,7°30′",
-"523910":"7.42,7°30′",
-"523903":"7.50,7°30′",
-"523902":"7.47,7°30′",
-"523900":"7.38,7°20′",
-"523877":"7.44,7°30′",
-"523876":"6.97,7° 0′",
-"523875":"6.64,6°40′",
-"523874":"6.59,6°40′",
-"523873":"6.71,6°40′",
-"523872":"6.95,7° 0′",
-"523871":"7.11,7°10′",
-"523870":"7.16,7°10′",
-"523867":"7.42,7°30′",
-"523866":"6.87,6°50′",
-"523865":"6.49,6°30′",
-"523864":"6.38,6°20′",
-"523863":"6.55,6°30′",
-"523862":"6.93,7° 0′",
-"523861":"7.14,7°10′",
-"523860":"7.13,7°10′",
-"523857":"7.38,7°20′",
-"523856":"6.89,6°50′",
-"523855":"6.52,6°30′",
-"523854":"6.41,6°20′",
-"523853":"6.61,6°40′",
-"523852":"7.02,7° 0′",
-"523851":"7.19,7°10′",
-"523850":"7.11,7°10′",
-"523847":"7.34,7°20′",
-"523846":"6.99,7° 0′",
-"523844":"6.61,6°40′",
-"523843":"6.76,6°50′",
-"523842":"7.05,7° 0′",
-"523841":"7.15,7°10′",
-"523840":"7.12,7°10′",
-"523837":"7.33,7°20′",
-"523836":"7.10,7°10′",
-"523834":"6.79,6°50′",
-"523833":"6.82,6°50′",
-"523832":"6.90,6°50′",
-"523831":"7.02,7° 0′",
-"523830":"7.23,7°10′",
-"523827":"7.34,7°20′",
-"523826":"7.18,7°10′",
-"523822":"6.80,6°50′",
-"523821":"6.95,7° 0′",
-"523820":"7.30,7°20′",
-"523817":"7.34,7°20′",
-"523816":"7.22,7°10′",
-"523815":"7.09,7°10′",
-"523812":"6.84,6°50′",
-"523811":"6.94,7° 0′",
-"523810":"7.22,7°10′",
-"523807":"7.31,7°20′",
-"523806":"7.23,7°10′",
-"523805":"7.12,7°10′",
-"523802":"6.94,7° 0′",
-"523801":"6.98,7° 0′",
-"523800":"7.09,7°10′",
-"523777":"7.20,7°10′",
-"523776":"7.26,7°20′",
-"523775":"7.34,7°20′",
-"523774":"7.42,7°30′",
-"523773":"7.47,7°30′",
-"523772":"7.50,7°30′",
-"523771":"7.57,7°30′",
-"523770":"7.78,7°50′",
-"523767":"7.10,7°10′",
-"523766":"7.13,7°10′",
-"523765":"7.23,7°10′",
-"523764":"7.37,7°20′",
-"523763":"7.44,7°30′",
-"523762":"7.46,7°30′",
-"523761":"7.50,7°30′",
-"523760":"7.61,7°40′",
-"523757":"7.03,7° 0′",
-"523756":"7.02,7° 0′",
-"523755":"7.13,7°10′",
-"523754":"7.32,7°20′",
-"523753":"7.39,7°20′",
-"523752":"7.40,7°20′",
-"523751":"7.40,7°20′",
-"523750":"7.44,7°30′",
-"523747":"7.07,7° 0′",
-"523746":"7.04,7° 0′",
-"523745":"7.13,7°10′",
-"523744":"7.28,7°20′",
-"523743":"7.33,7°20′",
-"523742":"7.33,7°20′",
-"523741":"7.34,7°20′",
-"523740":"7.35,7°20′",
-"523737":"7.34,7°20′",
-"523736":"7.27,7°20′",
-"523735":"7.24,7°10′",
-"523734":"7.28,7°20′",
-"523733":"7.28,7°20′",
-"523732":"7.30,7°20′",
-"523731":"7.33,7°20′",
-"523730":"7.35,7°20′",
-"523727":"7.53,7°30′",
-"523726":"7.46,7°30′",
-"523725":"7.34,7°20′",
-"523724":"7.29,7°20′",
-"523723":"7.26,7°20′",
-"523722":"7.28,7°20′",
-"523721":"7.33,7°20′",
-"523720":"7.35,7°20′",
-"523717":"7.46,7°30′",
-"523716":"7.44,7°30′",
-"523715":"7.35,7°20′",
-"523714":"7.28,7°20′",
-"523713":"7.24,7°10′",
-"523712":"7.26,7°20′",
-"523711":"7.30,7°20′",
-"523710":"7.33,7°20′",
-"523707":"7.25,7°20′",
-"523706":"7.31,7°20′",
-"523705":"7.29,7°20′",
-"523704":"7.25,7°20′",
-"523703":"7.21,7°10′",
-"523702":"7.21,7°10′",
-"523701":"7.25,7°20′",
-"523700":"7.31,7°20′",
-"523677":"8.00,8° 0′",
-"523676":"7.90,7°50′",
-"523675":"7.68,7°40′",
-"523674":"7.56,7°30′",
-"523673":"7.57,7°30′",
-"523672":"7.62,7°40′",
-"523671":"7.63,7°40′",
-"523670":"7.59,7°40′",
-"523667":"7.72,7°40′",
-"523666":"7.71,7°40′",
-"523665":"7.60,7°40′",
-"523664":"7.53,7°30′",
-"523663":"7.53,7°30′",
-"523662":"7.57,7°30′",
-"523661":"7.58,7°30′",
-"523660":"7.57,7°30′",
-"523657":"7.51,7°30′",
-"523656":"7.55,7°30′",
-"523655":"7.52,7°30′",
-"523654":"7.49,7°30′",
-"523653":"7.50,7°30′",
-"523652":"7.54,7°30′",
-"523651":"7.56,7°30′",
-"523650":"7.56,7°30′",
-"523647":"7.41,7°20′",
-"523646":"7.45,7°30′",
-"523645":"7.46,7°30′",
-"523644":"7.45,7°30′",
-"523643":"7.47,7°30′",
-"523642":"7.51,7°30′",
-"523641":"7.53,7°30′",
-"523640":"7.54,7°30′",
-"523637":"7.38,7°20′",
-"523636":"7.40,7°20′",
-"523635":"7.41,7°20′",
-"523634":"7.41,7°20′",
-"523633":"7.43,7°30′",
-"523632":"7.47,7°30′",
-"523631":"7.50,7°30′",
-"523630":"7.51,7°30′",
-"523627":"7.36,7°20′",
-"523626":"7.37,7°20′",
-"523625":"7.37,7°20′",
-"523624":"7.36,7°20′",
-"523623":"7.37,7°20′",
-"523622":"7.42,7°30′",
-"523621":"7.46,7°30′",
-"523620":"7.49,7°30′",
-"523617":"7.35,7°20′",
-"523616":"7.35,7°20′",
-"523614":"7.33,7°20′",
-"523613":"7.35,7°20′",
-"523612":"7.39,7°20′",
-"523611":"7.43,7°30′",
-"523610":"7.47,7°30′",
-"523607":"7.33,7°20′",
-"523606":"7.33,7°20′",
-"523604":"7.32,7°20′",
-"523603":"7.32,7°20′",
-"523602":"7.34,7°20′",
-"523601":"7.38,7°20′",
-"523600":"7.44,7°30′",
-"523577":"7.58,7°30′",
-"523576":"7.61,7°40′",
-"523575":"7.63,7°40′",
-"523574":"7.68,7°40′",
-"523573":"7.72,7°40′",
-"523572":"7.74,7°40′",
-"523571":"7.78,7°50′",
-"523570":"7.80,7°50′",
-"523567":"7.56,7°30′",
-"523566":"7.57,7°30′",
-"523565":"7.60,7°40′",
-"523564":"7.71,7°40′",
-"523563":"7.82,7°50′",
-"523562":"7.79,7°50′",
-"523561":"7.73,7°40′",
-"523560":"7.76,7°50′",
-"523557":"7.55,7°30′",
-"523556":"7.56,7°30′",
-"523555":"7.61,7°40′",
-"523554":"7.76,7°50′",
-"523553":"7.90,7°50′",
-"523552":"7.85,7°50′",
-"523551":"7.76,7°50′",
-"523550":"7.81,7°50′",
-"523547":"7.54,7°30′",
-"523546":"7.57,7°30′",
-"523545":"7.62,7°40′",
-"523544":"7.73,7°40′",
-"523543":"7.82,7°50′",
-"523542":"7.78,7°50′",
-"523541":"7.74,7°40′",
-"523540":"7.80,7°50′",
-"523537":"7.53,7°30′",
-"523536":"7.56,7°30′",
-"523535":"7.57,7°30′",
-"523534":"7.54,7°30′",
-"523533":"7.56,7°30′",
-"523532":"7.60,7°40′",
-"523531":"7.65,7°40′",
-"523530":"7.72,7°40′",
-"523527":"7.52,7°30′",
-"523526":"7.55,7°30′",
-"523525":"7.49,7°30′",
-"523524":"7.34,7°20′",
-"523523":"7.32,7°20′",
-"523522":"7.44,7°30′",
-"523521":"7.55,7°30′",
-"523520":"7.63,7°40′",
-"523517":"7.51,7°30′",
-"523516":"7.54,7°30′",
-"523515":"7.45,7°30′",
-"523514":"7.26,7°20′",
-"523513":"7.22,7°10′",
-"523512":"7.36,7°20′",
-"523511":"7.50,7°30′",
-"523510":"7.57,7°30′",
-"523507":"7.49,7°30′",
-"523506":"7.52,7°30′",
-"523505":"7.44,7°30′",
-"523504":"7.29,7°20′",
-"523503":"7.25,7°20′",
-"523502":"7.35,7°20′",
-"523501":"7.47,7°30′",
-"523500":"7.55,7°30′",
-"523477":"7.69,7°40′",
-"523476":"7.65,7°40′",
-"523475":"7.68,7°40′",
-"523474":"7.63,7°40′",
-"523473":"7.63,7°40′",
-"523472":"7.87,7°50′",
-"523471":"7.98,8° 0′",
-"523470":"7.11,7°10′",
-"523467":"7.86,7°50′",
-"523466":"7.98,8° 0′",
-"523465":"7.92,8° 0′",
-"523464":"7.70,7°40′",
-"523463":"7.61,7°40′",
-"523462":"7.79,7°50′",
-"523461":"7.96,8° 0′",
-"523460":"7.65,7°40′",
-"523457":"7.98,8° 0′",
-"523456":"8.13,8°10′",
-"523455":"8.02,8° 0′",
-"523454":"7.73,7°40′",
-"523453":"7.55,7°30′",
-"523452":"7.65,7°40′",
-"523451":"7.85,7°50′",
-"523450":"7.82,7°50′",
-"523447":"7.88,7°50′",
-"523446":"7.91,7°50′",
-"523445":"7.83,7°50′",
-"523444":"7.67,7°40′",
-"523443":"7.55,7°30′",
-"523442":"7.63,7°40′",
-"523441":"7.84,7°50′",
-"523440":"7.89,7°50′",
-"523437":"7.69,7°40′",
-"523436":"7.55,7°30′",
-"523435":"7.52,7°30′",
-"523434":"7.56,7°30′",
-"523433":"7.57,7°30′",
-"523432":"7.69,7°40′",
-"523431":"7.91,7°50′",
-"523430":"7.96,8° 0′",
-"523427":"7.57,7°30′",
-"523426":"7.42,7°30′",
-"523425":"7.41,7°20′",
-"523424":"7.49,7°30′",
-"523423":"7.56,7°30′",
-"523422":"7.68,7°40′",
-"523421":"7.88,7°50′",
-"523420":"7.93,8° 0′",
-"523417":"7.53,7°30′",
-"523416":"7.44,7°30′",
-"523415":"7.42,7°30′",
-"523414":"7.47,7°30′",
-"523413":"7.52,7°30′",
-"523412":"7.61,7°40′",
-"523411":"7.75,7°50′",
-"523410":"7.81,7°50′",
-"523407":"7.53,7°30′",
-"523406":"7.47,7°30′",
-"523405":"7.45,7°30′",
-"523404":"7.46,7°30′",
-"523403":"7.49,7°30′",
-"523402":"7.55,7°30′",
-"523401":"7.61,7°40′",
-"523400":"7.65,7°40′",
-"523377":"6.92,7° 0′",
-"523376":"8.13,8°10′",
-"523375":"8.49,8°30′",
-"523374":"8.17,8°10′",
-"523373":"7.98,8° 0′",
-"523372":"7.98,8° 0′",
-"523371":"8.09,8°10′",
-"523370":"8.01,8° 0′",
-"523367":"7.70,7°40′",
-"523366":"8.32,8°20′",
-"523365":"8.41,8°20′",
-"523364":"8.10,8°10′",
-"523363":"7.86,7°50′",
-"523362":"7.79,7°50′",
-"523361":"7.93,8° 0′",
-"523360":"7.97,8° 0′",
-"523357":"7.85,7°50′",
-"523356":"8.11,8°10′",
-"523355":"8.16,8°10′",
-"523354":"7.93,8° 0′",
-"523353":"7.67,7°40′",
-"523352":"7.44,7°30′",
-"523351":"7.48,7°30′",
-"523350":"7.67,7°40′",
-"523347":"7.79,7°50′",
-"523346":"7.82,7°50′",
-"523345":"7.89,7°50′",
-"523344":"7.77,7°50′",
-"523343":"7.53,7°30′",
-"523342":"7.24,7°10′",
-"523341":"7.17,7°10′",
-"523340":"7.36,7°20′",
-"523337":"7.67,7°40′",
-"523336":"7.48,7°30′",
-"523335":"7.63,7°40′",
-"523334":"7.66,7°40′",
-"523333":"7.53,7°30′",
-"523332":"7.38,7°20′",
-"523331":"7.35,7°20′",
-"523330":"7.43,7°30′",
-"523327":"7.65,7°40′",
-"523326":"7.51,7°30′",
-"523325":"7.61,7°40′",
-"523324":"7.62,7°40′",
-"523323":"7.58,7°30′",
-"523322":"7.59,7°40′",
-"523321":"7.63,7°40′",
-"523320":"7.63,7°40′",
-"523317":"7.72,7°40′",
-"523316":"7.69,7°40′",
-"523315":"7.70,7°40′",
-"523314":"7.63,7°40′",
-"523313":"7.62,7°40′",
-"523312":"7.64,7°40′",
-"523311":"7.70,7°40′",
-"523310":"7.71,7°40′",
-"523307":"7.62,7°40′",
-"523306":"7.58,7°30′",
-"523305":"7.57,7°30′",
-"523304":"7.60,7°40′",
-"523303":"7.64,7°40′",
-"523302":"7.61,7°40′",
-"523301":"7.62,7°40′",
-"523300":"7.69,7°40′",
-"523277":"7.76,7°50′",
-"523276":"7.67,7°40′",
-"523275":"7.63,7°40′",
-"523274":"7.66,7°40′",
-"523267":"7.79,7°50′",
-"523266":"7.71,7°40′",
-"523265":"7.64,7°40′",
-"523264":"7.66,7°40′",
-"523263":"7.76,7°50′",
-"523257":"7.71,7°40′",
-"523256":"7.73,7°40′",
-"523255":"7.58,7°30′",
-"523254":"7.54,7°30′",
-"523253":"7.67,7°40′",
-"523252":"7.72,7°40′",
-"523247":"7.56,7°30′",
-"523246":"7.68,7°40′",
-"523245":"7.54,7°30′",
-"523244":"7.50,7°30′",
-"523243":"7.61,7°40′",
-"523242":"7.66,7°40′",
-"523241":"7.68,7°40′",
-"523237":"7.54,7°30′",
-"523236":"7.64,7°40′",
-"523235":"7.61,7°40′",
-"523234":"7.62,7°40′",
-"523233":"7.65,7°40′",
-"523232":"7.64,7°40′",
-"523231":"7.65,7°40′",
-"523230":"7.71,7°40′",
-"523227":"7.61,7°40′",
-"523226":"7.63,7°40′",
-"523225":"7.67,7°40′",
-"523224":"7.71,7°40′",
-"523223":"7.69,7°40′",
-"523222":"7.67,7°40′",
-"523221":"7.63,7°40′",
-"523220":"7.66,7°40′",
-"523217":"7.67,7°40′",
-"523216":"7.64,7°40′",
-"523215":"7.65,7°40′",
-"523214":"7.65,7°40′",
-"523213":"7.66,7°40′",
-"523212":"7.70,7°40′",
-"523211":"7.58,7°30′",
-"523210":"7.55,7°30′",
-"523207":"7.69,7°40′",
-"523206":"7.65,7°40′",
-"523205":"7.60,7°40′",
-"523204":"7.55,7°30′",
-"523203":"7.57,7°30′",
-"523202":"7.62,7°40′",
-"523201":"7.46,7°30′",
-"523200":"7.42,7°30′",
-"523127":"7.87,7°50′",
-"523126":"7.96,8° 0′",
-"523117":"7.88,7°50′",
-"523116":"8.03,8° 0′",
-"523111":"7.63,7°40′",
-"523107":"7.80,7°50′",
-"523106":"7.99,8° 0′",
-"523105":"7.86,7°50′",
-"523104":"7.76,7°50′",
-"522904":"7.63,7°40′",
-"522903":"7.64,7°40′",
-"513962":"7.35,7°20′",
-"513952":"7.31,7°20′",
-"513942":"7.28,7°20′",
-"513941":"7.27,7°20′",
-"513932":"7.25,7°20′",
-"513931":"7.24,7°10′",
-"513921":"7.23,7°10′",
-"513920":"7.21,7°10′",
-"513914":"7.22,7°10′",
-"513913":"7.22,7°10′",
-"513904":"7.21,7°10′",
-"513903":"7.22,7°10′",
-"513877":"7.28,7°20′",
-"513876":"7.22,7°10′",
-"513872":"7.02,7° 0′",
-"513871":"7.03,7° 0′",
-"513870":"7.06,7° 0′",
-"513867":"7.26,7°20′",
-"513777":"7.14,7°10′",
-"513776":"7.21,7°10′",
-"513775":"7.23,7°10′",
-"513773":"7.19,7°10′",
-"513772":"7.18,7°10′",
-"513771":"7.23,7°10′",
-"513770":"7.29,7°20′",
-"513760":"7.26,7°20′",
-"513677":"7.31,7°20′",
-"513675":"7.31,7°20′",
-"513674":"7.28,7°20′",
-"513673":"7.25,7°20′",
-"513672":"7.25,7°20′",
-"513671":"7.33,7°20′",
-"513670":"7.42,7°30′",
-"513667":"7.27,7°20′",
-"513666":"7.28,7°20′",
-"513665":"7.28,7°20′",
-"513664":"7.24,7°10′",
-"513663":"7.17,7°10′",
-"513662":"7.19,7°10′",
-"513661":"7.34,7°20′",
-"513660":"7.42,7°30′",
-"513657":"7.23,7°10′",
-"513656":"7.25,7°20′",
-"513655":"7.26,7°20′",
-"513654":"7.22,7°10′",
-"513653":"7.16,7°10′",
-"513652":"7.21,7°10′",
-"513651":"7.34,7°20′",
-"513650":"7.39,7°20′",
-"513647":"7.19,7°10′",
-"513646":"7.22,7°10′",
-"513645":"7.25,7°20′",
-"513644":"7.22,7°10′",
-"513643":"7.17,7°10′",
-"513642":"7.17,7°10′",
-"513641":"7.21,7°10′",
-"513640":"7.26,7°20′",
-"513637":"7.17,7°10′",
-"513636":"7.20,7°10′",
-"513635":"7.23,7°10′",
-"513634":"7.21,7°10′",
-"513633":"7.18,7°10′",
-"513632":"7.12,7°10′",
-"513631":"7.09,7°10′",
-"513630":"7.16,7°10′",
-"513626":"7.17,7°10′",
-"513624":"7.20,7°10′",
-"513623":"7.18,7°10′",
-"513622":"7.15,7°10′",
-"513621":"7.11,7°10′",
-"513620":"7.15,7°10′",
-"513613":"7.17,7°10′",
-"513612":"7.15,7°10′",
-"513611":"7.11,7°10′",
-"513610":"7.14,7°10′",
-"513602":"7.12,7°10′",
-"513601":"7.09,7°10′",
-"513600":"7.09,7°10′",
-"513577":"7.46,7°30′",
-"513576":"7.46,7°30′",
-"513575":"7.41,7°20′",
-"513574":"7.33,7°20′",
-"513573":"7.31,7°20′",
-"513572":"7.36,7°20′",
-"513571":"7.45,7°30′",
-"513570":"7.51,7°30′",
-"513567":"7.44,7°30′",
-"513566":"7.42,7°30′",
-"513565":"7.36,7°20′",
-"513564":"7.33,7°20′",
-"513563":"7.33,7°20′",
-"513562":"7.36,7°20′",
-"513560":"7.45,7°30′",
-"513557":"7.41,7°20′",
-"513556":"7.39,7°20′",
-"513555":"7.34,7°20′",
-"513554":"7.32,7°20′",
-"513553":"7.33,7°20′",
-"513552":"7.36,7°20′",
-"513551":"7.38,7°20′",
-"513547":"7.35,7°20′",
-"513546":"7.38,7°20′",
-"513545":"7.35,7°20′",
-"513544":"7.33,7°20′",
-"513543":"7.33,7°20′",
-"513542":"7.35,7°20′",
-"513541":"7.36,7°20′",
-"513537":"7.31,7°20′",
-"513536":"7.41,7°20′",
-"513535":"7.41,7°20′",
-"513534":"7.36,7°20′",
-"513533":"7.33,7°20′",
-"513532":"7.34,7°20′",
-"513531":"7.35,7°20′",
-"513530":"7.35,7°20′",
-"513527":"7.32,7°20′",
-"513526":"7.50,7°30′",
-"513525":"7.53,7°30′",
-"513524":"7.40,7°20′",
-"513523":"7.32,7°20′",
-"513522":"7.34,7°20′",
-"513521":"7.35,7°20′",
-"513520":"7.32,7°20′",
-"513517":"7.31,7°20′",
-"513516":"7.54,7°30′",
-"513515":"7.58,7°30′",
-"513514":"7.40,7°20′",
-"513513":"7.30,7°20′",
-"513512":"7.34,7°20′",
-"513511":"7.34,7°20′",
-"513510":"7.26,7°20′",
-"513507":"7.22,7°10′",
-"513506":"7.41,7°20′",
-"513505":"7.47,7°30′",
-"513504":"7.35,7°20′",
-"513503":"7.29,7°20′",
-"513502":"7.32,7°20′",
-"513501":"7.24,7°10′",
-"513500":"7.11,7°10′",
-"513477":"7.51,7°30′",
-"513474":"7.47,7°30′",
-"513473":"7.49,7°30′",
-"513471":"7.56,7°30′",
-"513470":"7.56,7°30′",
-"513467":"7.47,7°30′",
-"513466":"7.46,7°30′",
-"513463":"7.49,7°30′",
-"513462":"7.52,7°30′",
-"513461":"7.55,7°30′",
-"513460":"7.55,7°30′",
-"513457":"7.44,7°30′",
-"513456":"7.45,7°30′",
-"513453":"7.47,7°30′",
-"513452":"7.50,7°30′",
-"513451":"7.53,7°30′",
-"513450":"7.56,7°30′",
-"513447":"7.41,7°20′",
-"513446":"7.44,7°30′",
-"513445":"7.44,7°30′",
-"513442":"7.44,7°30′",
-"513441":"7.46,7°30′",
-"513440":"7.52,7°30′",
-"513437":"7.37,7°20′",
-"513436":"7.40,7°20′",
-"513435":"7.41,7°20′",
-"513434":"7.41,7°20′",
-"513433":"7.40,7°20′",
-"513432":"7.40,7°20′",
-"513431":"7.40,7°20′",
-"513430":"7.45,7°30′",
-"513427":"7.32,7°20′",
-"513426":"7.34,7°20′",
-"513425":"7.36,7°20′",
-"513424":"7.37,7°20′",
-"513423":"7.38,7°20′",
-"513422":"7.39,7°20′",
-"513421":"7.38,7°20′",
-"513420":"7.39,7°20′",
-"513416":"7.27,7°20′",
-"513415":"7.31,7°20′",
-"513414":"7.33,7°20′",
-"513413":"7.35,7°20′",
-"513412":"7.37,7°20′",
-"513411":"7.37,7°20′",
-"513410":"7.37,7°20′",
-"513405":"7.27,7°20′",
-"513404":"7.29,7°20′",
-"513403":"7.29,7°20′",
-"513402":"7.31,7°20′",
-"513401":"7.35,7°20′",
-"513400":"7.36,7°20′",
-"513377":"7.49,7°30′",
-"513376":"7.37,7°20′",
-"513375":"7.42,7°30′",
-"513374":"7.64,7°40′",
-"513373":"7.74,7°40′",
-"513372":"7.66,7°40′",
-"513371":"7.59,7°40′",
-"513370":"7.65,7°40′",
-"513367":"7.52,7°30′",
-"513366":"7.46,7°30′",
-"513365":"7.55,7°30′",
-"513364":"7.79,7°50′",
-"513363":"7.97,8° 0′",
-"513362":"7.91,7°50′",
-"513361":"7.69,7°40′",
-"513360":"7.62,7°40′",
-"513357":"7.58,7°30′",
-"513356":"7.59,7°40′",
-"513355":"7.69,7°40′",
-"513354":"7.94,8° 0′",
-"513353":"8.25,8°20′",
-"513352":"8.22,8°10′",
-"513351":"7.78,7°50′",
-"513350":"7.52,7°30′",
-"513347":"7.58,7°30′",
-"513346":"7.62,7°40′",
-"513345":"7.72,7°40′",
-"513344":"7.97,8° 0′",
-"513343":"8.29,8°20′",
-"513342":"8.22,8°10′",
-"513341":"7.67,7°40′",
-"513340":"7.36,7°20′",
-"513337":"7.50,7°30′",
-"513336":"7.54,7°30′",
-"513335":"7.64,7°40′",
-"513334":"7.85,7°50′",
-"513333":"8.06,8° 0′",
-"513332":"7.95,8° 0′",
-"513331":"7.48,7°30′",
-"513330":"7.28,7°20′",
-"513327":"7.39,7°20′",
-"513326":"7.42,7°30′",
-"513325":"7.52,7°30′",
-"513324":"7.67,7°40′",
-"513322":"7.67,7°40′",
-"513321":"7.42,7°30′",
-"513320":"7.34,7°20′",
-"513317":"7.36,7°20′",
-"513316":"7.37,7°20′",
-"513315":"7.44,7°30′",
-"513314":"7.52,7°30′",
-"513313":"7.58,7°30′",
-"513312":"7.53,7°30′",
-"513311":"7.42,7°30′",
-"513310":"7.40,7°20′",
-"513307":"7.37,7°20′",
-"513306":"7.37,7°20′",
-"513305":"7.39,7°20′",
-"513304":"7.42,7°30′",
-"513302":"7.43,7°30′",
-"513300":"7.39,7°20′",
-"513277":"7.68,7°40′",
-"513276":"7.65,7°40′",
-"513275":"7.60,7°40′",
-"513274":"7.53,7°30′",
-"513273":"7.48,7°30′",
-"513272":"7.47,7°30′",
-"513271":"7.41,7°20′",
-"513270":"7.44,7°30′",
-"513267":"7.63,7°40′",
-"513266":"7.61,7°40′",
-"513265":"7.58,7°30′",
-"513264":"7.52,7°30′",
-"513263":"7.44,7°30′",
-"513262":"7.39,7°20′",
-"513261":"7.46,7°30′",
-"513260":"7.58,7°30′",
-"513257":"7.51,7°30′",
-"513256":"7.52,7°30′",
-"513255":"7.51,7°30′",
-"513254":"7.49,7°30′",
-"513253":"7.43,7°30′",
-"513252":"7.40,7°20′",
-"513251":"7.51,7°30′",
-"513250":"7.62,7°40′",
-"513247":"7.39,7°20′",
-"513246":"7.42,7°30′",
-"513245":"7.43,7°30′",
-"513244":"7.45,7°30′",
-"513243":"7.44,7°30′",
-"513242":"7.43,7°30′",
-"513241":"7.50,7°30′",
-"513240":"7.56,7°30′",
-"513237":"7.34,7°20′",
-"513236":"7.37,7°20′",
-"513235":"7.38,7°20′",
-"513234":"7.42,7°30′",
-"513233":"7.44,7°30′",
-"513232":"7.44,7°30′",
-"513231":"7.46,7°30′",
-"513230":"7.47,7°30′",
-"513227":"7.39,7°20′",
-"513226":"7.38,7°20′",
-"513225":"7.37,7°20′",
-"513224":"7.40,7°20′",
-"513223":"7.42,7°30′",
-"513222":"7.41,7°20′",
-"513221":"7.40,7°20′",
-"513220":"7.40,7°20′",
-"513217":"7.43,7°30′",
-"513216":"7.39,7°20′",
-"513215":"7.35,7°20′",
-"513214":"7.37,7°20′",
-"513213":"7.38,7°20′",
-"513212":"7.38,7°20′",
-"513211":"7.37,7°20′",
-"513210":"7.40,7°20′",
-"513207":"7.40,7°20′",
-"513206":"7.34,7°20′",
-"513205":"7.29,7°20′",
-"513204":"7.31,7°20′",
-"513203":"7.35,7°20′",
-"513202":"7.37,7°20′",
-"513201":"7.36,7°20′",
-"513200":"7.40,7°20′",
-"513177":"7.70,7°40′",
-"513176":"7.83,7°50′",
-"513175":"7.72,7°40′",
-"513174":"7.68,7°40′",
-"513167":"7.67,7°40′",
-"513166":"7.67,7°40′",
-"513165":"7.57,7°30′",
-"513164":"7.60,7°40′",
-"513163":"7.75,7°50′",
-"513162":"7.72,7°40′",
-"513157":"7.63,7°40′",
-"513156":"7.57,7°30′",
-"513155":"7.50,7°30′",
-"513154":"7.60,7°40′",
-"513153":"7.83,7°50′",
-"513152":"7.77,7°50′",
-"513151":"7.50,7°30′",
-"513150":"7.26,7°20′",
-"513147":"7.54,7°30′",
-"513146":"7.50,7°30′",
-"513145":"7.48,7°30′",
-"513144":"7.55,7°30′",
-"513143":"7.67,7°40′",
-"513142":"7.66,7°40′",
-"513141":"7.49,7°30′",
-"513140":"7.29,7°20′",
-"513137":"7.44,7°30′",
-"513136":"7.41,7°20′",
-"513135":"7.42,7°30′",
-"513134":"7.38,7°20′",
-"513133":"7.35,7°20′",
-"513132":"7.43,7°30′",
-"513131":"7.52,7°30′",
-"513130":"7.42,7°30′",
-"513127":"7.38,7°20′",
-"513126":"7.35,7°20′",
-"513125":"7.36,7°20′",
-"513124":"7.31,7°20′",
-"513123":"7.23,7°10′",
-"513122":"7.35,7°20′",
-"513121":"7.51,7°30′",
-"513120":"7.41,7°20′",
-"513117":"7.41,7°20′",
-"513116":"7.38,7°20′",
-"513115":"7.38,7°20′",
-"513114":"7.37,7°20′",
-"513113":"7.36,7°20′",
-"513112":"7.41,7°20′",
-"513111":"7.42,7°30′",
-"513110":"7.36,7°20′",
-"513107":"7.44,7°30′",
-"513106":"7.42,7°30′",
-"513105":"7.41,7°20′",
-"513104":"7.42,7°30′",
-"513103":"7.43,7°30′",
-"513102":"7.42,7°30′",
-"513101":"7.37,7°20′",
-"513100":"7.42,7°30′",
-"513057":"7.17,7°10′",
-"513047":"7.15,7°10′",
-"513046":"7.17,7°10′",
-"513037":"7.17,7°10′",
-"513036":"7.14,7°10′",
-"513027":"7.14,7°10′",
-"513020":"7.49,7°30′",
-"513017":"7.26,7°20′",
-"513016":"7.30,7°20′",
-"513007":"7.51,7°30′",
-"513006":"7.54,7°30′",
-"513005":"7.53,7°30′",
-"512973":"7.63,7°40′",
-"512972":"7.64,7°40′",
-"512963":"7.63,7°40′",
-"512962":"7.64,7°40′",
-"512953":"7.63,7°40′",
-"512952":"7.65,7°40′",
-"512943":"7.63,7°40′",
-"512942":"7.66,7°40′",
-"512941":"7.66,7°40′",
-"512933":"7.61,7°40′",
-"512932":"7.65,7°40′",
-"512931":"7.66,7°40′",
-"512922":"7.62,7°40′",
-"512921":"7.62,7°40′",
-"512912":"7.56,7°30′",
-"512911":"7.56,7°30′",
-"503965":"7.21,7°10′",
-"503964":"7.21,7°10′",
-"503932":"7.22,7°10′",
-"503876":"7.14,7°10′",
-"503672":"7.09,7°10′",
-"503671":"7.06,7° 0′",
-"503670":"7.05,7° 0′",
-"503661":"7.06,7° 0′",
-"503660":"7.08,7° 0′",
-"503650":"7.14,7°10′",
-"503640":"7.16,7°10′",
-"503577":"7.11,7°10′",
-"503576":"7.19,7°10′",
-"503575":"7.24,7°10′",
-"503574":"7.26,7°20′",
-"503573":"7.30,7°20′",
-"503572":"7.30,7°20′",
-"503571":"7.05,7° 0′",
-"503570":"6.87,6°50′",
-"503567":"7.14,7°10′",
-"503566":"7.14,7°10′",
-"503565":"7.12,7°10′",
-"503564":"7.17,7°10′",
-"503563":"7.27,7°20′",
-"503562":"7.24,7°10′",
-"503561":"6.92,7° 0′",
-"503560":"6.74,6°40′",
-"503557":"7.23,7°10′",
-"503556":"7.21,7°10′",
-"503555":"7.12,7°10′",
-"503554":"7.11,7°10′",
-"503553":"7.18,7°10′",
-"503552":"7.16,7°10′",
-"503551":"6.91,6°50′",
-"503547":"7.25,7°20′",
-"503546":"7.24,7°10′",
-"503545":"7.14,7°10′",
-"503544":"7.10,7°10′",
-"503543":"7.11,7°10′",
-"503542":"7.08,7° 0′",
-"503537":"7.19,7°10′",
-"503536":"7.19,7°10′",
-"503535":"7.14,7°10′",
-"503534":"7.10,7°10′",
-"503533":"7.08,7° 0′",
-"503532":"7.05,7° 0′",
-"503527":"7.13,7°10′",
-"503526":"7.13,7°10′",
-"503525":"7.11,7°10′",
-"503524":"7.08,7° 0′",
-"503523":"7.06,7° 0′",
-"503516":"7.08,7° 0′",
-"503515":"7.07,7° 0′",
-"503514":"7.06,7° 0′",
-"503475":"7.25,7°20′",
-"503474":"7.27,7°20′",
-"503473":"7.24,7°10′",
-"503472":"7.26,7°20′",
-"503471":"7.31,7°20′",
-"503470":"7.36,7°20′",
-"503466":"7.10,7°10′",
-"503465":"7.24,7°10′",
-"503464":"7.26,7°20′",
-"503463":"7.22,7°10′",
-"503462":"7.23,7°10′",
-"503461":"7.29,7°20′",
-"503460":"7.35,7°20′",
-"503456":"7.09,7°10′",
-"503455":"7.22,7°10′",
-"503454":"7.25,7°20′",
-"503453":"7.22,7°10′",
-"503452":"7.22,7°10′",
-"503451":"7.27,7°20′",
-"503450":"7.34,7°20′",
-"503444":"7.21,7°10′",
-"503443":"7.20,7°10′",
-"503442":"7.21,7°10′",
-"503441":"7.25,7°20′",
-"503440":"7.30,7°20′",
-"503434":"7.17,7°10′",
-"503433":"7.18,7°10′",
-"503432":"7.19,7°10′",
-"503431":"7.21,7°10′",
-"503430":"7.24,7°10′",
-"503422":"7.16,7°10′",
-"503421":"7.17,7°10′",
-"503420":"7.19,7°10′",
-"503412":"7.14,7°10′",
-"503411":"7.13,7°10′",
-"503410":"7.14,7°10′",
-"503401":"7.14,7°10′",
-"503400":"7.09,7°10′",
-"503377":"7.38,7°20′",
-"503376":"7.37,7°20′",
-"503375":"7.34,7°20′",
-"503374":"7.33,7°20′",
-"503373":"7.35,7°20′",
-"503372":"7.37,7°20′",
-"503371":"7.35,7°20′",
-"503370":"7.34,7°20′",
-"503367":"7.38,7°20′",
-"503366":"7.35,7°20′",
-"503365":"7.30,7°20′",
-"503364":"7.26,7°20′",
-"503363":"7.28,7°20′",
-"503362":"7.32,7°20′",
-"503361":"7.32,7°20′",
-"503360":"7.31,7°20′",
-"503357":"7.37,7°20′",
-"503356":"7.33,7°20′",
-"503355":"7.29,7°20′",
-"503354":"7.23,7°10′",
-"503353":"7.24,7°10′",
-"503352":"7.29,7°20′",
-"503351":"7.30,7°20′",
-"503350":"7.30,7°20′",
-"503347":"7.29,7°20′",
-"503346":"7.28,7°20′",
-"503345":"7.35,7°20′",
-"503344":"7.29,7°20′",
-"503343":"7.24,7°10′",
-"503342":"7.27,7°20′",
-"503341":"7.28,7°20′",
-"503340":"7.27,7°20′",
-"503337":"7.21,7°10′",
-"503336":"7.26,7°20′",
-"503335":"7.43,7°30′",
-"503334":"7.36,7°20′",
-"503333":"7.24,7°10′",
-"503332":"7.21,7°10′",
-"503331":"7.21,7°10′",
-"503330":"7.23,7°10′",
-"503327":"7.19,7°10′",
-"503326":"7.27,7°20′",
-"503325":"7.42,7°30′",
-"503324":"7.34,7°20′",
-"503323":"7.20,7°10′",
-"503322":"7.14,7°10′",
-"503321":"7.15,7°10′",
-"503320":"7.21,7°10′",
-"503317":"7.18,7°10′",
-"503314":"7.27,7°20′",
-"503313":"7.18,7°10′",
-"503312":"7.13,7°10′",
-"503311":"7.16,7°10′",
-"503310":"7.24,7°10′",
-"503303":"7.18,7°10′",
-"503302":"7.17,7°10′",
-"503301":"7.19,7°10′",
-"503300":"7.26,7°20′",
-"503277":"7.32,7°20′",
-"503276":"7.25,7°20′",
-"503275":"7.20,7°10′",
-"503274":"7.24,7°10′",
-"503273":"7.31,7°20′",
-"503272":"7.35,7°20′",
-"503271":"7.36,7°20′",
-"503270":"7.38,7°20′",
-"503267":"7.28,7°20′",
-"503266":"7.20,7°10′",
-"503265":"7.15,7°10′",
-"503264":"7.20,7°10′",
-"503263":"7.27,7°20′",
-"503262":"7.33,7°20′",
-"503261":"7.34,7°20′",
-"503260":"7.35,7°20′",
-"503257":"7.27,7°20′",
-"503256":"7.19,7°10′",
-"503255":"7.14,7°10′",
-"503253":"7.24,7°10′",
-"503252":"7.29,7°20′",
-"503251":"7.30,7°20′",
-"503250":"7.31,7°20′",
-"503247":"7.25,7°20′",
-"503246":"7.19,7°10′",
-"503245":"7.14,7°10′",
-"503244":"7.16,7°10′",
-"503243":"7.22,7°10′",
-"503241":"7.27,7°20′",
-"503240":"7.28,7°20′",
-"503237":"7.22,7°10′",
-"503236":"7.18,7°10′",
-"503235":"7.15,7°10′",
-"503234":"7.17,7°10′",
-"503233":"7.21,7°10′",
-"503227":"7.22,7°10′",
-"503226":"7.18,7°10′",
-"503225":"7.18,7°10′",
-"503224":"7.19,7°10′",
-"503223":"7.20,7°10′",
-"503222":"7.21,7°10′",
-"503217":"7.24,7°10′",
-"503216":"7.18,7°10′",
-"503215":"7.17,7°10′",
-"503214":"7.18,7°10′",
-"503213":"7.17,7°10′",
-"503212":"7.18,7°10′",
-"503211":"7.19,7°10′",
-"503210":"7.20,7°10′",
-"503207":"7.24,7°10′",
-"503206":"7.15,7°10′",
-"503205":"7.13,7°10′",
-"503204":"7.14,7°10′",
-"503203":"7.12,7°10′",
-"503202":"7.14,7°10′",
-"503201":"7.15,7°10′",
-"503200":"7.17,7°10′",
-"503177":"7.41,7°20′",
-"503176":"7.41,7°20′",
-"503175":"7.40,7°20′",
-"503174":"7.40,7°20′",
-"503173":"7.41,7°20′",
-"503172":"7.40,7°20′",
-"503171":"7.39,7°20′",
-"503170":"7.51,7°30′",
-"503167":"7.36,7°20′",
-"503160":"7.50,7°30′",
-"503157":"7.32,7°20′",
-"503150":"7.44,7°30′",
-"503145":"7.26,7°20′",
-"503144":"7.24,7°10′",
-"503143":"7.26,7°20′",
-"503140":"7.33,7°20′",
-"503135":"7.25,7°20′",
-"503134":"7.24,7°10′",
-"503133":"7.24,7°10′",
-"503132":"7.25,7°20′",
-"503131":"7.26,7°20′",
-"503130":"7.26,7°20′",
-"503125":"7.29,7°20′",
-"503124":"7.29,7°20′",
-"503123":"7.26,7°20′",
-"503122":"7.24,7°10′",
-"503121":"7.27,7°20′",
-"503120":"7.30,7°20′",
-"503115":"7.33,7°20′",
-"503114":"7.36,7°20′",
-"503113":"7.29,7°20′",
-"503112":"7.26,7°20′",
-"503111":"7.38,7°20′",
-"503110":"7.48,7°30′",
-"503105":"7.34,7°20′",
-"503104":"7.38,7°20′",
-"503103":"7.30,7°20′",
-"503102":"7.28,7°20′",
-"503101":"7.46,7°30′",
-"503100":"7.52,7°30′",
-"503077":"7.66,7°40′",
-"503076":"7.68,7°40′",
-"503075":"7.64,7°40′",
-"503073":"7.55,7°30′",
-"503067":"7.64,7°40′",
-"503066":"7.72,7°40′",
-"503065":"7.72,7°40′",
-"503064":"7.68,7°40′",
-"503063":"7.59,7°40′",
-"503060":"7.42,7°30′",
-"503057":"7.55,7°30′",
-"503056":"7.66,7°40′",
-"503055":"7.74,7°40′",
-"503054":"7.73,7°40′",
-"503053":"7.60,7°40′",
-"503052":"7.46,7°30′",
-"503047":"7.40,7°20′",
-"503046":"7.51,7°30′",
-"503045":"7.62,7°40′",
-"503044":"7.66,7°40′",
-"503043":"7.53,7°30′",
-"503042":"7.37,7°20′",
-"503041":"7.30,7°20′",
-"503037":"7.28,7°20′",
-"503036":"7.33,7°20′",
-"503035":"7.40,7°20′",
-"503034":"7.46,7°30′",
-"503033":"7.40,7°20′",
-"503032":"7.26,7°20′",
-"503031":"7.20,7°10′",
-"503030":"7.28,7°20′",
-"503027":"7.29,7°20′",
-"503026":"7.25,7°20′",
-"503025":"7.22,7°10′",
-"503024":"7.25,7°20′",
-"503023":"7.28,7°20′",
-"503022":"7.21,7°10′",
-"503021":"7.15,7°10′",
-"503020":"7.24,7°10′",
-"503017":"7.43,7°30′",
-"503016":"7.33,7°20′",
-"503015":"7.20,7°10′",
-"503014":"7.15,7°10′",
-"503013":"7.24,7°10′",
-"503012":"7.27,7°20′",
-"503011":"7.20,7°10′",
-"503010":"7.19,7°10′",
-"503007":"7.42,7°30′",
-"503006":"7.38,7°20′",
-"503005":"7.24,7°10′",
-"503004":"7.09,7°10′",
-"503003":"7.18,7°10′",
-"503002":"7.29,7°20′",
-"503001":"7.22,7°10′",
-"503000":"7.09,7°10′",
-"502966":"7.41,7°20′",
-"502965":"7.41,7°20′",
-"502956":"7.39,7°20′",
-"502955":"7.37,7°20′",
-"502947":"7.38,7°20′",
-"502946":"7.37,7°20′",
-"502945":"7.32,7°20′",
-"502944":"7.28,7°20′",
-"502937":"7.38,7°20′",
-"502936":"7.35,7°20′",
-"502934":"7.20,7°10′",
-"502927":"7.34,7°20′",
-"502926":"7.28,7°20′",
-"502925":"7.13,7°10′",
-"502924":"7.07,7° 0′",
-"502917":"7.21,7°10′",
-"502916":"7.11,7°10′",
-"502915":"6.94,7° 0′",
-"502914":"6.91,6°50′",
-"502913":"6.99,7° 0′",
-"502907":"7.03,7° 0′",
-"502906":"6.92,7° 0′",
-"502905":"6.76,6°50′",
-"502904":"6.76,6°50′",
-"502903":"6.91,6°50′",
-"493956":"7.82,7°50′",
-"493955":"7.70,7°40′",
-"493946":"7.80,7°50′",
-"493471":"7.18,7°10′",
-"493470":"7.09,7°10′",
-"493461":"7.19,7°10′",
-"493372":"7.16,7°10′",
-"493371":"7.17,7°10′",
-"493370":"7.21,7°10′",
-"493362":"7.11,7°10′",
-"493361":"7.12,7°10′",
-"493360":"7.15,7°10′",
-"493351":"7.08,7° 0′",
-"493350":"7.10,7°10′",
-"493340":"7.06,7° 0′",
-"493330":"7.03,7° 0′",
-"493320":"7.00,7° 0′",
-"493310":"6.97,7° 0′",
-"493300":"6.94,7° 0′",
-"493277":"7.20,7°10′",
-"493276":"7.14,7°10′",
-"493275":"7.12,7°10′",
-"493274":"7.12,7°10′",
-"493273":"7.11,7°10′",
-"493272":"7.11,7°10′",
-"493267":"7.15,7°10′",
-"493266":"7.14,7°10′",
-"493265":"7.14,7°10′",
-"493264":"7.14,7°10′",
-"493263":"7.10,7°10′",
-"493262":"7.08,7° 0′",
-"493257":"7.11,7°10′",
-"493256":"7.12,7°10′",
-"493255":"7.12,7°10′",
-"493254":"7.11,7°10′",
-"493253":"7.08,7° 0′",
-"493252":"7.05,7° 0′",
-"493250":"7.01,7° 0′",
-"493247":"7.07,7° 0′",
-"493246":"7.08,7° 0′",
-"493245":"7.07,7° 0′",
-"493244":"7.05,7° 0′",
-"493243":"7.04,7° 0′",
-"493241":"6.99,7° 0′",
-"493240":"6.95,7° 0′",
-"493237":"7.04,7° 0′",
-"493236":"7.05,7° 0′",
-"493235":"7.05,7° 0′",
-"493234":"7.03,7° 0′",
-"493233":"7.01,7° 0′",
-"493230":"6.91,6°50′",
-"493227":"7.00,7° 0′",
-"493226":"7.02,7° 0′",
-"493225":"7.04,7° 0′",
-"493224":"7.03,7° 0′",
-"493223":"7.00,7° 0′",
-"493220":"6.93,7° 0′",
-"493217":"6.97,7° 0′",
-"493216":"6.98,7° 0′",
-"493215":"7.02,7° 0′",
-"493214":"7.02,7° 0′",
-"493213":"6.99,7° 0′",
-"493210":"6.98,7° 0′",
-"493207":"6.94,7° 0′",
-"493206":"6.95,7° 0′",
-"493204":"6.98,7° 0′",
-"493203":"6.97,7° 0′",
-"493177":"7.15,7°10′",
-"493176":"7.20,7°10′",
-"493175":"7.28,7°20′",
-"493174":"7.30,7°20′",
-"493173":"7.24,7°10′",
-"493172":"7.26,7°20′",
-"493171":"7.40,7°20′",
-"493170":"7.32,7°20′",
-"493167":"7.08,7° 0′",
-"493166":"7.13,7°10′",
-"493165":"7.19,7°10′",
-"493164":"7.18,7°10′",
-"493163":"7.12,7°10′",
-"493162":"7.14,7°10′",
-"493161":"7.22,7°10′",
-"493160":"7.12,7°10′",
-"493157":"7.00,7° 0′",
-"493156":"7.05,7° 0′",
-"493155":"7.12,7°10′",
-"493154":"7.08,7° 0′",
-"493153":"6.95,7° 0′",
-"493152":"6.95,7° 0′",
-"493151":"7.06,7° 0′",
-"493150":"7.10,7°10′",
-"493147":"6.91,6°50′",
-"493146":"6.97,7° 0′",
-"493145":"7.07,7° 0′",
-"493144":"7.01,7° 0′",
-"493143":"6.81,6°50′",
-"493142":"6.81,6°50′",
-"493141":"6.96,7° 0′",
-"493140":"7.08,7° 0′",
-"493137":"6.86,6°50′",
-"493136":"6.92,7° 0′",
-"493135":"7.05,7° 0′",
-"493134":"6.99,7° 0′",
-"493133":"6.80,6°50′",
-"493132":"6.84,6°50′",
-"493131":"7.03,7° 0′",
-"493130":"7.02,7° 0′",
-"493127":"6.91,6°50′",
-"493126":"7.01,7° 0′",
-"493125":"7.17,7°10′",
-"493124":"7.13,7°10′",
-"493123":"6.99,7° 0′",
-"493122":"7.09,7°10′",
-"493121":"7.29,7°20′",
-"493120":"7.10,7°10′",
-"493117":"7.04,7° 0′",
-"493116":"7.23,7°10′",
-"493115":"7.47,7°30′",
-"493114":"7.48,7°30′",
-"493113":"7.33,7°20′",
-"493112":"7.37,7°20′",
-"493111":"7.47,7°30′",
-"493110":"7.14,7°10′",
-"493107":"7.14,7°10′",
-"493106":"7.44,7°30′",
-"493105":"7.83,7°50′",
-"493104":"7.88,7°50′",
-"493103":"7.64,7°40′",
-"493102":"7.51,7°30′",
-"493101":"7.40,7°20′",
-"493100":"6.96,7° 0′",
-"493077":"7.24,7°10′",
-"493076":"7.39,7°20′",
-"493075":"7.30,7°20′",
-"493074":"7.07,7° 0′",
-"493073":"7.10,7°10′",
-"493072":"7.21,7°10′",
-"493071":"7.15,7°10′",
-"493070":"7.02,7° 0′",
-"493067":"7.21,7°10′",
-"493066":"7.57,7°30′",
-"493065":"7.51,7°30′",
-"493064":"7.16,7°10′",
-"493063":"7.06,7° 0′",
-"493062":"7.09,7°10′",
-"493061":"7.07,7° 0′",
-"493060":"7.03,7° 0′",
-"493057":"7.42,7°30′",
-"493056":"7.98,8° 0′",
-"493055":"7.81,7°50′",
-"493054":"7.23,7°10′",
-"493053":"7.01,7° 0′",
-"493052":"6.98,7° 0′",
-"493051":"6.96,7° 0′",
-"493050":"7.03,7° 0′",
-"493047":"7.45,7°30′",
-"493046":"8.02,8° 0′",
-"493045":"7.81,7°50′",
-"493044":"7.14,7°10′",
-"493043":"6.94,7° 0′",
-"493042":"6.88,6°50′",
-"493041":"6.79,6°50′",
-"493040":"6.91,6°50′",
-"493037":"7.02,7° 0′",
-"493036":"7.35,7°20′",
-"493035":"7.34,7°20′",
-"493034":"7.00,7° 0′",
-"493033":"6.98,7° 0′",
-"493031":"6.64,6°40′",
-"493030":"6.70,6°40′",
-"493027":"6.67,6°40′",
-"493026":"6.68,6°40′",
-"493025":"6.91,6°50′",
-"493024":"7.00,7° 0′",
-"493023":"7.16,7°10′",
-"493022":"7.08,7° 0′",
-"493021":"6.71,6°40′",
-"493020":"6.63,6°40′",
-"493017":"6.57,6°30′",
-"493016":"6.53,6°30′",
-"493015":"6.88,6°50′",
-"493014":"7.17,7°10′",
-"493013":"7.34,7°20′",
-"493012":"7.26,7°20′",
-"493011":"6.89,6°50′",
-"493010":"6.72,6°40′",
-"493007":"6.51,6°30′",
-"493006":"6.69,6°40′",
-"493005":"7.16,7°10′",
-"493004":"7.40,7°20′",
-"493003":"7.40,7°20′",
-"493002":"7.25,7°20′",
-"493001":"6.98,7° 0′",
-"492977":"6.93,7° 0′",
-"492976":"6.84,6°50′",
-"492975":"6.72,6°40′",
-"492974":"6.73,6°40′",
-"492973":"6.88,6°50′",
-"492972":"7.02,7° 0′",
-"492971":"7.13,7°10′",
-"492970":"7.22,7°10′",
-"492967":"7.00,7° 0′",
-"492966":"6.93,7° 0′",
-"492965":"6.83,6°50′",
-"492964":"6.83,6°50′",
-"492963":"6.92,7° 0′",
-"492962":"7.02,7° 0′",
-"492961":"7.12,7°10′",
-"492960":"7.22,7°10′",
-"492957":"7.12,7°10′",
-"492956":"7.10,7°10′",
-"492955":"7.00,7° 0′",
-"492954":"6.95,7° 0′",
-"492953":"6.96,7° 0′",
-"492951":"7.11,7°10′",
-"492950":"7.21,7°10′",
-"492947":"7.13,7°10′",
-"492946":"7.20,7°10′",
-"492945":"7.12,7°10′",
-"492944":"7.02,7° 0′",
-"492943":"6.98,7° 0′",
-"492942":"7.01,7° 0′",
-"492941":"7.09,7°10′",
-"492940":"7.18,7°10′",
-"492937":"7.00,7° 0′",
-"492936":"7.15,7°10′",
-"492935":"7.12,7°10′",
-"492934":"7.01,7° 0′",
-"492932":"6.97,7° 0′",
-"492931":"7.03,7° 0′",
-"492930":"7.11,7°10′",
-"492927":"6.87,6°50′",
-"492926":"7.02,7° 0′",
-"492925":"7.01,7° 0′",
-"492924":"6.94,7° 0′",
-"492920":"6.97,7° 0′",
-"492917":"6.79,6°50′",
-"492916":"6.85,6°50′",
-"492915":"6.85,6°50′",
-"492910":"6.78,6°50′",
-"492907":"6.75,6°50′",
-"492906":"6.69,6°40′",
-"492900":"6.60,6°40′",
-"492867":"7.31,7°20′",
-"492866":"7.40,7°20′",
-"492857":"7.32,7°20′",
-"492837":"7.27,7°20′",
-"492827":"7.13,7°10′",
-"492826":"7.57,7°30′",
-"492817":"6.85,6°50′",
-"492816":"7.40,7°20′",
-"492815":"8.19,8°10′",
-"492807":"6.53,6°30′",
-"492806":"7.01,7° 0′",
-"492805":"7.92,8° 0′",
-"492804":"8.16,8°10′",
-"483956":"6.65,6°40′",
-"483176":"7.41,7°20′",
-"483175":"7.80,7°50′",
-"483174":"7.91,7°50′",
-"483173":"7.74,7°40′",
-"483172":"7.53,7°30′",
-"483171":"7.26,7°20′",
-"483170":"6.80,6°50′",
-"483165":"7.31,7°20′",
-"483164":"7.51,7°30′",
-"483163":"7.65,7°40′",
-"483162":"7.52,7°30′",
-"483161":"7.20,7°10′",
-"483160":"6.84,6°50′",
-"483155":"6.79,6°50′",
-"483154":"7.06,7° 0′",
-"483153":"7.47,7°30′",
-"483152":"7.46,7°30′",
-"483151":"7.17,7°10′",
-"483150":"6.92,7° 0′",
-"483145":"6.61,6°40′",
-"483144":"6.85,6°50′",
-"483143":"7.25,7°20′",
-"483142":"7.29,7°20′",
-"483141":"7.06,7° 0′",
-"483140":"6.89,6°50′",
-"483135":"6.63,6°40′",
-"483134":"6.77,6°50′",
-"483133":"7.01,7° 0′",
-"483132":"7.05,7° 0′",
-"483131":"6.91,6°50′",
-"483130":"6.81,6°50′",
-"483124":"6.71,6°40′",
-"483123":"6.82,6°50′",
-"483122":"6.88,6°50′",
-"483121":"6.83,6°50′",
-"483120":"6.78,6°50′",
-"483114":"6.66,6°40′",
-"483113":"6.72,6°40′",
-"483112":"6.80,6°50′",
-"483111":"6.81,6°50′",
-"483110":"6.78,6°50′",
-"483104":"6.63,6°40′",
-"483103":"6.64,6°40′",
-"483102":"6.70,6°40′",
-"483101":"6.76,6°50′",
-"483100":"6.77,6°50′",
-"483077":"6.55,6°30′",
-"483076":"6.96,7° 0′",
-"483075":"7.47,7°30′",
-"483074":"7.55,7°30′",
-"483073":"7.35,7°20′",
-"483072":"7.13,7°10′",
-"483071":"6.96,7° 0′",
-"483070":"6.86,6°50′",
-"483067":"6.77,6°50′",
-"483066":"7.23,7°10′",
-"483065":"7.61,7°40′",
-"483064":"7.51,7°30′",
-"483063":"7.20,7°10′",
-"483062":"6.98,7° 0′",
-"483061":"6.90,6°50′",
-"483060":"6.86,6°50′",
-"483057":"6.93,7° 0′",
-"483056":"7.26,7°20′",
-"483055":"7.47,7°30′",
-"483054":"7.33,7°20′",
-"483053":"7.03,7° 0′",
-"483052":"6.85,6°50′",
-"483051":"6.82,6°50′",
-"483050":"6.82,6°50′",
-"483047":"6.90,6°50′",
-"483046":"7.05,7° 0′",
-"483045":"7.18,7°10′",
-"483044":"7.12,7°10′",
-"483043":"6.93,7° 0′",
-"483042":"6.78,6°50′",
-"483041":"6.75,6°50′",
-"483040":"6.76,6°50′",
-"483037":"6.81,6°50′",
-"483036":"6.82,6°50′",
-"483035":"6.90,6°50′",
-"483034":"6.96,7° 0′",
-"483033":"6.87,6°50′",
-"483032":"6.75,6°50′",
-"483031":"6.71,6°40′",
-"483030":"6.72,6°40′",
-"483027":"6.75,6°50′",
-"483026":"6.68,6°40′",
-"483025":"6.72,6°40′",
-"483024":"6.81,6°50′",
-"483023":"6.79,6°50′",
-"483022":"6.72,6°40′",
-"483021":"6.69,6°40′",
-"483020":"6.70,6°40′",
-"483017":"6.72,6°40′",
-"483016":"6.58,6°30′",
-"483015":"6.56,6°30′",
-"483014":"6.64,6°40′",
-"483013":"6.70,6°40′",
-"483012":"6.68,6°40′",
-"483011":"6.66,6°40′",
-"483010":"6.67,6°40′",
-"483007":"6.71,6°40′",
-"483006":"6.53,6°30′",
-"483005":"6.41,6°20′",
-"483004":"6.48,6°30′",
-"483003":"6.66,6°40′",
-"483002":"6.71,6°40′",
-"483001":"6.66,6°40′",
-"482977":"6.72,6°40′",
-"482976":"6.56,6°30′",
-"482975":"6.52,6°30′",
-"482966":"6.52,6°30′",
-"482965":"6.46,6°30′",
-"482947":"6.70,6°40′",
-"482937":"6.70,6°40′",
-"482927":"6.69,6°40′",
-"482917":"6.66,6°40′",
-"482877":"6.41,6°20′",
-"482876":"6.72,6°40′",
-"482875":"7.47,7°30′",
-"482874":"7.78,7°50′",
-"482867":"6.49,6°30′",
-"482866":"6.69,6°40′",
-"482865":"7.14,7°10′",
-"482820":"6.85,6°50′",
-"482803":"6.75,6°50′",
-"482802":"6.75,6°50′",
-"474010":"5.87,5°50′",
-"473967":"5.99,6° 0′",
-"473173":"6.56,6°30′",
-"473172":"6.52,6°30′",
-"473171":"6.57,6°30′",
-"473170":"6.73,6°40′",
-"473163":"6.62,6°40′",
-"473162":"6.56,6°30′",
-"473161":"6.51,6°30′",
-"473160":"6.68,6°40′",
-"473153":"6.77,6°50′",
-"473152":"6.77,6°50′",
-"473151":"6.59,6°40′",
-"473150":"6.65,6°40′",
-"473143":"6.75,6°50′",
-"473142":"6.79,6°50′",
-"473141":"6.62,6°40′",
-"473140":"6.62,6°40′",
-"473133":"6.61,6°40′",
-"473132":"6.60,6°40′",
-"473131":"6.56,6°30′",
-"473130":"6.60,6°40′",
-"473123":"6.50,6°30′",
-"473122":"6.49,6°30′",
-"473121":"6.52,6°30′",
-"473120":"6.58,6°30′",
-"473113":"6.45,6°30′",
-"473112":"6.45,6°30′",
-"473111":"6.51,6°30′",
-"473110":"6.55,6°30′",
-"473102":"6.45,6°30′",
-"473101":"6.48,6°30′",
-"473100":"6.52,6°30′",
-"473077":"6.83,6°50′",
-"473076":"6.66,6°40′",
-"473075":"6.38,6°20′",
-"473074":"6.41,6°20′",
-"473073":"6.66,6°40′",
-"473072":"6.75,6°50′",
-"473071":"6.68,6°40′",
-"473067":"6.98,7° 0′",
-"473066":"6.89,6°50′",
-"473065":"6.57,6°30′",
-"473064":"6.52,6°30′",
-"473063":"6.57,6°30′",
-"473062":"6.53,6°30′",
-"473061":"6.52,6°30′",
-"473060":"6.51,6°30′",
-"473057":"6.95,7° 0′",
-"473056":"6.97,7° 0′",
-"473055":"6.83,6°50′",
-"473054":"6.80,6°50′",
-"473053":"6.47,6°30′",
-"473052":"6.13,6°10′",
-"473051":"6.23,6°10′",
-"473047":"6.76,6°50′",
-"473046":"6.81,6°50′",
-"473045":"6.94,7° 0′",
-"473044":"7.00,7° 0′",
-"473043":"6.48,6°30′",
-"473042":"5.96,6° 0′",
-"473041":"6.07,6° 0′",
-"473037":"6.61,6°40′",
-"473036":"6.64,6°40′",
-"473035":"6.83,6°50′",
-"473034":"6.92,7° 0′",
-"473033":"6.52,6°30′",
-"473032":"6.11,6°10′",
-"473027":"6.54,6°30′",
-"473026":"6.53,6°30′",
-"473025":"6.66,6°40′",
-"473024":"6.71,6°40′",
-"473023":"6.54,6°30′",
-"473022":"6.34,6°20′",
-"473021":"6.31,6°20′",
-"473017":"6.51,6°30′",
-"473016":"6.47,6°30′",
-"473015":"6.51,6°30′",
-"473014":"6.56,6°30′",
-"473013":"6.60,6°40′",
-"473012":"6.57,6°30′",
-"473011":"6.48,6°30′",
-"473010":"6.45,6°30′",
-"473007":"6.52,6°30′",
-"473006":"6.47,6°30′",
-"473004":"6.38,6°20′",
-"473003":"6.62,6°40′",
-"473002":"6.75,6°50′",
-"473001":"6.61,6°40′",
-"473000":"6.51,6°30′",
-"472967":"6.54,6°30′",
-"472966":"6.56,6°30′",
-"472957":"6.48,6°30′",
-"472956":"6.54,6°30′",
-"472946":"6.53,6°30′",
-"472945":"6.57,6°30′",
-"472935":"6.56,6°30′",
-"472915":"6.51,6°30′",
-"472872":"6.69,6°40′",
-"463171":"6.46,6°30′",
-"463170":"6.52,6°30′",
-"463160":"6.53,6°30′",
-"463120":"6.38,6°20′",
-"463110":"6.34,6°20′",
-"463100":"6.30,6°20′",
-"463077":"6.59,6°40′",
-"463076":"6.53,6°30′",
-"463075":"6.24,6°10′",
-"463074":"6.10,6°10′",
-"463073":"6.45,6°30′",
-"463072":"6.75,6°50′",
-"463071":"6.66,6°40′",
-"463067":"6.65,6°40′",
-"463066":"6.57,6°30′",
-"463065":"6.16,6°10′",
-"463064":"5.88,5°50′",
-"463063":"6.19,6°10′",
-"463062":"6.57,6°30′",
-"463061":"6.58,6°30′",
-"463057":"6.61,6°40′",
-"463056":"6.52,6°30′",
-"463055":"6.17,6°10′",
-"463054":"5.91,5°50′",
-"463046":"6.43,6°30′",
-"463045":"6.22,6°10′",
-"463035":"6.25,6°20′",
-"463016":"6.30,6°20′",
-"463013":"6.26,6°20′",
-"463012":"6.27,6°20′",
-"463010":"6.31,6°20′",
-"463007":"6.29,6°20′",
-"463006":"6.28,6°20′",
-"463002":"6.27,6°20′",
-"463000":"6.29,6°20′",
-"462975":"6.47,6°30′",
-"462963":"6.44,6°30′",
-"462953":"6.42,6°30′",
-"462927":"6.34,6°20′",
-"462923":"6.34,6°20′",
-"462917":"6.32,6°20′",
-"462913":"6.32,6°20′",
-"454052":"5.45,5°30′",
-"453170":"6.26,6°20′",
-"453160":"6.23,6°10′",
-"453077":"6.26,6°20′",
-"453067":"6.22,6°10′",
-"453057":"6.18,6°10′",
-"453056":"6.21,6°10′",
-"453054":"6.28,6°20′",
-"453053":"6.27,6°20′",
-"453052":"6.26,6°20′",
-"453051":"6.25,6°20′",
-"453047":"6.16,6°10′",
-"453046":"6.18,6°10′",
-"453045":"6.23,6°10′",
-"453044":"6.26,6°20′",
-"453043":"6.25,6°20′",
-"453035":"6.20,6°10′",
-"453034":"6.22,6°10′",
-"453033":"6.22,6°10′",
-"453024":"6.19,6°10′",
-"453023":"6.19,6°10′",
-"453000":"6.14,6°10′",
-"452907":"6.14,6°10′",
-"444052":"5.21,5°10′",
-"442977":"6.12,6°10′",
-"442967":"6.09,6°10′",
-"442966":"6.08,6° 0′",
-"442964":"6.07,6° 0′",
-"442957":"6.06,6° 0′",
-"442956":"6.05,6° 0′",
-"442945":"6.02,6° 0′",
-"442944":"6.02,6° 0′",
-"442935":"5.99,6° 0′",
-"442914":"5.94,6° 0′",
-"432962":"5.86,5°50′",
-"432951":"5.83,5°50′",
-"432920":"5.75,5°50′",
-"432916":"5.74,5°40′",
-"432910":"5.73,5°40′",
-"432827":"5.75,5°50′",
-"432817":"5.73,5°40′",
-"423040":"5.63,5°40′",
-"423030":"5.60,5°40′",
-"422965":"5.67,5°40′",
-"422955":"5.65,5°40′",
-"422954":"5.64,5°40′",
-"422947":"5.63,5°40′",
-"422945":"5.62,5°40′",
-"422944":"5.62,5°40′",
-"422943":"5.62,5°40′",
-"422942":"5.61,5°40′",
-"422937":"5.60,5°40′",
-"422934":"5.60,5°40′",
-"422933":"5.59,5°40′",
-"422932":"5.59,5°40′",
-"422931":"5.59,5°40′",
-"422923":"5.57,5°30′",
-"422922":"5.57,5°30′",
-"422921":"5.56,5°30′",
-"422913":"5.55,5°30′",
-"422912":"5.54,5°30′",
-"422911":"5.54,5°30′",
-"422902":"5.52,5°30′",
-"422901":"5.52,5°30′",
-"414241":"4.16,4°10′",
-"414240":"4.19,4°10′",
-"414231":"4.13,4°10′",
-"414221":"4.11,4°10′",
-"414211":"4.08,4° 0′",
-"412972":"5.49,5°30′",
-"412950":"5.44,5°30′",
-"412940":"5.42,5°30′",
-"412877":"5.49,5°30′",
-"412867":"5.46,5°30′",
-"412861":"5.45,5°30′",
-"412857":"5.44,5°30′",
-"412847":"5.42,5°30′",
-"412837":"5.39,5°20′",
-"412815":"5.34,5°20′",
-"412805":"5.32,5°20′",
-"412804":"5.32,5°20′",
-"404261":"4.01,4° 0′",
-"404252":"3.95,4° 0′",
-"404251":"3.98,4° 0′",
-"404241":"3.95,4° 0′",
-"404201":"3.82,3°50′",
-"404200":"3.85,3°50′",
-"404077":"4.25,4°20′",
-"404076":"4.27,4°20′",
-"404067":"4.22,4°10′",
-"404066":"4.24,4°10′",
-"402874":"5.30,5°20′",
-"402850":"5.27,5°20′",
-"402843":"5.24,5°10′",
-"402840":"5.25,5°20′",
-"402822":"5.21,5°10′",
-"402821":"5.21,5°10′",
-"402812":"5.15,5°10′",
-"402811":"5.13,5°10′",
-"402802":"5.05,5° 0′",
-"402801":"5.00,5° 0′",
-"402800":"5.06,5° 0′",
-"402757":"5.26,5°20′",
-"402747":"5.24,5°10′",
-"402737":"5.23,5°10′",
-"402727":"5.21,5°10′",
-"402707":"5.18,5°10′",
-"402706":"5.20,5°10′",
-"402705":"5.17,5°10′",
-"394271":"3.79,3°50′",
-"394270":"3.82,3°50′",
-"394261":"3.76,3°50′",
-"392872":"4.97,5° 0′",
-"392871":"4.91,4°50′",
-"392870":"4.99,5° 0′",
-"392861":"4.89,4°50′",
-"392860":"4.97,5° 0′",
-"392850":"4.97,5° 0′",
-"392840":"4.97,5° 0′",
-"392830":"4.97,5° 0′",
-"392777":"5.15,5°10′",
-"392776":"5.17,5°10′",
-"392772":"5.11,5°10′",
-"392771":"5.10,5°10′",
-"392767":"5.10,5°10′",
-"392766":"5.13,5°10′",
-"392762":"5.08,5° 0′",
-"392761":"5.07,5° 0′",
-"392757":"5.05,5° 0′",
-"392756":"5.09,5°10′",
-"392755":"5.09,5°10′",
-"392747":"5.02,5° 0′",
-"392746":"5.05,5° 0′",
-"392745":"5.06,5° 0′",
-"392741":"5.03,5° 0′",
-"392740":"5.02,5° 0′",
-"392737":"5.00,5° 0′",
-"392736":"5.02,5° 0′",
-"392735":"5.03,5° 0′",
-"392734":"5.03,5° 0′",
-"392733":"5.02,5° 0′",
-"392732":"5.01,5° 0′",
-"392727":"4.98,5° 0′",
-"392726":"5.00,5° 0′",
-"392725":"5.01,5° 0′",
-"392724":"5.01,5° 0′",
-"392723":"5.00,5° 0′",
-"392722":"4.99,5° 0′",
-"392721":"4.98,5° 0′",
-"392717":"4.96,5° 0′",
-"392716":"4.98,5° 0′",
-"392715":"4.99,5° 0′",
-"392714":"4.99,5° 0′",
-"392712":"4.96,5° 0′",
-"392711":"4.96,5° 0′",
-"392705":"4.97,5° 0′",
-"392676":"5.07,5° 0′",
-"392647":"5.01,5° 0′",
-"392646":"5.00,5° 0′",
-"392645":"4.99,5° 0′",
-"392636":"4.98,5° 0′",
-"392635":"4.97,5° 0′",
-"384112":"3.55,3°30′",
-"383172":"4.87,4°50′",
-"383162":"4.84,4°50′",
-"383161":"4.85,4°50′",
-"383152":"4.82,4°50′",
-"383151":"4.82,4°50′",
-"382474":"4.76,4°50′",
-"382375":"4.69,4°40′",
-"382354":"4.65,4°40′",
-"382353":"4.64,4°40′",
-"382344":"4.63,4°40′",
-"382343":"4.63,4°40′",
-"374113":"3.31,3°20′",
-"374112":"3.33,3°20′",
-"374102":"3.30,3°20′",
-"372542":"4.64,4°40′",
-"372541":"4.64,4°40′",
-"372532":"4.63,4°40′",
-"372531":"4.62,4°40′",
-"372523":"4.60,4°40′",
-"372522":"4.60,4°40′",
-"372521":"4.59,4°40′",
-"372513":"4.58,4°30′",
-"372512":"4.56,4°30′",
-"372511":"4.55,4°30′",
-"372503":"4.55,4°30′",
-"372502":"4.53,4°30′",
-"372501":"4.52,4°30′",
-"372415":"4.56,4°30′",
-"372405":"4.55,4°30′",
-"365337":"0.01,0° 0′",
-"364123":"3.11,3°10′",
-"363151":"4.43,4°30′",
-"362475":"4.53,4°30′",
-"362472":"4.59,4°40′",
-"362462":"4.60,4°40′",
-"362461":"4.59,4°40′",
-"362452":"4.59,4°40′",
-"362451":"4.57,4°30′",
-"362450":"4.50,4°30′",
-"362442":"4.54,4°30′",
-"362441":"4.51,4°30′",
-"362440":"4.45,4°30′",
-"362431":"4.43,4°30′",
-"362430":"4.40,4°20′",
-"362420":"4.36,4°20′",
-"362356":"4.45,4°30′",
-"362350":"4.31,4°20′",
-"362347":"4.44,4°30′",
-"362346":"4.43,4°30′",
-"362345":"4.40,4°20′",
-"362337":"4.41,4°20′",
-"362336":"4.41,4°20′",
-"362335":"4.38,4°20′",
-"362327":"4.37,4°20′",
-"362326":"4.37,4°20′",
-"362324":"4.31,4°20′",
-"362306":"4.25,4°20′",
-"362257":"4.30,4°20′",
-"303650":"2.77,2°50′",
-"303640":"2.75,2°50′"
+
+
+
+
+
+
+/*******************************************************
+
+    Vector Tile Canvas drawing
+
+*******************************************************/
+
+
+GSI.Canvas = {};
+
+GSI.Canvas.Polyline =  L.Polyline.extend( {
+	
+	_isCanvas : true,
+	
+	_containsPoint: function (p, closed) {
+		var i, j, k, len, len2, dist, part,
+		    w = this.options.weight / 2;
+		if (!this._parts ) return;
+		
+		if (L.Browser.touch) {
+			w += 10; // polyline click tolerance on touch devices
+		}
+
+		for (i = 0, len = this._parts.length; i < len; i++) {
+			part = this._parts[i];
+			for (j = 0, len2 = part.length, k = len2 - 1; j < len2; k = j++) {
+				if (!closed && (j === 0)) {
+					continue;
+				}
+
+				dist = L.LineUtil.pointToSegmentDistance(p, part[k], part[j]);
+
+				if (dist <= w) {
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+	
+} );
+
+
+
+GSI.Canvas.Polygon =  L.Polygon.extend( {
+	
+	_isCanvas : true,
+	_containsPointPolyline: function (p, closed) {
+		var i, j, k, len, len2, dist, part,
+		    w = this.options.weight / 2;
+		if (!this._parts ) return false;
+		
+		if (L.Browser.touch) {
+			w += 10; // polyline click tolerance on touch devices
+		}
+
+		for (i = 0, len = this._parts.length; i < len; i++) {
+			part = this._parts[i];
+			for (j = 0, len2 = part.length, k = len2 - 1; j < len2; k = j++) {
+				if (!closed && (j === 0)) {
+					continue;
+				}
+
+				dist = L.LineUtil.pointToSegmentDistance(p, part[k], part[j]);
+
+				if (dist <= w) {
+					return true;
+				}
+			}
+		}
+		return false;
+	},
+	
+	_containsPoint: function (p) {
+		var inside = false,
+		    part, p1, p2,
+		    i, j, k,
+		    len, len2;
+
+		// TODO optimization: check if within bounds first
+		
+		if (!this._parts ) return false;
+		
+		
+		if (this._containsPointPolyline( p, true)) {
+			// click on polygon border
+			return true;
+		}
+
+		// ray casting algorithm for detecting if point is in polygon
+
+		for (i = 0, len = this._parts.length; i < len; i++) {
+			part = this._parts[i];
+
+			for (j = 0, len2 = part.length, k = len2 - 1; j < len2; k = j++) {
+				p1 = part[j];
+				p2 = part[k];
+
+				if (((p1.y > p.y) !== (p2.y > p.y)) &&
+						(p.x < (p2.x - p1.x) * (p.y - p1.y) / (p2.y - p1.y) + p1.x)) {
+					inside = !inside;
+				}
+			}
+		}
+
+		return inside;
+	}
+	
+} );
+
+	
+GSI.Canvas.PathProcs =	{
+	redraw: function () {
+		if (this._map) {
+			this.projectLatlngs();
+			this._requestUpdate();
+		}
+		return this;
+	},
+	
+	setStyle: function (style) {
+		L.setOptions(this, style);
+		
+		if (this._map) {
+		//	this._updateStyle();
+		//	this._requestUpdate();
+		}
+		return this;
+		
+	},
+
+
+
+	onRemove: function (map) {
+		
+		map._pathRoot.removeChild(this._container);
+
+		// Need to fire remove event before we set _map to null as the event hooks might need the object
+		this.fire('remove');
+		
+
+		if (L.Browser.vml) {
+			this._container = null;
+			this._stroke = null;
+			this._fill = null;
+		}
+
+		map.off({
+			'viewreset': this.projectLatlngs,
+			'moveend': this._updatePath
+		}, this);
+		
+		
+		
+		if ( L.Browser.canvas )
+		{
+			if (this.options.clickable) {
+				this._map.off('click', this._onClick, this);
+				this._map.off('mousemove', this._onMouseMove, this);
+			}
+
+			this._requestUpdate();
+		}
+		this._map = null;
+		
+		
+		
+	},
+	
+	
+	_requestUpdate: function () {
+		if (this._map && !L.Path._updateRequest) {
+			L.Path._updateRequest = L.Util.requestAnimFrame(this._fireMapMoveEnd, this._map);
+		}
+	},
+
+	_fireMapMoveEnd: function () {
+		L.Path._updateRequest = null;
+		this.fire('moveend');
+	},
+
+	_initElements: function () {
+		
+		
+		
+		if ( L.Browser.canvas ) {
+			this._map._initPathRoot();
+			this._ctx = this._map._canvasCtx;
+		}
+		
+		
+		return L.Polyline.prototype._initElements.call(this);
+	},
+
+	_updateStyle: function (scale) {
+		if ( L.Browser.canvas  ) {
+			
+			var options = this.options;
+			if (options.stroke) {
+				this._ctx.lineWidth = options.weight * ( scale ? scale : 1 );
+				this._ctx.strokeStyle = options.color;
+				if ( options.lineCap &&
+					( options.lineCap == "butt" ||
+					options.lineCap == "round" ||
+					options.lineCap == "square" )
+				)
+				{
+					this._ctx.lineCap = options.lineCap ;
+				}
+				else
+					this._ctx.lineCap = "butt";
+			}
+			if (options.fill) {
+				this._ctx.fillStyle = options.fillColor || options.color;
+			}
+			
+		}
+		else
+			return L.Polyline.prototype._updateStyle.call(this);
+			
+	},
+
+	_drawPath: function (offset) {
+		var options = this.options;
+		var dashArray = null;
+		var isPolygon = (this instanceof L.Polygon);
+		if ( options.dashArray )
+		{
+			if ( options.dashArray instanceof Array )
+				dashArray = $.extend( [], options.dashArray);
+			else
+			{
+				var dashParts = options.dashArray.split( ',' );
+				dashArray = [];
+				for( var i=0; i<dashParts.length; i++ )
+				{
+					dashArray.push(parseInt( dashParts[i] ));
+				}
+			}
+			if ( dashArray.length < 2 ) dashArray = null;
+		}
+		var i, j, len, len2, point, drawMethod;
+		
+		this._ctx.beginPath();
+		
+		if (!offset ) offset = {x:0,y:0};
+		for (i = 0, len = this._parts.length; i < len; i++) {
+			for (j = 0, len2 = this._parts[i].length; j < len2; j++) {
+				point = this._parts[i][j];
+				//drawMethod = (j === 0 ? 'move' : 'line') + 'To';
+				var toPoint = {
+					x : point.x -offset.x,
+					y : point.y- offset.y
+				};
+				if ( this._canvasOffset )
+				{
+					//toPoint.x -= this._canvasOffset.x;
+					//toPoint.y -= this._canvasOffset.y;
+					
+				}
+				
+				
+				if ( j == 0 )
+				{
+					this._ctx.moveTo(toPoint.x, toPoint.y);
+				}
+				else
+				{
+					if (dashArray && !isPolygon)
+						GSI.Utils.dotLineTo( this._ctx, fromPoint.x, fromPoint.y,
+							toPoint.x, toPoint.y, dashArray);
+					else
+					{
+						if ( this._ctx.setLineDash !== undefined )
+							this._ctx.setLineDash([]);
+						else if ( this._ctx.mozDash !== undefined )
+							this._ctx.mozDash = [];
+						this._ctx.lineTo(toPoint.x, toPoint.y);
+					}
+				}
+				
+				fromPoint = toPoint;
+				/*
+				if ( this._canvasOffset )
+				{
+					x -= this._canvasOffset.x;
+					y -= this._canvasOffset.y;
+					
+				}
+				this._ctx[drawMethod](x, y);
+				*/
+			}
+			// TODO refactor ugly hack
+			if (isPolygon) {
+				this._ctx.closePath();
+			}
+		}
+	},
+	
+	
+	
+	
+	_checkIfEmpty: function () {
+		return !this._parts.length;
+	},
+	
+	//_latLngToPoint : function(tilePoint,zoom,dz,canvas_dx,canvas_dy,tlng,tlat){
+	_latLngTileToPoint : function(tilePoint,canvasDx,canvasDy,zoom,tileSize, resolution, originShift,latLng){
+		/*
+		var tileSize_default = 256;
+		var tileSize=tileSize_default;
+		var tz = zoom;
+		if(dz!=0){tileSize = tileSize_default*Math.pow(2, dz);tz = tz -dz;}
+		var initialResolution = 2 * Math.PI / tileSize;
+		var resolution = initialResolution / (Math.pow(2, tz));
+		var originShift = 2 * Math.PI / 2.0;
+		*/
+		
+		
+		var X = latLng.lng * (Math.PI / 180) ;
+		var Y=Math.log(Math.tan(Math.PI/4 + latLng.lat * (Math.PI / 180) / 2) );
+		var tx=(X + originShift)/(tileSize * resolution);
+		var ty=(Y + originShift)/(tileSize * resolution);
+		ty = Math.pow(2, zoom) - ty;
+		tx=(tx-tilePoint.x)*tileSize+canvasDx;
+		ty=(ty-tilePoint.y)*tileSize+canvasDy;
+		return L.point( tx, ty );
+	},
+	
+	projectLatlngs: function (tilePoint,canvasDx,canvasDy,zoom,tileSize, resolution, originShift) {
+		if ( !originShift ) return;
+		
+		this._originalPoints = [];
+		//var zoom = this._map.getZoom();
+		//var nativeZoom = this._maxNativeZoom || zoom;
+		//var dz = zoom - nativeZoom;
+		for (var i = 0, len = this._latlngs.length; i < len; i++) {
+			this._originalPoints[i] = this._latLngTileToPoint( 
+				tilePoint,canvasDx,canvasDy,zoom,tileSize, resolution, originShift, this._latlngs[i]);
+			//	this._tilePoint, zoom, dz, this._latlngs[i] );
+			//var a = this._map.latLngToLayerPoint(this._latlngs[i]);
+		}
+	},
+	_updatePath: function (offset) {
+		if (!this._map) { return; }
+		if (this.options.visible==false) return;
+		
+		//this._clipPoints();
+		this._parts = [this._originalPoints];
+		this._simplifyPoints();
+		
+		
+		if (this._checkIfEmpty()) { return; }
+		
+		var ctx = this._ctx,
+		    options = this.options;
+		this._drawPath(offset);
+		
+		
+		ctx.save();
+		this._updateStyle();
+
+		if (options.fill) {
+			ctx.globalAlpha = options.fillOpacity;
+			ctx.fill();
+		}
+
+		if (options.stroke) {
+			ctx.globalAlpha = options.opacity;
+			ctx.stroke();
+		}
+		
+		ctx.restore();
+		
+	},
+	
+	
+	_onClick: function (e) {
+		if (this._containsPoint(e.layerPoint)) {
+			this.fire('click', e);
+		}
+	},
+
+	_onMouseMove: function (e) {
+		if (!this._map || !this._map._pathRoot || this._map._animatingZoom) { return; }
+
+		// TODO don't do on each move
+		if (this._containsPoint(e.layerPoint)) {
+			//this._ctx.canvas.style.cursor = 'pointer';
+			this._map._pathRoot.style.cursor = 'pointer';
+			this._mouseInside = true;
+			this.fire('mouseover', e);
+
+		} else if (this._mouseInside) {
+			//this._ctx.canvas.style.cursor = '';
+			this._map._pathRoot.style.cursor = '';
+			this._mouseInside = false;
+			this.fire('mouseout', e);
+		}
+	}
 };
+
+GSI.Canvas.Polyline.include(GSI.Canvas.PathProcs);
+GSI.Canvas.Polygon.include(GSI.Canvas.PathProcs);
+
+
+GSI.Canvas.MultiPolyline = L.FeatureGroup.extend( {
+	initialize: function (latlngs, options) {
+		this._isCanvas = true;
+		this._layers = {};
+		this._options = options;
+		this.setLatLngs(latlngs);
+	},
+
+	setLatLngs: function (latlngs) {
+		var i = 0,
+		    len = latlngs.length;
+
+		this.eachLayer(function (layer) {
+			if (i < len) {
+				layer.setLatLngs(latlngs[i++]);
+			} else {
+				this.removeLayer(layer);
+			}
+		}, this);
+
+		while (i < len) {
+			var layer = new GSI.Canvas.Polyline(latlngs[i++], this._options);
+			this.addLayer(layer);
+		}
+
+		return this;
+	},
+
+	getLatLngs: function () {
+		var latlngs = [];
+
+		this.eachLayer(function (layer) {
+			latlngs.push(layer.getLatLngs());
+		});
+
+		return latlngs;
+	}
+
+} );
+
+GSI.Canvas.MultiPolygon = L.FeatureGroup.extend( {
+	initialize: function (latlngs, options) {
+		this._isCanvas = true;
+		this._layers = {};
+		this._options = options;
+		this.setLatLngs(latlngs);
+	},
+
+	setLatLngs: function (latlngs) {
+		var i = 0,
+		    len = latlngs.length;
+
+		this.eachLayer(function (layer) {
+			if (i < len) {
+				layer.setLatLngs(latlngs[i++]);
+			} else {
+				this.removeLayer(layer);
+			}
+		}, this);
+
+		while (i < len) {
+			var layer = new GSI.Canvas.Polygon(latlngs[i++], this._options);
+			this.addLayer(layer);
+		}
+
+		return this;
+	},
+
+	getLatLngs: function () {
+		var latlngs = [];
+
+		this.eachLayer(function (layer) {
+			latlngs.push(layer.getLatLngs());
+		});
+
+		return latlngs;
+	}
+
+} );
+GSI.Canvas.multiPolyline = function (latlngs, options) {
+	return new GSI.Canvas.MultiPolyline(latlngs, options);
+};
+
+GSI.Canvas.multiPolygon = function (latlngs, options) {
+	return new GSI.Canvas.MultiPolygon(latlngs, options);
+};
+
+L.DivIcon.prototype._setIconStyles = function (img, name) {
+	var options = this.options,
+	    size = L.point(options[name + 'Size']),
+	    anchor;
+	
+	var div = $(img).children("div");
+	
+	if ( div.length > 0 && div.find("img").length <= 0)
+	{
+		// When it is italic, the right end is hurt so force it big.
+		var cssText = ( div.prop("style") ? div.prop("style").cssText : "" );
+		var angle90 = div.css("writing-mode") 
+			|| div.css("-moz-writing-mode") || div.css("-o-writing-mode") 
+			|| div.css("-ms-writing-mode")|| div.css("-webkit-writing-mode");
+		if ( angle90 ) angle90 = $.trim( angle90 );
+		else
+		{
+			var matches = cssText.match(/vertical-rl/);
+			if ( matches )angle90 = "vertical-rl";
+		}
+		
+		var fontStyle = div.css("font-style") || "normal";
+		
+		if ( angle90  && angle90 != "" && ( fontStyle!="" && fontStyle != "normal" ) )
+		{
+			if ( size ) size = L.point(12,12);//{x:12, y:12};
+			if ( div.css("font-size") )
+			{
+				size.x = Math.ceil( parseInt(div.css("font-size")) * 1.5 );
+			}else
+				size.x = 300;
+		}
+	}
+	
+	
+	if (name === 'shadow') {
+		anchor = L.point(options.shadowAnchor || options.iconAnchor);
+	} else {
+		anchor = L.point(options.iconAnchor);
+	}
+
+	if (!anchor && size) {
+		anchor = size.divideBy(2, true);
+	}
+	
+	
+	
+	img.className = 'leaflet-marker-' + name + ' ' + options.className;
+
+	if (anchor) {
+		img.style.marginLeft = (-anchor.x) + 'px';
+		img.style.marginTop  = (-anchor.y) + 'px';
+	}
+
+	if (size) {
+		img.style.width  = size.x + 'px';
+		img.style.height = size.y + 'px';
+	}
+};
+
+
+GSI.Canvas.GeoJSON =  L.GeoJSON.extend( {
+	
+	addData: function (geojson) {
+		var features = L.Util.isArray(geojson) ? geojson : geojson.features,
+		    i, len, feature;
+
+		if (features) {
+			for (i = 0, len = features.length; i < len; i++) {
+				// Only add this if geometry or geometries are set and not null
+				feature = features[i];
+				if (feature.geometries || feature.geometry || feature.features || feature.coordinates) {
+					this.addData(features[i]);
+				}
+			}
+			return this;
+		}
+
+		var options = this.options;
+
+		if (options.filter && !options.filter(geojson)) { return; }
+		
+		var layer = GSI.Canvas.GeoJSON.geometryToLayer(geojson, options.pointToLayer, options.coordsToLatLng, options);
+		
+		layer.feature = L.GeoJSON.asFeature(geojson);
+
+		layer.defaultOptions = layer.options;
+		this.resetStyle(layer);
+
+		if (options.onEachFeature) {
+			options.onEachFeature(geojson, layer);
+		}
+
+		return this.addLayer(layer);
+	}
+	
+	
+	
+});
+
+
+GSI.Canvas.GeoJSON.coordsToLatLng=function (coords) { // (Array[, Boolean]) -> LatLng
+		return new L.LatLng(coords[1], coords[0], coords[2]);
+};
+
+GSI.Canvas.GeoJSON.coordsToLatLngs = function (coords, levelsDeep, coordsToLatLng) { // (Array[, Number, Function]) -> Array
+	var latlng, i, len,
+	    latlngs = [];
+
+	for (i = 0, len = coords.length; i < len; i++) {
+		latlng = levelsDeep ?
+		        GSI.Canvas.GeoJSON.coordsToLatLngs(coords[i], levelsDeep - 1, coordsToLatLng) :
+		        (coordsToLatLng || GSI.Canvas.GeoJSON.coordsToLatLng)(coords[i]);
+
+		latlngs.push(latlng);
+	}
+
+	return latlngs;
+};
+
+GSI.Canvas.GeoJSON.geometryToLayer = function (geojson, pointToLayer, coordsToLatLng, vectorOptions) {
+	var geometry = geojson.type === 'Feature' ? geojson.geometry : geojson,
+	    coords = geometry.coordinates,
+	    layers = [],
+	    latlng, latlngs, i, len;
+	
+	coordsToLatLng = coordsToLatLng || this.coordsToLatLng;
+
+	switch (geometry.type) {
+	case 'Point':
+		latlng = coordsToLatLng(coords);
+		return pointToLayer ? pointToLayer(geojson, latlng) : new L.Marker(latlng);
+
+	case 'MultiPoint':
+		for (i = 0, len = coords.length; i < len; i++) {
+			latlng = coordsToLatLng(coords[i]);
+			layers.push(pointToLayer ? pointToLayer(geojson, latlng) : new L.Marker(latlng));
+		}
+		return new L.FeatureGroup(layers);
+
+	case 'LineString':
+		latlngs = this.coordsToLatLngs(coords, 0, coordsToLatLng);
+		return new GSI.Canvas.Polyline(latlngs, vectorOptions);
+
+	case 'Polygon':
+		
+		if (coords.length === 2 && !coords[1].length) {
+			throw new Error('Invalid GeoJSON object.');
+		}
+		latlngs = this.coordsToLatLngs(coords, 1, coordsToLatLng);
+		return new GSI.Canvas.Polygon(latlngs, vectorOptions);
+
+	case 'MultiLineString':
+		
+		latlngs = this.coordsToLatLngs(coords, 1, coordsToLatLng);
+		
+		return new GSI.Canvas.MultiPolyline(latlngs, vectorOptions);
+
+	case 'MultiPolygon':
+		latlngs = this.coordsToLatLngs(coords, 2, coordsToLatLng);
+		return new GSI.Canvas.MultiPolygon(latlngs, vectorOptions);
+
+	case 'GeometryCollection':
+		for (i = 0, len = geometry.geometries.length; i < len; i++) {
+
+			layers.push(this.geometryToLayer({
+				geometry: geometry.geometries[i],
+				type: 'Feature',
+				properties: geojson.properties
+			}, pointToLayer, coordsToLatLng, vectorOptions));
+		}
+		return new L.FeatureGroup(layers);
+
+	default:
+		throw new Error('Invalid GeoJSON object.');
+	}
+};
+
+GSI.Canvas.geoJson = function (geojson, options) {
+	return new GSI.Canvas.GeoJSON(geojson, options);
+};
+
+
+
+
+GSI.VectorTileLayer = L.TileLayer.Canvas.extend( {
+	_requests: [],
+	_keyLayers: {},
+	
+	_opacity : 1,
+	_useCanvas : false,
+	
+	options : {
+		tileSize : 256,
+		canvasSize : 512,
+		maxDz : 4,
+		canvasDx : 20,
+		canvasDy : 20
+	},
+	initialize: function (url, options, geojsonOptions, isNormalNativeZoom) {
+		this._url = url;
+		this.geojsonOptions = $.extend( {}, geojsonOptions );
+		this._isNormalNativeZoom = isNormalNativeZoom;
+		
+		options.clipTiles = false;
+		this._styleLoading = true;
+		L.setOptions(this, options);
+		this._useCanvas = ( this.options.styletype == 'canvas' );
+		L.TileLayer.prototype.initialize.call(this, url, options);
+		//L.TileLayer.Ajax.prototype.initialize.call(this, url, options);
+        this.geojsonLayer = new L.GeoJSON(null, this.geojsonOptions);
+		
+		if ( options.skipLoadStyle ){
+			
+			//this._defaultLoadStyle();
+			this._styleLoading = false;
+		}
+			
+		else
+			this._loadStyle( url, options.styleurl );
+	},
+	
+	
+	setMarkerZIndex : function( zIndex )
+	{
+		this.options.zIndexOffset = zIndex;
+		if ( this.geojsonLayer && this.geojsonLayer.setMarkerZIndex )
+			this.geojsonLayer.setMarkerZIndex( this.options.zIndexOffset )
+	},
+	
+	setStyleText : function( styleText )
+	{
+		try
+		{
+			var data = eval( "(" + styleText + ")" );
+			if ( data.geojsonOptions ) this.geojsonOptions =  data.geojsonOptions;
+			for (  var key in this._tiles ) //var i=0; i<this._tiles.length; i++ ) 
+			{
+				var tile = this._tiles[key];
+				if ( !tile.geoJSON ) continue;
+				for( var j=0; j<tile.geoJSON.length; j++ )
+				{
+					tile.geoJSON[j].options = this.geojsonOptions;
+				}
+			}
+			if ( data.options )
+			{
+				if ( this.options._minZoom )
+					data.options.minZoom = this.options._minZoom;
+
+				if ( this.options._maxZoom )
+					data.options.maxZoom = this.options._maxZoom;
+
+				if ( this.options._maxNativeZoom )
+					data.options.maxNativeZoom = this.options._maxNativeZoom;
+
+				if ( this.options._attribution )
+					data.options.attribution = this.options._attribution;
+				if ( this.options._bounds )
+					data.options.bounds = this.options._bounds;
+				this._useCanvas = ( data.options.styletype == 'canvas' );
+				
+				L.setOptions(this, data.options);
+			}
+		}
+		catch(e)
+		{
+			
+		}
+		if ( this.geojsonLayer )
+		{
+			//this.geojsonLayer.options = $.extend( {}, this.geojsonOptions );
+			this.geojsonLayer.setStyle( this.geojsonOptions );
+		}
+		
+		
+		this._styleLoading = false;
+		this._updateTileStyles();
+		/*
+		if ( !this._useCanvas )
+		{
+			try
+			{
+				if(this._tileContainer)
+					this._reset();
+			}catch(e){}
+			try
+			{
+				this._update();
+			}catch(e){}
+		}
+		*/
+	
+	},
+	
+	_onStyleLoad : function(result)
+	{
+		try
+		{
+			var data = null;
+			if ( !result) return;
+			if ( result.data )
+			{
+				data = result.data;
+			}
+			else data = result;
+			data = eval( "(" + data + ")" );
+			if ( data.geojsonOptions ) this.geojsonOptions =  data.geojsonOptions;
+			for ( var i=0; i<this._tiles.length; i++ ) 
+			{
+				var tile = this._tiles[i];
+				if ( !tile.geoJSON ) continue;
+				for( var j=0; j<tile.geoJSON.length; j++ )
+				{
+					tile.geoJSON[i].options = this.geojsonOptions;
+				}
+			}
+			
+			if ( data.options )
+			{
+				if ( this.options._minZoom )
+					data.options.minZoom = this.options._minZoom;
+
+				if ( this.options._maxZoom )
+					data.options.maxZoom = this.options._maxZoom;
+
+				if ( this.options._maxNativeZoom )
+					data.options.maxNativeZoom = this.options._maxNativeZoom;
+
+				if ( this.options._attribution )
+					data.options.attribution = this.options._attribution;
+				if ( this.options._bounds )
+					data.options.bounds = this.options._bounds;
+				this._useCanvas = ( data.options.styletype == 'canvas' );
+				
+				L.setOptions(this, data.options);
+			}
+		}
+		catch( e ){}
+		
+		if ( this.geojsonLayer )
+		{
+			this.geojsonLayer.options = $.extend( {}, this.geojsonOptions );
+			//this.geojsonLayer.setStyle( this.geojsonOptions.style );
+		}
+		
+		
+		this._styleLoading = false;
+		//this._updateTileStyles();
+		
+		try
+		{
+			if(this._tileContainer)
+				this._reset();
+		}catch(e){}
+		try
+		{
+			this._update();
+		}catch(e){}
+	},
+	
+	_updateTileStyles : function()
+	{
+		
+		
+		for (key in this._tiles)
+		{
+			var tile = this._tiles[key];
+			var geoJSON = tile.geoJSON;
+			if (geoJSON)
+			{
+				
+				for( var i=0; i<geoJSON.length; i++ )
+				{
+					//if (geoJSON[i].options.clickable) geoJSON[i]._onMouseMove(e);
+					var style = this.geojsonOptions.style;
+					if (typeof style === 'function') {
+						style = style(geoJSON[i].feature);
+					}
+					if (geoJSON[i].setStyle) {
+						geoJSON[i].setStyle(style);
+					}
+				}
+				this.drawTile(tile, tile._tilePoint, null, true);
+			}
+		}
+		
+	},
+	
+	
+	_defaultLoadStyle : function()
+	{
+		var styleUrl = './js/style.js';
+
+		this._styleAjax = $.ajax({
+			type: "GET",
+			dataType: "text",
+			url: styleUrl,
+			success:  L.Util.bind( this._onStyleLoad, this ),
+			error :  L.Util.bind( function(){
+				this._styleLoading = false;
+			}, this ),
+			async : true
+		});
+	},
+	/*
+	_getTileSize: function () {
+		var map = this._map,
+		    zoom = map.getZoom() + this.options.zoomOffset,
+		    zoomN = this.options.maxNativeZoom,
+		    tileSize = this.options.tileSize;
+		if ( this._useCanvas  )
+		{
+			if (zoomN && ( zoom > zoomN) ) {
+				tileSize = Math.round(map.getZoomScale(zoom) / map.getZoomScale(zoomN) * tileSize);
+			}
+		}
+		else
+		{
+			if (zoomN && zoom > zoomN) {
+				tileSize = Math.round(map.getZoomScale(zoom) / map.getZoomScale(zoomN) * tileSize);
+			}
+		}
+		return tileSize;
+	},
+	
+	_getZoomForUrl: function () {
+
+		var options = this.options,
+		    zoom = this._map.getZoom();
+
+		if (options.zoomReverse) {
+			zoom = options.maxZoom - zoom;
+		}
+
+		zoom += options.zoomOffset;
+		
+		return options.maxNativeZoom ? Math.min(zoom, options.maxNativeZoom) : zoom;
+		
+	},
+	*/
+	
+	_loadStyle : function(url,styleUrl)
+	{
+		
+		if ( styleUrl && styleUrl != '' )
+			styleUrl = styleUrl;
+		else
+			styleUrl = url.replace(/\/\{z\}.*/,"") + '/style.js';
+		
+		var data = null;
+		
+		this._styleLoading = true;
+		this._styleAjax = $.ajax({
+			type: "GET",
+			dataType: "text",
+			url: styleUrl,
+			data :data,
+			success:  L.Util.bind( this._onStyleLoad, this ),
+			error :  L.Util.bind( this._defaultLoadStyle, this ),
+			async : true
+
+		});
+	},
+	
+	
+    _createTile: function () {
+		
+		var tile = L.DomUtil.create('canvas', 'leaflet-tile');
+		tile.onselectstart = tile.onmousemove = L.Util.falseFn;
+		//tile.width = tile.height = this._getTileSize();
+		if ( !this._useCanvas )
+		{
+			tile.width = tile.height = this._getTileSize();
+			return;
+		}
+		var zoom = this._map.getZoom();
+		var dz = zoom - this.options.maxNativeZoom;
+		var tileSize = ( this._printMode  ? this.options.canvasSize : this.options.tileSize );
+		var tz = zoom;
+		if(dz>=this.options.maxDz){tileSize = tileSize*Math.pow(2, this.options.maxDz);tz = tz -dz;}
+		else if(dz>0){tileSize = tileSize*Math.pow(2, dz);tz = tz -dz;}
+		
+		
+		
+		/*
+		if ( this._printMode )
+		{
+			var tileSize2 = this.options.tileSize;
+			scale = this.options.tileSize / this.options.canvasSize;
+			
+			if(dz>0){tileSize2 =tileSize2 *Math.pow(2, dz);}
+			tile.style.width= tileSize2 + this.options.canvasDx + "px";
+			tile.style.height= tileSize2 + this.options.canvasDx + "px";
+			tile.width=tileSize + this.options.canvasDx *2;
+			tile.height=tileSize + this.options.canvasDy *2;
+		}
+		else 
+		*/
+		/*
+		if (dz >= this.options.maxDz)
+		
+		{
+			var tileSize2 =this.options.tileSize *Math.pow(2, dz);
+			tile._scale = tileSize2 / tileSize;
+			tile.style.width= tileSize2 + this.options.canvasDx * Math.pow(2,(dz-this.options.maxDz+1))  + "px";
+			tile.style.height= tileSize2 + this.options.canvasDx * Math.pow(2,(dz-this.options.maxDz+1)) + "px";
+			tile.width=tileSize + this.options.canvasDx *2;
+			tile.height=tileSize + this.options.canvasDy *2;
+		}
+		else
+		*/
+		{
+			if (dz >= this.options.maxDz)
+			{
+				var tileSize2 = ( dz > 0 ? this.options.tileSize *Math.pow(2, dz) : this.options.tileSize );
+				var tileSize3 = ( this._printMode  ? this.options.canvasSize : this.options.tileSize );
+				if(dz>0)tileSize3 = tileSize3*Math.pow(2, dz);
+				
+				tile._scale = tileSize2 / tileSize3;
+				tile.style.width= tileSize + this.options.canvasDx * (2 * tile._scale)  + "px";
+				tile.style.height= tileSize + this.options.canvasDx * (2 * tile._scale) + "px";
+				tile._realTileSize = tileSize3;
+				tile._tileSize = tileSize;
+				
+			}
+			else
+			{
+				var tileSize2 = ( dz > 0 ? this.options.tileSize *Math.pow(2, dz) : this.options.tileSize );
+				tile._scale = tileSize2 / tileSize;
+				tile.style.width= tileSize2 + this.options.canvasDx * (2 * tile._scale)  + "px";
+				tile.style.height= tileSize2 + this.options.canvasDx * (2 * tile._scale) + "px";
+			}
+			tile.width=tileSize + this.options.canvasDx *2;
+			tile.height=tileSize + this.options.canvasDy *2;
+		}
+		
+		
+		
+		return tile;
+	},
+	
+	_clearTilePopup : function(tile)
+	{
+		if ( !this._popup ) return;
+		
+		var geoJSON = tile.geoJSON;
+		if (!geoJSON) return;
+		for( var i=0; i<geoJSON.length; i++ )
+		{
+			if ( geoJSON instanceof L.FeatureGroup )
+			{
+				var layers = geoJSON.getLayers();
+				for( var j=0; j<layers.length; j++ )
+				{
+					if ( layers[j]._popup == this._popup )
+						this._map.closePopup(this._popup);
+				}
+			}
+			if ( geoJSON[i]._popup == this._popup ) 
+				this._map.closePopup(this._popup);
+		}
+	},
+	
+	_clearPopup : function()
+	{
+		this._map.closePopup( this._popup );
+		this._popup = null;
+		
+	},
+	
+	_reset: function (e) {
+		if ( ( e && e.hard ) || this._map.getZoom() < this.options.minZoom || this._map.getZoom() > this.options.maxZoom) 
+		{
+			this._clearPopup();
+		}
+		this.geojsonLayer.clearLayers();
+		this._keyLayers = {};
+        this._removeOldClipPaths();
+		
+		for (var i in this._requests) {
+			if ( this._requests[i] && this._requests[i].abort )
+            	this._requests[i].abort();
+        }
+		this._requests = [];
+		if ( ( e && e.hard ) || this._map.getZoom() < this.options.minZoom || this._map.getZoom() > this.options.maxZoom) 
+		{
+			if ( this._bgBuffer )this._clearBgBuffer();
+		}
+		L.TileLayer.Canvas.prototype._reset.apply(this, arguments);
+    },
+	_removeOldClipPaths: function  () {
+        for (var clipPathId in this._clipPathRectangles) {
+            var clipPathZXY = clipPathId.split('_').slice(1);
+            var zoom = parseInt(clipPathZXY[0], 10);
+            if (zoom !== this._map.getZoom()) {
+                var rectangle = this._clipPathRectangles[clipPathId];
+                this._map.removeLayer(rectangle);
+                var clipPath = document.getElementById(clipPathId);
+                if (clipPath !== null) {
+                    clipPath.parentNode.removeChild(clipPath);
+                }
+                delete this._clipPathRectangles[clipPathId];
+            }
+        }
+    },
+	// Recurse LayerGroups and call func() on L.Path layer instances
+    _recurseLayerUntilPath: function (func, layer) {
+        if (layer instanceof L.Path) {
+            func(layer);
+        }
+        else if (layer instanceof L.LayerGroup) {
+            // Recurse each child layer
+            layer.getLayers().forEach(this._recurseLayerUntilPath.bind(this, func), this);
+        }
+    },
+
+    _clipLayerToTileBoundary: function (layer, tilePoint) {
+        // Only perform SVG clipping if the browser is using SVG
+        if (!L.Path.SVG) { return; }
+        if (!this._map) { return; }
+
+        if (!this._map._pathRoot) {
+            this._map._pathRoot = L.Path.prototype._createElement('svg');
+            this._map._panes.overlayPane.appendChild(this._map._pathRoot);
+        }
+        var svg = this._map._pathRoot;
+
+        // create the defs container if it doesn't exist
+        var defs = null;
+        if (svg.getElementsByTagName('defs').length === 0) {
+            defs = document.createElementNS(L.Path.SVG_NS, 'defs');
+            svg.insertBefore(defs, svg.firstChild);
+        }
+        else {
+            defs = svg.getElementsByTagName('defs')[0];
+        }
+
+        // Create the clipPath for the tile if it doesn't exist
+        var clipPathId = 'tileClipPath_' + tilePoint.z + '_' + tilePoint.x + '_' + tilePoint.y;
+        var clipPath = document.getElementById(clipPathId);
+        if (clipPath === null) {
+            clipPath = document.createElementNS(L.Path.SVG_NS, 'clipPath');
+            clipPath.id = clipPathId;
+
+            // Create a hidden L.Rectangle to represent the tile's area
+            var tileSize = this.options.tileSize,
+            nwPoint = tilePoint.multiplyBy(tileSize),
+            sePoint = nwPoint.add([tileSize, tileSize]),
+            nw = this._map.unproject(nwPoint),
+            se = this._map.unproject(sePoint);
+            this._clipPathRectangles[clipPathId] = new L.Rectangle(new L.LatLngBounds([nw, se]), {
+                opacity: 0,
+                fillOpacity: 0,
+                clickable: false,
+                noClip: true
+            });
+            this._map.addLayer(this._clipPathRectangles[clipPathId]);
+
+            // Add a clip path element to the SVG defs element
+            // With a path element that has the hidden rectangle's SVG path string  
+            var path = document.createElementNS(L.Path.SVG_NS, 'path');
+            var pathString = this._clipPathRectangles[clipPathId].getPathString();
+            path.setAttribute('d', pathString);
+            clipPath.appendChild(path);
+            defs.appendChild(clipPath);
+        }
+
+        // Add the clip-path attribute to reference the id of the tile clipPath
+        this._recurseLayerUntilPath(function (pathLayer) {
+            pathLayer._container.setAttribute('clip-path', 'url(#' + clipPathId + ')');
+        }, layer);
+    },
+	_initEvents: function () {
+		
+
+	},
+	onAdd: function (map) {
+		
+		
+        this._map = map;
+        this._map._panes.overlayPane.style.cursor = '';
+        //L.TileLayer.Ajax.prototype.onAdd.call(this, map);
+        
+		
+		L.TileLayer.prototype.onAdd.call(this, map);
+		
+		if ( !GSI.VectorTileLayer._layers ) 
+			GSI.VectorTileLayer._layers = [];
+		
+		GSI.VectorTileLayer._layers.push( this );
+		if ( GSI.VectorTileLayer._layers.length == 1 )
+		{
+			this._map.on('mousemove', GSI.VectorTileLayer._onGeoJSONMouseMove);
+			this._map.on('click', GSI.VectorTileLayer._onGeoJSONClick);
+		}
+		
+		this._map.on( 'moveend', this._onMapMoved, this );
+		
+		map.addLayer(this.geojsonLayer);
+		
+	},
+	
+	onRemove: function (map) {
+		
+		this._map.off( 'moveend', this._onMapMoved, this );
+		
+		this._clearPopup();
+		this._map._panes.overlayPane.style.cursor = '';
+		map.removeLayer(this.geojsonLayer);
+
+		for( var i=0; i<GSI.VectorTileLayer._layers.length; i++ )
+		{
+			if ( GSI.VectorTileLayer._layers[i] == this )
+			{
+				GSI.VectorTileLayer._layers.splice(i,1);
+				break;
+			}
+		}
+		if ( GSI.VectorTileLayer._layers.length == 0 )
+		{
+			
+			this._map.off('mousemove', GSI.VectorTileLayer._onGeoJSONMouseMove);
+			this._map.off('click', GSI.VectorTileLayer._onGeoJSONClick);
+		}
+		L.TileLayer.prototype.onRemove.call(this, map);
+	},
+	
+	_latLngToChildLayer : function( latLng )
+	{
+		if ( !latLng ) return null;
+		var zoom = this._map.getZoom();
+		var dz = zoom - this.options.maxNativeZoom;
+		var drawTileSize = ( this._printMode ? this.options.canvasSize : this.options.tileSize );
+		var dispTileSize = this.options.tileSize;
+		
+		var tz = zoom;
+		
+		
+		if(dz>0){dispTileSize = dispTileSize*Math.pow(2, dz);tz = tz -dz;}
+		//if(dz>=this.options.maxDz) 
+		//	drawTileSize = drawTileSize*Math.pow(2, this.options.maxDz);
+		if (dz>0)
+			drawTileSize = ( this._printMode ? this.options.canvasSize : this.options.tileSize )*Math.pow(2, dz);
+		var scale=drawTileSize / dispTileSize;
+		
+		
+		
+		var initialResolution = 2 * Math.PI / dispTileSize;
+		var resolution = initialResolution / (Math.pow(2, tz));
+		var originShift = 2 * Math.PI / 2.0;
+		
+		
+		var tilePoint = this._map.project(latLng).divideBy(dispTileSize).floor();
+		
+		
+		
+		var key = tilePoint.x + ":" + tilePoint.y;
+		var tile = this._tiles[key];
+		if ( !tile ) return;
+		var tilePoint = tile._tilePoint;
+		var x = latLng.lng * (Math.PI / 180) ;
+		var y=Math.log(Math.tan(Math.PI/4 + latLng.lat * (Math.PI / 180) / 2) );
+		var tx=(x + originShift)/(dispTileSize * resolution);
+		var ty=(y + originShift)/(dispTileSize * resolution);
+		ty = Math.pow(2, tz) - ty;
+		tx=(tx-tilePoint.x)*dispTileSize; //+( this.options.canvasDx );
+		ty=(ty-tilePoint.y)*dispTileSize; //+( this.options.canvasDy );
+		tx *= scale;
+		ty *= scale;
+		tx += (this.options.canvasDx );
+		ty += (this.options.canvasDx );
+		
+		var tile = this._tiles[key];
+		var p= L.point( tx, ty );
+		var hit = false;
+		var result = null;
+		var geoJSON = tile.geoJSON;
+		if (!geoJSON) return null;
+		
+		for( var i=0; i<geoJSON.length; i++ )
+		{
+			if ( geoJSON instanceof L.FeatureGroup )
+			{
+				var layers = geoJSON.getLayers();
+				for( var j=0;j<layers.length; j++ )
+				{
+					if (layers[j].options && layers[j].options.clickable && layers[j]._onMouseMove )
+					{ 
+						if ( layers[j]._containsPoint(p) )
+						{
+							result = layers[j];
+							hit = true;
+							return result;
+						}
+					}
+					if ( hit ) break;
+				}
+			}
+			else
+			{
+				if (geoJSON[i].options && geoJSON[i].options.clickable )
+				{
+					if ( geoJSON[i]._containsPoint(p) )
+					{
+						result = geoJSON[i];
+						hit = true;
+						return result;
+					}
+				}
+			}
+		}
+		
+		return result;
+	},
+	
+	
+	_update: function () {
+		if (this._map && this._map._panTransition && this._map._panTransition._inProgress) { return; }
+		if (this._tilesToLoad < 0) { this._tilesToLoad = 0; }
+		
+		L.TileLayer.Canvas.prototype._update.apply(this, arguments);
+	},
+	
+	_addTile: function (tilePoint, container) {
+		var tilePos = this._getTilePos(tilePoint);
+		
+		var mapZoom = this._map.getZoom();
+		
+		// get unused tile - or create a new tile
+		var tile = ( !this._useCanvas ? { style:{},className :""} : this._getTile() );
+		tile.datum = null;
+		tile.processed = false;
+		//tile.geoJSON = null;
+		/*
+		Chrome 20 layouts much faster with top/left (verify with timeline, frames)
+		Android 4 browser has display issues with top/left and requires transform instead
+		(other browsers don't currently care) - see debug/hacks/jitter.html for an example
+		*/
+		
+		if ( this._useCanvas )
+		{	
+			//scale = ( this._printMode ?  this.options.tileSize / this.options.canvasSize : 1 );
+			tilePos.x -= parseInt( this.options.canvasDx * tile._scale );
+			tilePos.y -= parseInt( this.options.canvasDy * tile._scale );
+			tile._dX = parseInt( this.options.canvasDx * tile._scale );
+			tile._dY = parseInt( this.options.canvasDy * tile._scale );
+			tile._current = {
+				x : 0,
+				y : 0
+			};
+			tile._defaultTilePos = tilePos;
+			var maxTilePoint = $.extend({}, tilePoint );
+			maxTilePoint.x += 1;
+			maxTilePoint.y += 1;
+			var maxTilePos = this._getTilePos( maxTilePoint );
+			
+		}
+		
+		L.DomUtil.setPosition(tile, tilePos, L.Browser.chrome);
+		
+		
+		
+		this._tiles[tilePoint.x + ':' + tilePoint.y] = tile;
+
+		this._loadTile(tile, tilePoint);
+		
+		if ( this._useCanvas )
+		{
+			if (tile.parentNode !== this._tileContainer) {
+				container.appendChild(tile);
+			}
+		}
+	},
+	
+	_getTileUrls : function( tilePoint,zoom,dz )
+	{
+		var x =  "";
+		var y =  "";
+		if ( !tilePoint._children ) tilePoint._children = [];
+		if(dz<0 && !this._isNormalNativeZoom)
+		{
+			var num =Math.pow(2, Math.abs(dz) );
+			for ( var i=0; i<num; i++ ){
+				x =  i+Math.floor(tilePoint.x / Math.pow(2, dz));
+				for ( var ii=0; ii<num;  ii++ ){
+					y =  ii+Math.floor(tilePoint.y / Math.pow(2, dz));
+					//result.push("/"+x+"/"+y+".geojson");
+					tilePoint._children.push( {
+						url:L.Util.template(this._url, L.extend({
+								s: this._getSubdomain(tilePoint),
+								z: zoom,
+								x: x,
+								y: y
+							}, this.options)),
+						key : x + ":" + y + ":" +zoom,
+						x : x,
+						y : y,
+						z : zoom
+					} );
+				}
+			}
+		}
+		else
+		{
+			tilePoint._children.push( {
+				url :this.getTileUrl(tilePoint ),
+				key : tilePoint.x + ":" + tilePoint.y + ":" +tilePoint.z,
+				x : tilePoint.x,
+				y : tilePoint.y,
+				z : tilePoint.z
+			} );
+		}
+		return ;
+	},
+	setPrintMode : function( printMode )
+	{
+		this._printMode = printMode;
+		this._reset( {hard:true} );
+	},
+	
+	_loadTile: function (tile, tilePoint) {
+		
+		tile._layer = this;
+		tile._tilePoint = tilePoint;
+		//this._redrawTile(tile);
+	
+		if (!this.options.async) {
+			this.tileDrawn(tile);
+		}
+		
+		this._adjustTilePoint(tilePoint);
+		/*
+		var layer = this;
+		var req = new XMLHttpRequest();
+		this._requests.push(req);
+		req.onreadystatechange = this._xhrHandler(req, layer, tile, tilePoint);
+		req.open('GET', this.getTileUrl(tilePoint), true);
+		
+		//req.open('GET','http://cyberjapandata.gsi.go.jp/xyz/experimental_rdcl/16/58242/25798.geojson', true);
+		req.send();
+		*/
+		//this._adjustTilePoint(tilePoint);
+		var layer = this;
+		/*
+		var req = new XMLHttpRequest();
+		this._requests.push(req);
+		req.onreadystatechange = this._xhrHandler(req, layer, tile, tilePoint);
+		req.open('GET', this.getTileUrl(tilePoint), true);
+		req.send();
+		*/
+		var zoom = this._map.getZoom();
+		var dz = zoom  - this.options.maxNativeZoom;
+		if ( this._useCanvas)
+		{
+			
+			this._getTileUrls( tilePoint, this.options.maxNativeZoom, dz );
+		}
+		else
+		{
+			this._getTileUrls( tilePoint, zoom, 0 );
+		}
+		
+		if ( !tile.datum ) tile.datum = {};
+		this.tileDrawn(tile);
+		for( var i=0; i<tilePoint._children.length; i++ )
+		{
+			var req = $.ajax( {
+				type: "GET",
+				dataType : "text",
+				url: tilePoint._children[i].url,
+				async:true,
+				success:  L.Util.bind( function(data){
+						this.child.loaded = true;
+						this.tile.datum[this.child.key] = JSON.parse(data);
+						this.layer._tileLoaded(this.tile, this.tilePoint, this.child.key);
+					}, 
+					{ layer:layer, tile:tile, tilePoint:tilePoint, child :tilePoint._children[i] }
+				),
+				error : L.Util.bind( function(data){
+						this.child.loaded = true;
+		                this.layer._tileLoaded(this.tile, this.tilePoint, this.child.key);
+					}, 
+					{ layer:layer, tile:tile, tilePoint:tilePoint, child :tilePoint._children[i] }
+				)
+			});
+			this._requests.push(req);
+			
+		}
+			
+	},
+	
+	
+	
+	_initContainer: function ()
+	{
+		var tilePane = this._map._panes.overlayPane;
+		
+		if (!this._container) {
+			this._container = L.DomUtil.create('div', 'leaflet-layer');
+
+			this._updateZIndex();
+
+			if (this._animated) {
+				var className = 'leaflet-tile-container';
+				this._bgBuffer = L.DomUtil.create('div', className, this._container);
+				this._tileContainer = L.DomUtil.create('div', className, this._container);
+
+			} else {
+				this._tileContainer = this._container;
+			}
+			
+			tilePane.insertBefore(this._container,tilePane.firstChild);
+			//tilePane.appendChild(this._container);
+
+			if (this.options.opacity < 1) {
+				this._updateOpacity();
+			}
+		}
+	},
+	
+	_tileLoaded: function (tile, tilePoint, childKey) {
+		
+	
+		if ( tile && tile.datum[childKey] && this.options.isTopoJSON)
+		{
+			tile.datum[childKey] = omnivore.topojson.parse(tile.datum[childKey]);
+		}
+		
+		var loaded = true;
+		if ( tilePoint )
+		{
+			for( var j=0; j<tilePoint._children.length; j++ )
+			{
+				if ( !tilePoint._children[j].loaded )
+					loaded = false;
+			}
+		}
+		//if ( loaded )
+		L.TileLayer.Canvas.prototype._tileLoaded.apply(this, arguments);
+			
+		if ( !tile  ) return null;
+		
+		
+		
+		
+		if (tile.datum[childKey] )
+		{
+			try
+			{
+				var addedLayers = [];
+				
+				var addedLayer = this.addTileData(addedLayers, tile, tile.datum[childKey], tilePoint);
+				if ( !tile.geoJSON ) tile.geoJSON = [];
+				for( var i= 0; i<addedLayers.length; i++ )
+				{
+					tile.geoJSON.push(addedLayers[i]);
+				}
+				
+				if( !this._styleLoading )
+				{
+					this._updateTilePosition( tile );
+					this.drawTile(tile, tilePoint, addedLayer, null, false, tile._current);
+				}
+			}catch(e){
+			}
+		
+		}
+		this.tileDrawn(tile);
+		
+		
+		
+		
+		//if (tile.datum === null) { return null; }
+		//this.addTileData(tile.datum, tilePoint);
+		
+		
+		if ( this._opacity != 1 )this.setOpacity( this._opacity );
+		
+		if ( this.geojsonLayer )
+		{
+			if ( this.options.zIndexOffset && this.geojsonLayer.setMarkerZIndex )
+			{
+				this.geojsonLayer.setMarkerZIndex( this.options.zIndexOffset )
+			}
+		}
+	},
+	
+	addTileData: function (result, tile, geojson, tilePoint) {
+        var features = L.Util.isArray(geojson) ? geojson : geojson.features,
+            i, len, feature;
+		var mapZoom = this._map.getZoom();
+		
+        if (features) {
+            for (i = 0, len = features.length; i < len; i++) {
+                // Only add this if geometry or geometries are set and not null
+                feature = features[i];
+                if (feature.geometries || feature.geometry || feature.features || feature.coordinates) {
+                    this.addTileData(result, tile, features[i], tilePoint);
+                    
+                }
+            }
+            return result;
+        }
+		
+        var options = this.geojsonOptions;
+		
+        if (options.filter && !options.filter(geojson)) { return null; }
+		
+        var parentLayer = this.geojsonLayer;
+        var incomingLayer = null;
+        if (this.options.unique && typeof(this.options.unique) === 'function') {
+            var key = this.options.unique(geojson);
+
+            // When creating the layer for a unique key,
+            // Force the geojson to be a geometry collection
+            if (!(key in this._keyLayers && geojson.geometry.type !== 'GeometryCollection')) {
+                geojson.geometry = {
+                    type: 'GeometryCollection',
+                    geometries: [geojson.geometry]
+                };
+            }
+
+            // Transform the geojson into a new Layer
+            try {
+				
+				if ( !this._useCanvas )
+                	incomingLayer = L.geometryToLayer(geojson, options.pointToLayer, options.coordsToLatLng);
+                else
+            		incomingLayer = GSI.Canvas.GeoJSON.geometryToLayer (geojson, options.pointToLayer, options.coordsToLatLng);
+            }
+            // Ignore GeoJSON objects that could not be parsed
+            catch (e) {
+				
+                return null;
+            }
+            incomingLayer.feature = L.GeoJSON.asFeature(geojson);
+            // Add the incoming Layer to existing key's GeometryCollection
+            if (key in this._keyLayers) {
+                parentLayer = this._keyLayers[key];
+                parentLayer.feature.geometry.geometries.push(geojson.geometry);
+            }
+            // Convert the incoming GeoJSON feature into a new GeometryCollection layer
+            else {
+                this._keyLayers[key] = incomingLayer;
+            }
+        }
+        // Add the incoming geojson feature to the L.GeoJSON Layer
+        else {
+            // Transform the geojson into a new layer
+            try {
+				if ( !this._useCanvas )
+				{
+					
+                	incomingLayer = L.GeoJSON.geometryToLayer(geojson, options.pointToLayer, options.coordsToLatLng, this.geojsonOptions);
+                }
+                else
+                {
+                	incomingLayer =GSI.Canvas.GeoJSON.geometryToLayer (geojson, options.pointToLayer, options.coordsToLatLng, this.geojsonOptions);
+            	}
+            }
+            // Ignore GeoJSON objects that could not be parsed
+            catch (e) {
+                return null;
+            }
+            
+            if ( !incomingLayer ) return null;
+            incomingLayer.feature = L.GeoJSON.asFeature(geojson);
+        }
+        incomingLayer.defaultOptions = incomingLayer.options;
+
+        //this.geojsonLayer.resetStyle(incomingLayer);
+        
+        if ( !this._styleLoading )
+        {
+	        var style = this.geojsonOptions.style;
+			if (typeof style === 'function') {
+				style = style(incomingLayer.feature);
+			}
+			if (incomingLayer.setStyle) {
+				
+				incomingLayer.setStyle(style);
+			}
+			
+	        
+        }
+        
+        if ( !incomingLayer._isCanvas ) this.geojsonLayer.resetStyle(incomingLayer);
+        
+        if (options.onEachFeature) {
+            options.onEachFeature(geojson, incomingLayer);
+        }
+        //parentLayer.addLayer(incomingLayer);
+		
+		
+		//tile.geoJSON.push(incomingLayer);
+		
+		if ( !incomingLayer._isCanvas ) 
+        {
+	        parentLayer.addLayer(incomingLayer);
+
+	        // If options.clipTiles is set and the browser is using SVG
+	        // then clip the layer using SVG clipping
+	        if (this.options.clipTiles) {
+	            this._clipLayerToTileBoundary(incomingLayer, tilePoint);
+	        }
+		}
+		else
+		{
+			
+			incomingLayer._tilePoint = tilePoint;
+			result.push( incomingLayer );
+			
+			//if ( !tile.geoJSON ) tile.geoJSON = [];
+			//tile.geoJSON.push(incomingLayer);
+			
+		}
+        return incomingLayer;
+    },
+    _removeOtherTiles: function (bounds) {
+		var kArr, x, y, key;
+
+		for (key in this._tiles) {
+			kArr = key.split(':');
+			x = parseInt(kArr[0], 10);
+			y = parseInt(kArr[1], 10);
+
+			// remove tile if it's out of bounds
+			if (x < bounds.min.x || x > bounds.max.x || y < bounds.min.y || y > bounds.max.y) {
+				this._removeTile(key);
+			}
+		}
+	},
+
+	_removeTile: function (key) {
+		var tile = this._tiles[key];
+		this._clearTilePopup(tile);
+		this.fire('tileunload', {tile: tile, url: tile.src});
+
+		if (this.options.reuseTiles) {
+			L.DomUtil.removeClass(tile, 'leaflet-tile-loaded');
+			this._unusedTiles.push(tile);
+
+		} else if (tile.parentNode === this._tileContainer) {
+			this._tileContainer.removeChild(tile);
+		}
+
+		// for https://github.com/CloudMade/Leaflet/issues/137
+		if (!L.Browser.android) {
+			tile.onload = null;
+			tile.src = L.Util.emptyImageUrl;
+		}
+
+		delete this._tiles[key];
+	},
+	
+	_updateTilePosition : function(tile, zoom, dz, pixelBounds, origin, mapSize)
+	{
+		if ( !this._useCanvas ) return;
+		
+		if ( !zoom )
+		{
+			zoom = this._map.getZoom();
+			dz = zoom - this.options.maxNativeZoom;
+			pixelBounds = this._map.getPixelBounds();
+			origin = this._map.getPixelOrigin();
+			mapSize = this._map.getSize();
+		}
+				//console.log( this._map.getPixelBounds() );
+		if ( dz > this.options.maxDz)
+		{
+			var tilePoint = tile._tilePoint;
+			
+			var tileLeftTop = {
+				x : tilePoint.x * tile._realTileSize - pixelBounds.min.x,
+				y : tilePoint.y * tile._realTileSize - pixelBounds.min.y
+			};
+			var tileRightBottom = {
+				x : (tilePoint.x+1) * tile._realTileSize - pixelBounds.min.x,
+				y : (tilePoint.y+1) * tile._realTileSize - pixelBounds.min.y
+			};
+			
+			var newCurrent = $.extend( {}, tile._current );
+			
+			if (
+				tileLeftTop.x + tile._current.x > 0 
+				|| tile._current.y + tile._current.y > 0 
+				|| tileLeftTop.x + tile._current.x + tile._tileSize < mapSize.x
+				|| tileLeftTop.y + tile._current.y + tile._tileSize < mapSize.y )
+			{
+				
+				newCurrent.x = parseInt(-tileLeftTop.x + ( ( mapSize.x / 2 ) - ( tile._tileSize/2) ) );
+				newCurrent.y = parseInt(-tileLeftTop.y + ( ( mapSize.y / 2 ) - ( tile._tileSize/2) ) );
+			}
+			
+			if ( newCurrent.x < 0 )
+				newCurrent.x = 0;
+			if ( newCurrent.y < 0 )
+				newCurrent.y = 0;
+			if ( newCurrent.x > tile._realTileSize - tile._tileSize )
+				newCurrent.x = tile._realTileSize - tile._tileSize;
+			if ( newCurrent.y > tile._realTileSize - tile._tileSize )
+				newCurrent.y = tile._realTileSize - tile._tileSize;
+			
+			
+			
+			if ( newCurrent.x != tile._current.x || newCurrent.y != tile._current.y || !tile._updatePos)
+			{
+				
+				tile._current.x = newCurrent.x;
+				tile._current.y = newCurrent.y;
+				
+				var tilePos = this._getTilePos( tilePoint );
+				
+				tilePos.x += tile._current.x - tile._dX;
+				tilePos.y += tile._current.y - tile._dY;
+				
+				//var pos = $.extend( {}, L.DomUtil.getPosition(tile ) );
+				
+				L.DomUtil.setPosition(tile, tilePos, L.Browser.chrome);
+				
+				//var pos2 = $.extend( {}, L.DomUtil.getPosition(tile ) );
+				//console.log( tile._current  );
+				
+				//var ctx = tile.getContext('2d');
+				//ctx.clearRect( 0, 0, tile.width, tile.height );
+				//ctx.beginPath();
+				//this.drawTile(tile, tile._tilePoint, tile.geoJSON, zoom, true, tile._current );
+				return true;
+			}
+				
+		}
+		return false;
+		
+	},
+	
+	_onMapMoved : function(e)
+	{
+		if ( !this._useCanvas ) return;
+		var zoom = this._map.getZoom();
+		var dz = zoom - this.options.maxNativeZoom;
+		var pixelBounds = this._map.getPixelBounds();
+		var origin = this._map.getPixelOrigin();
+		var mapSize = this._map.getSize();
+				//console.log( this._map.getPixelBounds() );
+		if ( dz > this.options.maxDz)
+		{
+			for ( var key in this._tiles )
+			{
+				var tile = this._tiles[key];
+				if ( this._updateTilePosition( tile, zoom, dz, pixelBounds, origin, mapSize ) )
+				{
+					
+					var ctx = tile.getContext('2d');
+					ctx.clearRect( 0, 0, tile.width, tile.height );
+					ctx.beginPath();
+					this.drawTile(tile, tile._tilePoint, tile.geoJSON, zoom, true, tile._current );
+				}
+				
+				
+				
+			}
+		}
+		return true;
+	},
+	
+    drawTile: function (tile, tilePoint, drawLayers, zoom, redraw, drawOffset) {
+		
+		if ( !this._useCanvas || !drawLayers || !tile.getContext ) return;// !tile.geoJSON || !tile.getContext ) return;
+		
+		if ( !zoom ) zoom = this._map.getZoom();
+		var dz = zoom - this.options.maxNativeZoom;
+		var tileSize = ( this._printMode  ? this.options.canvasSize : this.options.tileSize );
+		var tz = zoom;
+		
+		//if(dz>=this.options.maxDz){tileSize = tileSize*Math.pow(2, this.options.maxDz);tz = tz -dz;}
+		//else 
+		if(dz>0){tileSize = tileSize*Math.pow(2, dz);tz = tz -dz;}
+		
+		var initialResolution = 2 * Math.PI / tileSize;
+		var resolution = initialResolution / (Math.pow(2, tz));
+		var originShift = 2 * Math.PI / 2.0;
+		
+		var ctx = tile.getContext('2d');
+		//var scale = 1;//( this._printMode  ? this.options.canvasSize / this.options.tileSize   : 1 );
+		
+		//var pos = this._getTilePos( tilePoint );
+		for( var i=0; i<drawLayers.length; i++ )
+		{
+			var drawList = [];
+			if ( drawLayers[i] instanceof L.FeatureGroup)
+			{
+				var layers = drawLayers[i].getLayers();
+				for( var j=0; j<layers.length; j++ )
+					drawList.push( layers[j] );
+			}
+			else
+			{
+				drawList.push( drawLayers[i] );
+			}
+			for( var j=0; j<drawList.length; j++ )
+			{
+				
+				drawList[j]._ctx = ctx;
+				drawList[j]._ctx.lineCap = 'round';
+				drawList[j]._ctx.lineJoin = 'round';
+				
+				drawList[j]._map = this._map;
+				//this._map._initPathRoot();
+				//drawList[j]._initPath();
+				
+				drawList[j].projectLatlngs(
+					tilePoint,this.options.canvasDx,this.options.canvasDy,tz,tileSize, resolution, originShift);
+				//drawList[j]._updateStyle();
+				
+				if ( !this._styleLoading )
+		        {
+			        var style = this.geojsonOptions.style;
+					if (typeof style === 'function') {
+						style = style(drawLayers[i].feature);
+					}
+					if (drawList[j].setStyle) {
+						
+						drawList[j].setStyle(style);
+					}
+					
+			        
+		        }
+				drawList[j]._updatePath(drawOffset);
+			}
+		}
+		
+	},
+	
+	setOpacity : function( opacity )
+	{
+		this._opacity = opacity;
+		if ( this.geojsonLayer )
+		{
+			var opacitySetter = new GSI.LayerOpacitySetter();
+			opacitySetter.setOpacity( this.geojsonLayer, opacity  );
+		}
+		
+		$( this._container ).css({ "opacity": opacity } );
+	}
+	
+} );
+
+
+
+
+
+GSI.VectorTileLayer._onGeoJSONMouseMove = function( e )
+{
+	if ( !GSI.VectorTileLayer._layers ) return;
+	var hitLayer = null;
+	for( var i=0; i<GSI.VectorTileLayer._layers.length; i++ )
+	{
+		var layer = GSI.VectorTileLayer._layers[i];
+		if ( !layer._useCanvas ) continue;
+		
+		hitLayer = layer._latLngToChildLayer( e.latlng );
+		
+		if ( hitLayer ) break;
+		
+	}
+	
+	if ( hitLayer )
+	{
+		layer._map._panes.overlayPane.style.cursor = 'pointer';
+	}
+	else
+	{
+		layer._map._panes.overlayPane.style.cursor = '';
+	}
+};
+	
+GSI.VectorTileLayer._onGeoJSONClick = function( e )
+{
+	if ( !GSI.VectorTileLayer._layers ) return;
+	var hitLayer = null;
+	for( var i=0; i<GSI.VectorTileLayer._layers.length; i++ )
+	{
+		var layer = GSI.VectorTileLayer._layers[i];
+		if ( !layer._useCanvas ) continue;
+		
+		var hitLayer = layer._latLngToChildLayer(  e.latlng );
+		
+		if ( hitLayer ) 
+		{
+			break;
+		}
+	}
+	
+	if ( hitLayer )
+	{
+		layer._popup = hitLayer._popup;
+		layer._popup.setLatLng(e.latlng);
+		layer._map.openPopup( layer._popup );
+	}
+};
+
+
+
+
+
+
+
+
+
+
+/*******************************************************
+
+ GSI.MapToImage
+    Save images
+
+*******************************************************/
+
+
+GSI.MapToImage = {};
+
+GSI.MapToImage = L.Class.extend( {
+	includes: L.Mixin.Events,
+	options : {
+		drawControls : true
+	},
+	
+	initialize : function ( map, list, options )
+	{
+		L.setOptions(this, options);
+		this._map = map;
+		this._list = list;
+		
+	},
+	
+	setList : function( list )
+	{
+		this._list = list;
+	},
+	
+	start : function()
+	{
+		for ( var i=0; i<this._list.length; i++ )
+		{
+			
+			var item = this._list[i];
+			var layer = item.layer;
+			if ( !layer ) {
+				item.loaded = true;
+				continue;
+			}
+			
+			
+			if ( item.type == "geojson" )
+			{
+				item.drawLayer = new GSI.MapToImage.VectorTileLayer( this._map, layer, {opacity: item.opacity} );
+			}
+			if ( item.type == "kml" )
+			{
+				item.drawLayer = new GSI.MapToImage.VectorTileLayer( this._map, layer, {opacity: item.opacity} );
+			}
+			
+			else if ( item.type == "geojson_tile" )
+			{
+				item.drawLayer = new GSI.MapToImage.VectorTileLayer( this._map, layer, {opacity: item.opacity} );
+			}
+			else if ( item.type == "tile" )
+			{
+				item.drawLayer = new GSI.MapToImage.TileLayer( this._map, layer, {
+					opacity: item.opacity, 
+					grayscale: item.grayscale,
+					blend: item.blend
+					} );
+			}
+			else if ( item.type == "system" )
+			{
+				item.drawLayer = layer;
+			}
+			else
+			{
+				item.loaded = true;
+			}
+			if ( !item.drawLayer ) continue;
+			item.loaded = false;
+			
+		}
+		
+		for ( var i=0; i<this._list.length; i++ )
+		{
+			
+			var item = this._list[i];
+			
+			if ( !item.drawLayer ) continue;
+			
+			if ( item.drawLayer.on )
+			{
+				item.drawLayer.off("loaded").on("loaded", L.bind(this._onLoad, this, item ) );
+			}
+			
+			if ( item.drawLayer.refreshQueue ) 
+			{
+				item.drawLayer.refreshQueue();
+			}
+			
+			if ( item.drawLayer.load )
+			{
+				item.drawLayer.load();
+			}
+			else
+				item.loaded = true;
+		
+		}
+		
+		if ( !this._drawn )this._onLoad({});
+	},
+	
+	_onLoad : function(item) {
+		
+		item.loaded  = true;
+		var loaded = true;
+		for( var i =0; i<this._list.length; i++ )
+		{
+			if ( !this._list[i].loaded ){ loaded = false; break; }
+		}
+		if ( loaded ) {
+			this._drawn = true;
+			this._drawMapImage();
+		}
+	},
+	
+	_drawMapImage : function()
+	{
+		var size = this._map.getSize();
+		
+		var imageSize = {
+			width : size.x,
+			height : size.y
+		};
+		
+		this._mapCanvas = $( "<canvas>" ).css ( {
+		} )
+		.attr( {
+			"width" : size.x,
+			"height" : size.y
+		} );
+		this._mapTexture = this._mapCanvas[0].getContext("2d");
+		this._mapTexture.fillStyle = "rgb(255, 255, 255)";
+		this._mapTexture.fillRect(0, 0, size.x, size.y);
+		for ( var i=this._list.length-1; i>=0; i-- )
+		{
+			if ( this._list[i].drawLayer )
+			{
+				if ( this._list[i].type=="system" )
+					this._list[i].drawLayer.drawPath( this._mapTexture );
+				else
+					this._list[i].drawLayer.draw( this._mapTexture );
+			}
+		}
+		this._markerPaneToCanvas();
+		
+		
+	},
+	
+	_drawDIVMarker : function(marker, origin, pixelBounds)
+	{
+		var result = false;
+		
+		var div = marker.children("div");
+		
+	
+		var radius = div.css( "border-radius" ) || div.css( "-moz-border-radius" ) || div.css( "-webkit-border-radius" );
+		if ( radius )
+		{
+			radius = $.trim(radius);
+			var parts = radius.split( " " );
+			if (parts.length > 0 )
+				radius = parseInt( parts[0] );
+			else
+				radius = 0;
+		}
+		else
+			radius = 0;
+		
+		var left = 0;
+		var top = 0;
+		//transform: translate3d(1023px, -112px, 0px); opacity: 1;
+		if (L.Browser.any3d) {
+			var matches = marker[0].style[L.DomUtil.TRANSFORM].match(/([+-]*\d+)[\D]*\,[^+-\d]*([+-]*\d+)[\D]*/);
+			if (matches) {
+				left = parseFloat(matches[1])+( origin.x-pixelBounds.min.x );
+				top  = parseFloat(matches[2])+( origin.y-pixelBounds.min.y );
+			}
+		} else {
+			left = parseInt(marker[0].style.left)+( origin.x-pixelBounds.min.x );
+			top = parseInt(marker[0].style.top)+( origin.y-pixelBounds.min.y );
+		}
+		
+		var margin = {
+			left : 0,
+			top : 0
+		};
+		
+		
+		var opacity = div.css("opacity");
+		if (!opacity ) opacity = 1;
+		
+		
+			
+		if ( marker.css("margin-left") ) margin.left = parseFloat( marker.css("margin-left") );
+		if ( marker.css("margin-top") ) margin.top = parseFloat( marker.css("margin-top") );
+		if ( marker.css("margin") ) {
+			var parts = $.trim(marker.css("margin")).split( " " );
+			if ( parts.length > 0 ) margin.top = parseFloat( $.trim(parts[0]) );
+			if ( parts.length > 3 ) margin.left= parseFloat( $.trim(parts[3]) );
+			
+		}
+		if ( $.trim( div.html() ) == "" )
+		{
+			
+			
+			var bgColor = "#000";
+			if ( div.css( "background-color" ) ) bgColor = div.css( "background-color" );
+			else if ( div.css( "background" ) ) bgColor = div.css( "background" );
+			var size = {
+				w : div.outerWidth(),
+				h : div.outerHeight()
+			};
+			
+			
+			if ( radius )
+			{
+				
+				this._mapTexture.beginPath();
+				this._mapTexture.arc(left, top, size.w/2, 0, Math.PI*2, false);
+				this._mapTexture.save();
+				this._mapTexture.fillStyle = bgColor;
+				this._mapTexture.globalAlpha=opacity;
+				this._mapTexture.fill();
+				this._mapTexture.restore();
+			}
+			else
+			{
+				this._mapTexture.fillStyle = bgColor;
+				this._mapTexture.globalAlpha=opacity;
+				this._mapTexture.fillRect(left+margin.left, top+margin.top, size.w, size.h);
+			}
+			result = true;
+		}
+		else
+		{
+			var cssText = ( div.prop("style") ? div.prop("style").cssText : "" );
+			
+			var fontSize = div.css("font-size") || '12px';
+			var fontWeight = div.css("font-weight") || '';
+			var fontStyle = div.css("font-style") || '';
+			var textShadow = div.css("text-shadow") || div.css("-ms-text-shadow") || '';
+			if ( textShadow )
+			{
+				var matches = textShadow.match(/(rgb\([\d\s,]+\))/);
+				if ( matches )textShadow = matches[1];
+				else {
+					matches = textShadow.match(/(#[a-f|A-F|\d]+)/);
+					if ( matches )textShadow = matches[1];
+					else textShadow = '';
+				};
+			}
+			else textShadow = '';
+			var color = div.css("color") || "#000";
+			var fontFamily = div.css("font-family");
+			if ( !fontFamily || fontFamily == '' ) fontFamily = "'Meiryo','sans-serif'";
+			var text = div.text();
+			var transformOrign = div.css("transform-origin");
+			var lineHeight = div.css("line-height");
+			var transform = div.css("transform") 
+				|| div.css("-moz-transform") || div.css("-o-transform") 
+				|| div.css("-ms-transform")|| div.css("-webkit-transform");
+			var rotate = 0;
+			if ( transform )
+			{
+				var matches = transform.match(/rotate\((.+?)deg/);
+				if ( matches )rotate = parseFloat(matches[1]);
+				else
+				{
+					var matches = cssText.match(/rotate\((.+?)deg/);
+					if ( matches )rotate = parseFloat(matches[1]);
+				}
+			}
+			
+			var angle90 = div.css("writing-mode") 
+				|| div.css("-moz-writing-mode") || div.css("-o-writing-mode") 
+				|| div.css("-ms-writing-mode")|| div.css("-webkit-writing-mode");
+			if ( angle90 ) angle90 = $.trim( angle90 );
+			else
+			{
+				var matches = cssText.match(/vertical-rl/);
+				if ( matches )angle90 = "vertical-rl";
+			}
+			
+			
+			//if ( !transform 
+			var textAlign = "left";
+			var textBaseline = "top";
+			
+			if ( transformOrign && transformOrign != "" )
+			{
+				transformOrign = $.trim(transformOrign);
+				var parts = transformOrign.split( " " );
+				if ( parts.length == 1 )
+				{
+					if ( parts[0] == "right" || parts[0] == "bottom" )
+					{
+						textAlign = "right";
+						textBaseline = "bottom";
+					}
+					else if ( parts[0] == "center" )
+					{
+						
+						textAlign = "center";
+						textBaseline = "middle";
+					}
+					else
+					{
+						textAlign = "left";
+						textBaseline = "top";
+					}
+					
+				}
+				else if ( parts.length >= 2 )
+				{
+					if ( parts[0] == "right" || parts[0] == "bottom" )
+						textAlign = "right";
+					else if ( parts[0] == "center" )
+						textAlign = "center";
+					else
+						textAlign = "left";
+					
+					
+					if ( parts[1] == "right" || parts[1] == "bottom" )
+						textBaseline = "bottom";
+					else if ( parts[1] == "center" )
+						textBaseline = "middle";
+					else
+						textBaseline = "top";
+						
+				}
+				
+			}
+			
+			if ( lineHeight && lineHeight.match(/px/) )
+			{
+				lineHeight = parseFloat( lineHeight );
+			}
+			else
+				lineHeight = null;
+			
+			var parts = fontFamily.split( ',' );
+			fontFamily = "";
+			for( var k=0; k<parts.length; k++ )
+			{
+				fontFamily += (fontFamily == "" ? "": ",") + "'" + $.trim(parts[k]).replace(/[\'\"]/g,"") + "'";
+			}
+			
+			this._mapTexture.font = ( fontStyle != "" ? fontStyle + " " : "" ) + fontWeight + " " + fontSize + " " + fontFamily + "";
+			this._mapTexture.globalAlpha=opacity;
+			
+			
+			if ( angle90 == "mode:tb-rl" || angle90 == "vertical-rl" )
+			{
+				return this._drawDIVMarkerTategaki(left, top, margin, text, color, textShadow, textAlign, textBaseline, rotate, lineHeight );
+			}
+			
+			this._mapTexture.textAlign = textAlign;
+			this._mapTexture.textBaseline = textBaseline;
+				
+			
+			var metrics  = this._mapTexture.measureText(text, left+margin.left, top+margin.top );
+			var lineWidth = metrics.width;
+			
+			if ( lineHeight != null )
+			{
+				this._mapTexture.textAlign = "top";
+				top += (lineHeight/2);
+			}
+		
+			if ( rotate != 0 )
+			{
+				//top += lineHeight;
+				this._mapTexture.save();
+				this._mapTexture.translate( left+margin.left, top+margin.top );
+				this._mapTexture.rotate( rotate * Math.PI / 180 );
+				if ( textShadow && textShadow != '' )
+				{
+					this._mapTexture.lineWidth  = 4;
+					this._mapTexture.strokeStyle = textShadow;
+					this._mapTexture.strokeText(text, 0,0 );
+				}
+				
+				this._mapTexture.fillStyle = color;
+				this._mapTexture.fillText(text, 0,0 );
+				this._mapTexture.restore();
+			}
+			else
+			{
+				
+				this._mapTexture.save();
+				this._mapTexture.rotate( 0 );
+				this._mapTexture.translate( left+margin.left,top+margin.top);
+				if ( textShadow && textShadow != '' )
+				{
+					this._mapTexture.lineWidth  = 4;
+					this._mapTexture.strokeStyle = textShadow;
+					this._mapTexture.strokeText(text, 0, 0 );
+				}
+				this._mapTexture.fillStyle = color;
+				this._mapTexture.fillText(text, 0, 0 );
+				this._mapTexture.restore();
+			}
+			result = true;
+			
+		}
+		return result;
+	},
+	
+	_drawDIVMarkerTategaki : function(left, top, margin, text, color, textShadow, textAlign, textBaseline, rotate, lineHeight)
+	{
+		var texture = this._mapTexture;
+		var canvas = null;
+		
+		if ( rotate != 0 )
+		{
+			canvas = document.createElement( "canvas" );
+			texture = canvas.getContext('2d');
+			texture.font = this._mapTexture.font;
+			texture.globalAlpha = this._mapTexture.globalAlpha;
+		}
+		
+		var isDrawShadow = !!( textShadow && textShadow != '');
+		if ( isDrawShadow )
+		{
+			texture.lineWidth  = 4;
+			texture.strokeStyle = textShadow;
+		}
+		var result = false;
+		var metric = texture.measureText("あ" );
+		var charHeight = metric.width;
+		
+		texture.textAlign = "center";
+		//texture.textAlign = "left";
+		texture.textBaseline = "top";
+		
+		
+		//texturefillText(text, left+margin.left, top+margin.top);
+		texture.fillStyle = color;
+		var x = ( !canvas ? left+margin.left : 0 ) + (charHeight/2);
+		var y= ( !canvas ? top+margin.top : 0 );
+		for( var i=0; i<text.length; i++ )
+		{
+			var c = text.charAt(i);
+			
+			if ( c == "（" || c == "(" )
+			
+			{
+				c="(";
+				texture.save();
+				texture.textBaseline = "middle";
+				//texture.textBaseline = "middle";
+				texture.translate( 
+					x,
+					y + charHeight - texture.measureText(c).width / 2); //texture.measureText(c).width, y + );
+				texture.rotate( 90 * Math.PI / 180 );
+				
+				if ( isDrawShadow )
+					texture.strokeText(c, 0,0 );
+				texture.fillText(c, 0, 0);
+				texture.restore();
+			}
+			else if ( c == "）" || c == ")" )
+			{
+				c= ")";
+				texture.save();
+				texture.textBaseline = "middle";
+				texture.translate( x,
+					y + charHeight / 2);
+				texture.rotate( 90 * Math.PI / 180 );
+				if ( isDrawShadow )
+					texture.strokeText(c, 0,0);
+				texture.fillText(c, 0, 0 );
+				texture.restore();
+			}
+			else
+			{
+				
+				texture.save();
+				if ( isDrawShadow )
+					texture.strokeText(c,x,y);
+				texture.fillText(c, x, y);
+				
+				texture.restore();
+			}
+			y += charHeight;
+			
+		}
+		
+		if ( canvas )
+		{
+			//texture
+			this._mapTexture.save();
+			this._mapTexture.translate( left+margin.left, top+margin.top );
+			this._mapTexture.rotate( rotate * Math.PI / 180 );
+			this._mapTexture.drawImage(canvas, 0,0);
+			this._mapTexture.restore();
+		}
+		
+		
+		result = true;
+		return result;
+	},
+	
+	_markerPaneToCanvas : function()
+	{
+		var size = this._map.getSize();
+		var markerPane = $(".leaflet-objects-pane .leaflet-marker-pane" ).clone();
+		var images = markerPane.find( "img" );
+		images.each(function() {
+			this.crossOrigin = "anonymous";
+			var url = this.src.replace(/cyberjapandata.gsi.go.jp/, "maps.gsi.go.jp");
+			if(url.indexOf('//maps.gsi.go.jp/') != -1)
+			{
+				url=url.replace('https://','//');
+				url=url.replace('http://','//');
+			}
+			if ( !CONFIG.ISPREVIEWSITE )
+			{
+				this.src = url;
+			}
+			else
+			{
+				if ( url.match(/maps.gsi.go.jp/) )
+				{
+					var proxy = CONFIG.PROXYURL;
+					this.src = proxy.replace( "{url}",  url.replace(/cyberjapandata.gsi.go.jp/, "maps.gsi.go.jp") );
+				}
+			}
+			
+		} );
+		
+		
+		
+		var origin = this._map.getPixelOrigin();
+		var pixelBounds = this._map.getPixelBounds();
+		
+		//markerPane.find( "*" ).css( {"transform":"none"} );
+		
+		//markerPane.css( { "position":"absolute", "margin-left" : ( origin.x - pixelBounds.min.x ) + "px",  "margin-top" : ( origin.y - pixelBounds.min.y) + "px"} );
+		
+		var markers = markerPane.children();
+		for( var i=0; i<markers.length; i++ )
+		{
+			var marker = $(markers[i]);
+			
+			if ( marker.prop("tagName") == "DIV" && marker.find("img").length <= 0)
+			{
+				if ( this._drawDIVMarker( marker, origin,pixelBounds ) )
+					marker.remove();
+			}
+			
+		}
+		
+		
+		
+		if ( origin.x-pixelBounds.min.x == 0 && top+( origin.y-pixelBounds.min.y ) == 0 )
+		{
+			
+		}
+		else
+		{
+			var elems = markerPane.find( "*" );
+			
+			for( var i=0; i<elems.length; i++ )
+			{
+				var el = elems[i];
+				var transform = el.style[L.DomUtil.TRANSFORM];
+				var left = 0;
+				var top = 0;
+				//transform: translate3d(1023px, -112px, 0px); opacity: 1;
+				if (L.Browser.any3d) {
+					
+					var matches = el.style[L.DomUtil.TRANSFORM].match(/([+-]*\d+)[\D]*\,[^+-\d]*([+-]*\d+)[\D]*/);
+					if (matches) {
+						//console.log( matches );
+						left = parseFloat(matches[1]);
+						top  = parseFloat(matches[2]);
+						
+						var point = new L.Point(left+( origin.x-pixelBounds.min.x ), top+( origin.y-pixelBounds.min.y ) );
+						el.style[L.DomUtil.TRANSFORM] =  L.DomUtil.getTranslateString(point);
+					}
+				} else {
+					el.style.left = parseInt(el.style.left)+( origin.x-pixelBounds.min.x ) + "px";
+					el.style.top = parseInt(el.style.top)+( origin.y-pixelBounds.min.y ) + "px";
+					//left = parseFloat(el.style.left);
+					//top  = parseFloat(el.style.top);
+				}
+				
+			}
+		}
+		
+		
+		
+		
+		
+		
+		
+		var dummy = $( "<div>" ).addClass("maptoimage-dummy").css({"z-index" : 0, "width": "1px", "height": "1px", "position": "absolute"});
+		$( "body" ).append(dummy);
+		
+		dummy.append( markerPane );
+		html2canvas(markerPane[0], {
+			onrendered: L.bind( this._onMarkerRendered, this ),
+			logging:false,
+			userCORS:true,
+			allowTaint:false,
+			width: size.x,
+			height: size.y
+		});
+		
+	},
+	_popupPaneToCanvas : function()
+	{
+		var size = this._map.getSize();
+		var popupPane = $(".leaflet-objects-pane .leaflet-popup-pane" ).clone();
+		
+		if ( popupPane.children().length <= 0 )
+		{
+			this._balloonToCanvas();
+			return;
+		}
+		
+		var images = popupPane.find( "img" );
+		images.each(function() {
+			this.crossOrigin = "anonymous";
+			var url = this.src.replace(/cyberjapandata.gsi.go.jp/, "maps.gsi.go.jp");
+			if(url.indexOf('//maps.gsi.go.jp/') != -1)
+			{
+				url=url.replace('https://','//');
+				url=url.replace('http://','//');
+			}
+			if ( !CONFIG.ISPREVIEWSITE )
+			{
+				this.src = url;
+			}
+			else
+			{
+				if ( url.match(/maps.gsi.go.jp/) )
+				{
+					var proxy = CONFIG.PROXYURL;
+					this.src = proxy.replace( "{url}",  url.replace(/cyberjapandata.gsi.go.jp/, "maps.gsi.go.jp") );
+				}
+			}
+			
+		} );
+		
+		
+		
+		
+		var mapPane = $( ".leaflet-map-pane" );
+		popupPane.find( ".leaflet-popup" ).remove();
+		
+		
+		var origin = this._map.getPixelOrigin();
+		var pixelBounds = this._map.getPixelBounds();
+		
+		//markerPane.find( "*" ).css( {"transform":"none"} );
+		
+		//markerPane.css( { "position":"absolute", "margin-left" : ( origin.x - pixelBounds.min.x ) + "px",  "margin-top" : ( origin.y - pixelBounds.min.y) + "px"} );
+		
+		if ( origin.x-pixelBounds.min.x == 0 && top+( origin.y-pixelBounds.min.y ) == 0 )
+		{
+			
+		}
+		else
+		{
+			var elems = popupPane.find( "*" );
+			
+			for( var i=0; i<elems.length; i++ )
+			{
+				var el = elems[i];
+				var transform = el.style[L.DomUtil.TRANSFORM];
+				var left = 0;
+				var top = 0;
+				//transform: translate3d(1023px, -112px, 0px); opacity: 1;
+				if (L.Browser.any3d) {
+					
+					var matches = el.style[L.DomUtil.TRANSFORM].match(/([+-]*[\d\.]+)[\D]*\,[^+-\d]*([+-]*[\d\.]+)[\D]*/);
+					if (matches) {
+						left = parseFloat(matches[1]);
+						top  = parseFloat(matches[2]);
+						
+						var point = new L.Point(left+( origin.x-pixelBounds.min.x ), top+( origin.y-pixelBounds.min.y ) );
+						el.style[L.DomUtil.TRANSFORM] =  L.DomUtil.getTranslateString(point);
+					}
+				} else {
+					left = parseFloat(el.style.left);
+					top  = parseFloat(el.style.top);
+				}
+				
+			}
+		}
+		
+		var dummy = $( "<div>" ).addClass("maptoimage-dummy").css({"z-index" : 0, "width": "1px", "height": "1px", "position": "absolute"});
+		$( "body" ).append(dummy);
+		
+		//mapPane.append( popupPane );
+		dummy.append( popupPane );
+		html2canvas(popupPane[0], {
+			onrendered: L.bind( this._onPopupRendered, this ),
+			logging:false,
+			userCORS:true,
+			allowTaint:false,
+			width: size.x,
+			height: size.y
+		});
+	},
+	
+	_onMarkerRendered : function(canvas) 
+	{
+		var size = this._map.getSize();
+		
+		this._mapTexture.drawImage(canvas, 0, 0, size.x, size.y, 
+				0,0, 
+				size.x, size.y);
+		$( ".maptoimage-dummy" ).remove();
+		
+		if ( this.options.drawControls )
+			this._centerCrossToCanvas();
+		this._popupPaneToCanvas();
+		
+	},
+	
+	_onPopupRendered : function(canvas) 
+	{
+		var size = this._map.getSize();
+		
+		this._mapTexture.drawImage(canvas, 0, 0, size.x, size.y, 
+				0,0, 
+				size.x, size.y);
+		$( ".maptoimage-dummy" ).remove();
+		this._balloonToCanvas();
+		
+	},
+	
+	_balloonToCanvas : function()
+	{
+		var size = this._map.getSize();
+		
+		
+		var popupPane = $(".leaflet-objects-pane .leaflet-popup-pane" ).clone();
+		//popupPane.children( ":not(.leaflet-popup)" ).remove();
+		var baloons = popupPane.find( ".leaflet-popup" );
+		var baloonsOrig = $( ".leaflet-objects-pane .leaflet-popup-pane .leaflet-popup" );
+		
+		if ( baloons.length <= 0 ) 
+		{
+			if ( this.options.drawControls )
+				this._miniMapToCanvas();
+			else
+				this._scaleToCanvas();
+			return;
+		}
+		
+		var images = popupPane.find( "img" );
+		images.each(function() {
+			this.crossOrigin = "anonymous";
+			var src = this.src.replace(/cyberjapandata.gsi.go.jp/, "maps.gsi.go.jp");
+			if(src.indexOf('//maps.gsi.go.jp/') != -1)
+			{
+				src=src.replace('https://','//');
+				src=src.replace('http://','//');
+			}
+			if ( !CONFIG.ISPREVIEWSITE )
+			{
+				this.src = src;
+			}
+			else
+			{
+				if ( src.match(/maps.gsi.go.jp/) )
+				{
+					var proxy = CONFIG.PROXYURL;
+					this.src = proxy.replace( "{url}",  src.replace(/cyberjapandata.gsi.go.jp/, "maps.gsi.go.jp") );
+				}
+			}
+			
+		} );
+		
+		
+		
+		
+		this._baloons = [];
+		var containerPos = $(this._map.getContainer() ).offset();
+		for( var i=0; i<baloons.length; i++ )
+		{
+			var pos = $(baloonsOrig[i]).offset();
+			pos.top-=containerPos.top;
+			pos.left-=containerPos.left;
+			
+			this._baloons.push(
+				{
+					elem: baloons[i],
+					pos : pos,
+					arrowHeight : $(baloonsOrig[i]).find(".leaflet-popup-tip-container .leaflet-popup-tip").outerHeight()
+				} );
+		}
+		
+		this._drawNextBalloon();
+		
+		
+		
+	},
+	
+	_drawNextBalloon : function()
+	{
+		var baloon = $( this._baloons[0].elem );
+		
+		var closeBtn = baloon.find("a.leaflet-popup-close-button").css( {
+		    position: "absolute",
+			top: 0,
+			right: 0,
+			padding: "4px 4px 0 0",
+			"text-align": "center",
+			width: "18px",
+			height: "14px",
+			font: "16px/14px Tahoma, Verdana, sans-serif",
+			color: "#c3c3c3",
+			"text-decoration": "none",
+			"font-weight": "bold",
+			background: "transparent"
+		} ).remove();
+		
+		baloon.find(".leaflet-popup-tip-container").remove();
+		baloon.append( closeBtn );
+		var origin = this._map.getPixelOrigin();
+		var pixelBounds = this._map.getPixelBounds();
+		
+		var dummy = $( "<div>" ).addClass("maptoimage-dummy").css({"z-index" : 0, "width": "1px", "height": "1px", "position": "absolute"});
+		$( "body" ).append(dummy);
+		
+		dummy.append( baloon[0] );
+		
+		
+		var iframes = dummy.find("iframe");
+	
+	
+		for( var i=0; i<iframes.length; i++ )
+		{
+			var w = $(iframes[i] ).outerWidth() ;
+			var h = $(iframes[i] ).outerHeight() ;
+			
+			$(iframes[i] ).parent().append( $( "<div>" ).css({ width:w +"px", height:h+"px", background:"#333"}) );
+			$(iframes[i] ).hide();
+			
+			
+		}
+		
+		
+		
+		this._baloons[0].width = baloon.outerWidth();
+		this._baloons[0].height = baloon.outerHeight();
+		
+		
+		baloon.css( {
+			"transform" : "none",
+			"left" : 0,
+			"top" : 0
+		} );
+		
+		html2canvas(baloon[0], {
+			onrendered: L.bind( this._onBalloonRendered, this ),
+			logging:false,
+			userCORS:true,
+			allowTaint:true,
+			width: this._baloons[0].width,
+			height: this._baloons[0].height
+		});
+	},
+	
+	_onBalloonRendered : function(canvas) 
+	{
+		
+		this._mapTexture.shadowBlur = 20;
+		this._mapTexture.shadowColor = "rgba(0, 0, 0, 0.5)";
+		
+		
+		this._mapTexture.drawImage(canvas, 
+				0,0, 
+				this._baloons[0].width, this._baloons[0].height, 
+				this._baloons[0].pos.left, this._baloons[0].pos.top, 
+				this._baloons[0].width, this._baloons[0].height);
+		
+		
+		
+		this._mapTexture.shadowBlur = 0;
+		this._mapTexture.shadowColor = "rgba(0, 0, 0, 0)";
+		
+		var pos = {
+			x : 0,
+			y : 0
+		};
+		
+		pos.x = this._baloons[0].pos.left + ( this._baloons[0].width / 2 );
+		pos.y = this._baloons[0].pos.top + this._baloons[0].height;
+		
+		this._mapTexture.beginPath();
+		this._mapTexture.moveTo(
+			parseInt(pos.x - 14 ), 
+			parseInt(pos.y - 1 )
+		);
+		
+		this._mapTexture.lineTo(
+			parseInt(pos.x + 14 ), 
+			parseInt(pos.y - 1 )
+		);
+		
+		this._mapTexture.lineTo(
+			parseInt(pos.x ), 
+			parseInt(pos.y - 1 + 14 )
+		);
+		
+		this._mapTexture.closePath();
+		this._mapTexture.save();
+		this._mapTexture.fillStyle = "#fff";
+		this._mapTexture.globalAlpha = 1;
+		this._mapTexture.fill();   
+		this._mapTexture.restore();
+			
+		$( ".maptoimage-dummy" ).remove();
+		this._baloons.shift();
+		
+		if ( this._baloons.length <= 0 )
+		{
+			if ( this.options.drawControls )
+				this._miniMapToCanvas();
+			else
+				this._scaleToCanvas();
+			
+		}
+		else
+			this._drawNextBalloon();
+		
+	},
+	
+	_miniMapToCanvas : function()
+	{
+		var size = this._map.getSize();
+		
+		if ( GSI.GLOBALS.onoffObjects[CONFIG.PARAMETERNAMES.MINIMAP] .obj.getVisible() )
+		{
+			var miniMap = GSI.GLOBALS.onoffObjects[CONFIG.PARAMETERNAMES.MINIMAP] .obj.miniMap;
+			var tileLayer = new GSI.MapToImage.TileLayer(miniMap._miniMap, miniMap._layer);
+			tileLayer.on("loaded", L.bind(this._onMiniMapLoad, this, { tileLayer: tileLayer, miniMap : miniMap} ) );
+			tileLayer.refreshQueue();
+			tileLayer.load();
+			
+		}
+		else
+			this._scaleToCanvas();
+		
+	},
+	
+	_onMiniMapLoad : function( data )
+	{
+		var size = data.miniMap._miniMap .getSize();
+		var imageSize = {
+			width : size.x,
+			height : size.y
+		};
+		
+		var canvas = $( "<canvas>" ).css ( {
+		} )
+		.attr( {
+			"width" : size.x,
+			"height" : size.y
+		} );
+		texture = canvas[0].getContext("2d");
+		texture.fillStyle = "rgb(255, 255, 255)";
+		texture.fillRect(0, 0, size.x, size.y);
+		
+		data.tileLayer.draw(texture);
+		var miniMapContainer = $(".leaflet-control-container .leaflet-control-minimap" ).clone();
+		miniMapContainer.empty();
+		
+		var dummy = $( "<div>" ).addClass("maptoimage-dummy").css({"z-index" : 0, "width": "1px", "height": "1px", "position": "absolute"});
+		$( "body" ).append(dummy);
+		
+		dummy.append( miniMapContainer );
+		var canvas2 = canvas[0];
+		html2canvas(miniMapContainer[0], {
+			onrendered: L.bind( function(canvas){
+				var offset = $(this._map.getContainer() ).offset();
+				var pos = $(".leaflet-control-container .leaflet-control-minimap" ).offset();
+				pos.left -= offset.left;
+				pos.top -= offset.top;
+				
+				
+				if ( $( "#footer" ).is(":visible") )
+					pos.top += $( "#footer" ).outerHeight();
+				//this._mapTexture.drawImage(canvas, pos.left, pos.top );
+				//this._mapTexture.drawImage(canvas2, pos.left+2, pos.top+2 );
+				
+				var min = null;
+				var max = null;
+				
+				for( var i=0; i<data.miniMap._aimingRect._parts[0].length; i++ )
+				{
+					if ( !min ) min = $.extend( {}, data.miniMap._aimingRect._parts[0][i] );
+					else
+					{
+						if( min.x > data.miniMap._aimingRect._parts[0][i].x ) min.x = data.miniMap._aimingRect._parts[0][i].x;
+						if( min.y > data.miniMap._aimingRect._parts[0][i].y ) min.y = data.miniMap._aimingRect._parts[0][i].y;
+					}
+					if ( !max ) max = $.extend( {}, data.miniMap._aimingRect._parts[0][i] );
+					else
+					{
+						if( max.x < data.miniMap._aimingRect._parts[0][i].x ) max.x = data.miniMap._aimingRect._parts[0][i].x;
+						if( max.y < data.miniMap._aimingRect._parts[0][i].y ) max.y = data.miniMap._aimingRect._parts[0][i].y;
+					}
+				}
+				
+				var w = max.x - min.x;
+				var h = max.y - min.y;
+				var texture = canvas2.getContext("2d");
+				texture.moveTo( parseInt(size.x / 2 - w / 2), parseInt(size.y / 2 - h / 2) );
+				texture.lineTo( parseInt(size.x / 2 + w / 2), parseInt(size.y / 2 - h / 2) );
+				texture.lineTo( parseInt(size.x / 2 + w / 2), parseInt(size.y / 2 + h / 2) );
+				texture.lineTo( parseInt(size.x / 2 - w / 2), parseInt(size.y / 2 + h / 2) );
+				texture.closePath();
+				texture.save();
+				texture.lineWidth = 2;
+				texture.strokeStyle = data.miniMap._aimingRect.options.color;
+				texture.fillStyle = data.miniMap._aimingRect.options.color;
+				
+				texture.globalAlpha = data.miniMap._aimingRect.options.fillOpacity;
+				texture.fill();   
+				texture.globalAlpha = data.miniMap._aimingRect.options.opacity;
+				texture.stroke();
+				texture.restore();
+				
+				//var drawLayer = new GSI.MapToImage.VectorTileLayer( data.miniMap._miniMap , data.miniMap._aimingRect );
+				//drawLayer.draw( canvas.getContext("2d") );
+				
+				this._mapTexture.shadowBlur = 10;
+				this._mapTexture.shadowColor = "rgba(0, 0, 0, 0.5)";
+
+				this._mapTexture.drawImage(canvas, pos.left, pos.top );
+				this._mapTexture.drawImage(canvas2, pos.left+2, pos.top+2 );
+				
+				
+				$( ".maptoimage-dummy" ).remove();
+				this._scaleToCanvas();
+			}, this ),
+			logging:false,
+			userCORS:true,
+			allowTaint:false,
+			width: size.x+4,
+			height: size.y+4
+		});
+		
+	},
+	
+	_scaleToCanvas : function(canvas) 
+	{
+		var size = this._map.getSize();
+		
+		var scaleBar = $( ".leaflet-control-scale" );
+		
+		var size = {
+			w : scaleBar.outerWidth(),
+			h : scaleBar.outerHeight()
+		};
+		
+		var offset = $(this._map.getContainer() ).offset();
+		var pos = scaleBar.offset();
+		if ( $( "#footer" ).is(":visible") )
+			pos.top += $( "#footer" ).outerHeight();
+		pos.left -= offset.left;
+		pos.top -= offset.top;
+		pos.left +=1;
+		pos.top +=1;
+		size.w -= 2;
+		size.h -= 2;
+		
+		
+		this._mapTexture.fillStyle = "#fff";
+		this._mapTexture.globalAlpha = 0.5;
+		this._mapTexture.fillRect( pos.left, pos.top, size.w, size.h );
+		if ( this._mapTexture.setLineDash !== undefined )
+			this._mapTexture.setLineDash([]);
+		else if ( this._ctx.mozDash !== undefined )
+			this._mapTexture.mozDash = [];
+		
+		this._mapTexture.beginPath();
+		this._mapTexture.moveTo( pos.left, pos.top );
+		this._mapTexture.lineTo( pos.left, pos.top  + size.h );
+		this._mapTexture.lineTo( pos.left + size.w, pos.top  + size.h );
+		this._mapTexture.lineTo( pos.left + size.w, pos.top );
+		this._mapTexture.save();
+		this._mapTexture.globalAlpha = 1;
+		this._mapTexture.lineWidth = 2;
+		this._mapTexture.strokeStyle = "#777";
+		this._mapTexture.stroke();
+		
+		
+		this._mapTexture.font = "normal 11px 'Lucida Grande','Hiragino Kaku Gothic ProN','Meiryo', 'sans-serif'";
+		
+		this._mapTexture.fillStyle = "#333";
+		this._mapTexture.textAlign = "left";
+		this._mapTexture.textBaseline = "middle";
+		this._mapTexture.fillText( scaleBar.text(), 
+			pos.left + 6, pos.top + size.h / 2 );
+		
+		this._mapTexture.restore();
+		
+		this._finish();
+		/*
+		scaleBar = scaleBar.clone();
+		var dummy = $( "<div>" ).addClass("maptoimage-dummy").css({"z-index" : 0, "width": "1px", "height": "1px", "position": "absolute"});
+		$( "body" ).append(dummy);
+		
+		console.log( scaleBar );
+		//mapPane.append( popupPane );
+		dummy.append( scaleBar );
+		html2canvas(scaleBar[0], {
+			onrendered: L.bind( function(canvas) {
+				
+				$( ".maptoimage-dummy" ).remove();
+				var scaleBar = $( ".leaflet-control-scale" );
+				var offset = $(this._map.getContainer() ).offset();
+				var pos = scaleBar.offset();
+				if ( $( "#footer" ).is(":visible") )
+					pos.top += $( "#footer" ).outerHeight();
+				//if ( pos.left - 280 > 0 ) pos.left-=280;
+				this._mapTexture.drawImage(canvas, pos.left - offset.left, pos.top - offset.top );
+				this._finish();
+			}, this ),
+			logging:false,
+			userCORS:true,
+			allowTaint:false,
+			width: size.x,
+			height: size.y
+		});
+		*/
+		
+	},
+	
+	_centerCrossToCanvas : function()
+	{
+		var size = this._map.getSize();
+		
+		if ( GSI.GLOBALS.onoffObjects[CONFIG.PARAMETERNAMES.CENTERCROSS] .obj.getVisible() )
+		{
+			this._mapTexture.beginPath();
+			
+			this._mapTexture.moveTo( parseInt(size.x / 2 ) - 16, parseInt( size.y / 2 ) );
+			this._mapTexture.lineTo( parseInt(size.x / 2 ) + 16, parseInt( size.y / 2 ) );
+			
+			
+			this._mapTexture.moveTo( parseInt(size.x / 2 ), parseInt( size.y / 2 ) - 16 );
+			this._mapTexture.lineTo( parseInt(size.x / 2 ), parseInt( size.y / 2 ) + 16 );
+			
+			this._mapTexture.save();
+			this._mapTexture.globalAlpha = 1;
+			
+			this._mapTexture.lineWidth = 3;
+			this._mapTexture.strokeStyle = "#222";
+		
+		
+			this._mapTexture.stroke();
+			
+			this._mapTexture.restore();
+		}
+	},
+	
+	_finish : function() 
+	{
+		var size = this._map.getSize();
+		
+		var text =  "GSI Maps";
+		this._mapTexture.font= "normal 25px 'Meiryo','Hiragino Kaku Gothic ProN'";
+		
+		this._mapTexture.strokeStyle = '#000';
+		this._mapTexture.lineWidth = 4; 
+		this._mapTexture.lineJoin = 'round';
+		this._mapTexture.fillStyle = '#fff';
+		this._mapTexture.textAlign = 'right';
+		this._mapTexture.textBaseline = 'bottom';
+		
+		this._mapTexture.globalAlpha = 0.8;
+		this._mapTexture.strokeText(text,size.x-6,size.y-6);
+		this._mapTexture.globalAlpha = 1;
+		this._mapTexture.fillText(text,size.x-6,size.y-6);
+		
+		this.fire("finish", { canvas : this._mapCanvas } );
+	}
+	
+	
+} );
+
+
+
+
+GSI.MapToImage.TileLayer = L.Class.extend( {
+	includes: L.Mixin.Events,
+	
+	initialize : function ( map, layer, options )
+	{
+		L.setOptions(this, options);
+		this._map = map;
+		this._layer = layer;
+		
+	},
+	
+	_getTileSize : function()
+	{
+		var zoom = this._map.getZoom();
+		var zoomN = this._layer.options.maxNativeZoom;
+		var tileSize = this._layer.options.tileSize;
+
+		if (zoomN && zoom > zoomN) {
+			tileSize = Math.round(this._map.getZoomScale(zoom) / this._map.getZoomScale(zoomN) * tileSize);
+		}
+		
+		return tileSize;
+	},
+	
+	refreshQueue : function()
+	{
+		var bounds = this._map.getPixelBounds();
+		var zoom = this._map.getZoom();
+		if (zoom > this._layer.options.maxZoom || zoom < this._layer.options.minZoom) {
+			return;
+		}
+		
+		
+		var tileSize = this._getTileSize();
+		
+		
+		
+		var tileBounds = L.bounds(
+				bounds.min.divideBy(tileSize)._floor(),
+				bounds.max.divideBy(tileSize)._floor());
+		this._queue = [],
+			center = tileBounds.getCenter();
+		
+		this._tiles = {};
+		var j, i, point;
+
+		for (j = tileBounds.min.y; j <= tileBounds.max.y; j++) {
+			for (i = tileBounds.min.x; i <= tileBounds.max.x; i++) {
+				point = new L.Point(i, j);
+				this._queue.push(point);
+				this._tiles[ point.x + ":" + point.y ] = point;
+			}
+		}
+		
+	},
+	
+	_getZoomForUrl: function () {
+
+		var options = this._layer.options,
+		    zoom = this._map.getZoom();
+
+		if (options.zoomReverse) {
+			zoom = options.maxZoom - zoom;
+		}
+
+		zoom += options.zoomOffset;
+
+		return options.maxNativeZoom ? Math.min(zoom, options.maxNativeZoom) : zoom;
+	},
+	
+	
+	_getWrapTileNum: function () {
+		var crs = this._map.options.crs,
+		    size = crs.getSize(this._map.getZoom());
+		return size.divideBy(this._getTileSize())._floor();
+	},
+	
+	_adjustTilePoint: function (tilePoint) {
+
+		var limit = this._getWrapTileNum();
+		
+		// wrap tile coordinates
+		if (!this.options.continuousWorld && !this.options.noWrap) {
+			tilePoint.x = ((tilePoint.x % limit.x) + limit.x) % limit.x;
+		}
+
+		tilePoint.z = this._getZoomForUrl();
+	},
+	
+	load : function()
+	{
+		if ( !this._queue ) return;
+		var zoom = this._getZoomForUrl();
+		var tileSize = this._getTileSize();
+		var origin = this._map.getPixelOrigin();
+		var pixelBounds = this._map.getPixelBounds();
+		var loadCounter = 0;
+		
+		for( var i = 0; i<this._queue.length; i++ )
+		{
+			var tilePoint =  this._queue[i];
+			
+			var tilePoint2 = $.extend( {}, tilePoint );
+			
+			this._adjustTilePoint(tilePoint2);
+			
+			if (this._layer.options.bounds) {
+				var 
+					nwPoint = tilePoint.multiplyBy(tileSize),
+					sePoint = nwPoint.add([tileSize, tileSize]),
+					nw = this._map.unproject(nwPoint),
+					se = this._map.unproject(sePoint);
+
+				if (!this._layer.options.continuousWorld && !this._layer.options.noWrap) {
+					nw = nw.wrap();
+					se = se.wrap();
+				}
+
+				if (!this._layer.options.bounds.intersects([nw, se])) 
+				{
+					tilePoint._noimage = true;
+					delete this._tiles[ tilePoint.x + ":" + tilePoint.y ];
+					continue;
+				}
+			}
+			
+			var tilePos = this._getTilePos(tilePoint2, tileSize);
+			tilePos = tilePoint.multiplyBy(tileSize).subtract(origin);
+			tilePos.x += (origin.x - pixelBounds.min.x );
+			tilePos.y += (origin.y - pixelBounds.min.y );
+			
+			
+			
+			tilePoint.img = $( "<img>" ).css({
+				width : tileSize + "px",
+				height : tileSize + "px"
+			}).attr( { "crossOrigin" : "anonymous" } );
+			//tilePoint.z = zoom;
+			tilePoint.size = tileSize;
+			tilePoint.pos = tilePos;
+			tilePoint.img.on("load", L.bind( this._onTileLoad, this, tilePoint ) );
+			tilePoint.img.on( "error", L.bind( this._onTileLoadError, this, tilePoint ) );
+			
+			tilePoint.img.attr( { "src" : this.getTileUrl(tilePoint2) } );
+			
+			//this._loadTile(tile, tilePoint);
+			loadCounter++;
+		}
+		
+		if ( loadCounter <= 0 )
+		{
+			this._tileLoaded();
+		}
+	},
+	
+	_tileLoaded : function()
+	{
+		var length = 0;
+		for(var key in this._tiles) length++;
+		
+		if ( length <= 0 )
+		{
+			this.fire( "loaded" );
+		}
+	},
+	
+	_onTileLoad :function(tilePoint)
+	{
+		delete this._tiles[ tilePoint.x + ":" + tilePoint.y ];
+		this._tileLoaded();
+	},
+	_onTileLoadError :function(tilePoint)
+	{
+		tilePoint._noimage = true;
+		delete this._tiles[ tilePoint.x + ":" + tilePoint.y ];
+		this._tileLoaded();
+	},
+	
+	_getSubdomain: function (tilePoint) {
+		var index = Math.abs(tilePoint.x + tilePoint.y) % this._layer.options.subdomains.length;
+		return this._layer.options.subdomains[index];
+	},
+	getTileUrl: function (tilePoint) {
+		return L.Util.template(this._layer._url.replace(/cyberjapandata.gsi.go.jp/, "maps.gsi.go.jp"), L.extend({
+			s: this._getSubdomain(tilePoint),
+			z: tilePoint.z,
+			x: tilePoint.x,
+			y: tilePoint.y
+		}, this.options));
+	},
+	
+	_getTilePos : function(tilePoint, tileSize)
+	{
+		var origin = this._map.getPixelOrigin();
+
+		return tilePoint.multiplyBy(tileSize).subtract(origin);
+	},
+	
+	
+	draw : function( texture )
+	{
+		var grayScaleCanvas = null;
+		texture.globalAlpha = ( this.options.opacity ? this.options.opacity : 1.0 );
+		for ( var i=0; i<this._queue.length; i++ )
+		{
+			var tilePoint = this._queue[i];
+			if ( tilePoint._noimage ) continue;
+			
+			if ( this.options.grayscale )
+			{
+				
+				if ( !grayScaleCanvas )
+					grayScaleCanvas = document.createElement("canvas");
+				if(grayScaleCanvas.getContext)
+				{
+					grayScaleCanvas.width  = Math.ceil(tilePoint.size);
+					grayScaleCanvas.height = Math.ceil(tilePoint.size);
+
+					var ctx = grayScaleCanvas.getContext("2d");
+					ctx.drawImage(tilePoint.img[0], 0, 0, 256 ,256, 0, 0, tilePoint.size, tilePoint.size);
+					var imageData = ctx.getImageData(0, 0, tilePoint.size, tilePoint.size);
+					pixelData = imageData.data;
+					for(var y = 0; y < grayScaleCanvas.height; y++){
+						for(var x = 0; x < grayScaleCanvas.width; x++){
+							// (x,y)brightness of the pixel
+							var j = (y * 4 * grayScaleCanvas.width) + (x * 4);
+
+							var R = pixelData[j    ];
+							var G = pixelData[j + 1];
+							var B = pixelData[j + 2];
+
+							//Convert to grayscale
+							var grayScale = (R * 0.3) + (G * 0.59) + (B * .11);
+							pixelData[j    ] = grayScale;
+							pixelData[j + 1] = grayScale;
+							pixelData[j + 2] = grayScale;
+							//pixelData[j + 3] = 32;
+						}
+					}
+					ctx.putImageData(imageData, 0, 0, 0, 0, imageData.width, imageData.height);
+					
+					
+				texture.drawImage(grayScaleCanvas, 0, 0, 256 ,256, 
+					tilePoint.pos.x, tilePoint.pos.y, 
+					tilePoint.size, tilePoint.size);
+					
+				}
+			}
+			else
+			{
+				if ( this.options.blend )
+				{
+					texture.globalCompositeOperation = "multiply";
+					texture.drawImage(tilePoint.img[0], 0, 0, 256 ,256, 
+						tilePoint.pos.x, tilePoint.pos.y, 
+						tilePoint.size, tilePoint.size);
+					texture.globalCompositeOperation = "source-over";
+				}
+				else
+				{
+					texture.drawImage(tilePoint.img[0], 0, 0, 256 ,256, 
+						tilePoint.pos.x, tilePoint.pos.y, 
+						tilePoint.size, tilePoint.size);
+				
+				}
+			}
+		}
+		texture.globalAlpha = 1.0;
+	}
+	
+} );
+
+
+
+
+GSI.MapToImage.VectorTileLayer = L.Class.extend( {
+	includes: L.Mixin.Events,
+	
+	initialize : function ( map, layer, options )
+	{
+		L.setOptions(this, options);
+		this._map = map;
+		this._layer = layer;
+		
+	},
+	
+	load : function()
+	{
+		this.fire( "loaded" );
+	},
+	
+	draw : function( texture )
+	{
+		if ( this._layer instanceof GSI.VectorTileLayer )
+		{
+			var canvasList = $(this._layer._container ).find( "canvas" );
+			for( var key in this._layer._tiles )
+			{
+				var geoJSON = this._layer._tiles[key].geoJSON;
+				if ( !geoJSON ) continue;
+				for( var i=0; i<geoJSON.length; i++ )
+					this._drawLayer( texture,geoJSON[i], this._layer._tiles[key]._tilePoint, this._layer.options );
+			}
+		}
+		
+		this._drawLayer( texture,this._layer.geojsonLayer ? this._layer.geojsonLayer  : ( this._layer.layer ? this._layer.layer: this._layer) );
+	},
+	_drawLayer : function(texture,layer, tilePoint, layerOptions)
+	{
+		if ( !layer ) return;
+		if ( layer.getLayers ) 
+		{
+			var layers = layer.getLayers();
+			
+				
+			for( var i=0; i<layers.length; i++ )
+			{
+				this._drawLayer( texture,layers[i], tilePoint, layerOptions );
+			}
+			return;
+		}
+		this._drawPath( texture, layer, tilePoint, layerOptions );
+	},
+	
+	_updateStyle: function (texture, layer) {
+		if ( !layer._parts && ( !layer._radius || !layer._point ) ) return;
+		var options = layer.options;
+		if (options.stroke) {
+			texture.lineWidth = options.weight;
+			texture.strokeStyle = options.color;
+			
+			if ( options.lineCap &&
+				( options.lineCap == "butt" ||
+				options.lineCap == "round" ||
+				options.lineCap == "square" )
+			)
+			{
+				texture.lineCap = options.lineCap ;
+			}
+			else
+				texture.lineCap = "butt";
+		}
+		if (options.fill) {
+			texture.fillStyle = options.fillColor || options.color;
+		}
+	},
+	
+	_drawPath: function (texture, layer, tilePoint, layerOptions) {
+		
+		if ( layer.options.visible == false ) return;
+		
+		var origin = this._map.getPixelOrigin();
+		var pixelBounds = this._map.getPixelBounds();
+		var options = layer.options;
+		var dashArray = null;
+		
+		
+		
+		var offset = {
+			x : 0,
+			y : 0
+		};
+		var scale = 1;
+		if ( tilePoint )
+		{
+			var zoom = this._map.getZoom();
+			var dz = zoom - layerOptions.maxNativeZoom;
+			var tileSize = layerOptions.tileSize;
+			var tz = zoom;
+			if(dz>0){tileSize = tileSize*Math.pow(2, dz);tz = tz -dz;}
+			//if(dz>=layerOptions.maxDz)
+			//	scale = tileSize / (layerOptions.tileSize*Math.pow(2, layerOptions.maxDz) );
+			
+			offset.x = tilePoint.x*tileSize- pixelBounds.min.x -layerOptions.canvasDx*scale;
+			offset.y = tilePoint.y*tileSize- pixelBounds.min.y  - layerOptions.canvasDy*scale;
+		}
+		else
+		{
+			offset.x = ( origin.x - pixelBounds.min.x );
+			offset.y = ( origin.y - pixelBounds.min.y );
+		}
+		
+		
+		
+		if ( options.dashArray )
+		{
+			if ( options.dashArray instanceof Array )
+				dashArray = $.extend( [], options.dashArray);
+			else
+			{
+				var dashParts = options.dashArray.split( ',' );
+				dashArray = [];
+				for( var i=0; i<dashParts.length; i++ )
+				{
+					dashArray.push(parseInt( dashParts[i] ));
+				}
+			}
+			if ( dashArray.length < 2 ) dashArray = null;
+		}
+		
+		if ( !layer._parts ) 
+		{
+			if ( layer._radius && layer._point )
+			{
+				var p = layer._point;
+				texture.beginPath();
+				texture.arc(
+					( scale * p.x ) + offset.x, 
+					( scale * p.y ) + offset.y, 
+					layer._radius, 0, Math.PI * 2, false);
+			}
+		}
+		else
+		{
+			
+			var i, j, len, len2, point, drawMethod;
+			var vp = this._map._pathViewport;
+			
+			var isPolygon = (layer instanceof L.Polygon || layer instanceof L.Circle);
+			
+			
+			var parts = layer._parts;
+			for (i = 0, len = parts.length; i < len; i++) {
+				
+				texture.beginPath();
+				var fromPoint = null;
+				var firstPoint = null;
+				for (j = 0, len2 = parts[i].length; j < len2; j++) {
+					
+					point = parts[i][j];
+				
+					var toPoint = {
+						x : ( scale * point.x ) + offset.x,
+						y : ( scale * point.y ) + offset.y
+					};
+					
+					if ( j == 0 )
+					{
+						firstPoint = toPoint;
+						texture.moveTo(toPoint.x, toPoint.y);
+					}
+					else
+					{
+						if (dashArray && !isPolygon)
+							GSI.Utils.dotLineTo( texture, fromPoint.x, fromPoint.y,
+								toPoint.x, toPoint.y, dashArray);
+						else
+						{
+							if ( texture.setLineDash !== undefined )
+								texture.setLineDash([]);
+							else if ( texture.mozDash !== undefined )
+								texture.mozDash = [];
+							texture.lineTo(toPoint.x, toPoint.y);
+						}
+					}
+					
+					fromPoint = toPoint;
+				}
+				if (isPolygon) {
+					texture.closePath();
+				}
+			}
+			
+		}
+		
+		
+		texture.save();
+		
+		
+		this._updateStyle(texture, layer);
+		var opacity = ( this.options.opacity ?  this.options.opacity: 1 );
+		
+		if (layer.options.fill) 
+		{
+			texture.globalAlpha = ( layer.options.fillOpacity || layer.options.fillOpacity == 0 ?layer.options.fillOpacity : 0 ) * opacity;
+			texture.fill();
+		}
+		if (layer.options.stroke) {
+			texture.globalAlpha = ( layer.options.opacity || layer.options.opacity == 0 ?  layer.options.opacity: 1 );
+			texture.stroke();
+		}
+		texture.restore();
+		
+	}
+
+
+	
+} );
+
+
+
+
+GSI.MapToImageWindow = L.Class.extend( {
+	includes: L.Mixin.Events,
+	
+	initialize : function ( map, canvas )
+	{
+		L.setOptions(this, options);
+		this._map = map;
+	},
+	
+	show : function(f)
+	{
+		if ( !this._blind )
+		{
+			this._blind = $( "<div>" ).addClass( "window_blind" );
+			this._msg = $( "<div>" ).css( {
+				"position" : "absolute",
+				"left" : "50%",
+				"top" : "50%",
+				"margin-left" : "-90px",
+				"padding-left" : "34px",
+				"display" : "none",
+				"color" : "#fff",
+				"z-index" : 999999,
+				"line-height": "32px",
+				"background-image": "url(image/system/loading002.gif)",
+				"background-position":"0px 50%",
+				"background-repeat":"no-repeat"
+			}).html( "Image conversion in progress." );
+			$("body").append( this._blind ).append( this._msg );
+		}
+		
+		
+		
+		
+		this._blind.fadeIn( 300 );
+		this._msg .fadeIn( 300,f );
+	
+	},
+	
+	_makeWorldFileText : function()
+	{
+		
+		var size = this._map.getSize();
+		var bounds = this._map.getBounds();
+				
+		var northWest = L.Projection.SphericalMercator.project(
+				bounds.getNorthWest()
+			);
+		var southEast = L.Projection.SphericalMercator.project(
+				bounds.getSouthEast()
+			);
+			
+			
+		var lt = {
+			lng : northWest.x * 6378137.0,
+			lat :northWest.y * 6378137.0
+		};
+		var rb = {
+			lng : southEast.x * 6378137.0,
+			lat : southEast.y * 6378137.0
+		};
+		var txt = "";
+				txt += ( ( rb.lng - lt.lng ) / size.x ) + "\n";
+				txt += "0\n";
+				txt += "0\n";
+				txt += -( ( rb.lng - lt.lng ) / size.x ) + "\n";
+				txt += lt.lng + "\n";
+				txt += lt.lat;
+		return txt;
+	},
+	
+	setCanvas : function( canvas )
+	{
+		this._canvas = canvas;		
+		this._worldFileText = this._makeWorldFileText();
+		
+		this._msg .hide();
+		this._fileName = 'img' + GSI.Utils.getTimeStampString();
+		
+		if ( !this._frame )
+		{
+			this._frame = $( "<div>" ).addClass("gsi_maptoimage_window");
+			
+			this._text = $( "<div>"  ).addClass("gsi_maptoimage_window_text").html( GSI.TEXT.MAPTOIMAGE.WINDOW_MSG );
+			this._frame.append( this._text );
+			
+			this._closeBtn = $( "<a>" ).addClass("close_btn").attr({"href":"javascript:void(0);"}).html("×").click( L.bind( function() { this.hide();}, this ) );
+			this._frame.append( this._closeBtn );
+			var buttonFrame = $( "<div>" ).addClass("gsi_maptoimage_window_button_frame");
+			this._dlImageButton = $( "<a>" ).attr({"href":"javascript:void(0);"}).html(GSI.TEXT.MAPTOIMAGE.WINDOW_SAVEIMGBTN).click(L.bind( function(){
+				if(window.navigator.msSaveBlob)
+				{
+					window.navigator.msSaveOrOpenBlob( this._makeImage(this._canvas.toDataURL()), this._fileName + ".png" );
+				}
+				else
+				{
+					var url = window.URL || window.webkitURL;
+					this._dlImageButton.attr( {
+						"download" : this._fileName + ".png",
+						"href" : url.createObjectURL(this._makeImage(this._canvas.toDataURL()))
+					} );
+					
+				}
+			
+			}, this ) );
+			this._dlWorldButton = $( "<a>" ).attr({"href":"javascript:void(0);"}).html(GSI.TEXT.MAPTOIMAGE.WINDOW_SAVEPGWBTN).click(L.bind( function(){
+				/*
+				var size = this._map.getSize();
+				var bounds = this._map.getBounds();
+						
+				var northWest = L.Projection.SphericalMercator.project(
+						bounds.getNorthWest()
+					);
+				var southEast = L.Projection.SphericalMercator.project(
+						bounds.getSouthEast()
+					);
+					
+					
+				var lt = {
+					lng : northWest.x * 6378137.0,
+					lat :northWest.y * 6378137.0
+				};
+				var rb = {
+					lng : southEast.x * 6378137.0,
+					lat : southEast.y * 6378137.0
+				};
+
+				//var lt = bounds.getNorthWest();
+				//var rb = bounds.getSouthEast();
+				
+				var txt = "";
+				txt += ( ( rb.lng - lt.lng ) / size.x ) + "\n";
+				txt += "0\n";
+				txt += "0\n";
+				txt += -( ( rb.lng - lt.lng ) / size.x ) + "\n";
+				txt += lt.lng + "\n";
+				txt += lt.lat;
+				*/
+				var blob = new Blob([this._worldFileText], { "type" : "text/plain"})
+					
+				if(window.navigator.msSaveBlob)
+				{
+					window.navigator.msSaveOrOpenBlob( blob, this._fileName + ".pgw" );
+				}
+				else
+				{
+					
+					var url = window.URL || window.webkitURL;
+					this._dlWorldButton.attr( {
+						"download" : this._fileName + ".pgw",
+						"href" : url.createObjectURL(blob)
+					} );
+					
+				}
+			}, this ) );
+			buttonFrame.append( this._dlImageButton ).append( this._dlWorldButton );
+			
+			var messageFrame = $( "<div>" ).addClass("gsi_maptoimage_window_text2").html( GSI.TEXT.MAPTOIMAGE.WINDOW_MSG2 );
+			
+			
+			this._frame.append( buttonFrame );
+			this._frame.append( messageFrame );
+			
+			$("body").append( this._frame );
+		}
+		
+		this._blind.fadeIn( 200 );
+		this._frame.fadeIn( 200 );
+		
+	},
+	 
+	_makeImage : function(v){
+		var o      = null;
+		var base64 = v.split(',');
+		if(base64.length > 1){
+			var data   = window.atob(base64[1]);
+			var data_n = data.length;
+			if(data_n > 0){
+			var data_buff = new ArrayBuffer(data_n);
+			var data_blob = new Uint8Array(data_buff);
+
+			var i = 0;
+
+			for(i = 0; i < data_n; i++){
+			    data_blob[i] = data.charCodeAt(i);
+			}
+				o = new Blob([data_blob], {type: 'image/png'});
+			}
+		}
+		return o;
+	},
+	
+	hide : function()
+	{
+		if ( this._frame ) this._frame.fadeOut( 200 );
+		if ( this._blind ) this._blind.fadeOut( 200 );
+	},
+	
+} );
+
+
+
+
+/*************************************************
+ L.TileLayer bounds Bug fixes
+*************************************************/
+L.TileLayer.prototype._tileShouldBeLoaded = function (tilePoint) {
+	if ((tilePoint.x + ':' + tilePoint.y) in this._tiles) {
+		return false; // already loaded
+	}
+
+	var options = this.options;
+
+	if (!options.continuousWorld) {
+		var limit = this._getWrapTileNum();
+
+		// don't load if exceeds world bounds
+		if ((options.noWrap && (tilePoint.x < 0 || tilePoint.x >= limit.x)) ||
+			tilePoint.y < 0 || tilePoint.y >= limit.y) { return false; }
+	}
+
+	if (options.bounds) {
+		var tileSize = this._getTileSize(), //options.tileSize,
+		    nwPoint = tilePoint.multiplyBy(tileSize),
+		    sePoint = nwPoint.add([tileSize, tileSize]),
+		    nw = this._map.unproject(nwPoint),
+		    se = this._map.unproject(sePoint);
+
+		// TODO temporary hack, will be removed after refactoring projections
+		// https://github.com/Leaflet/Leaflet/issues/1618
+		if (!options.continuousWorld && !options.noWrap) {
+			nw = nw.wrap();
+			se = se.wrap();
+		}
+
+		if (!options.bounds.intersects([nw, se])) { return false; }
+	}
+
+	return true;
+};
+
+
+
+
+
+
+/*************************************************
+ Distance calculation
+*************************************************/
+GSI.Utils.DistanceCalculator = {};
+GSI.Utils.DistanceCalculator.calc = function (from, to)
+{
+	try
+	{
+		var PI = 3.14159265358979;
+		var params = {};
+		
+		// Convert to radians
+		params.phi1  = from.lat * PI / 180;
+		params.lamb1 = from.lng * PI / 180; if (params.lamb1 < 0) params.lamb1 += PI * 2;
+		params.phi2  = to.lat * PI / 180;
+		params.lamb2 = to.lng * PI / 180; if (params.lamb2 < 0) params.lamb2 += PI * 2;
+		
+		// Calculation
+		params.lamb = params.lamb2 - params.lamb1;
+		if (params.lamb > PI) params.lamb -= PI * 2;
+		else if (params.lamb < -PI) params.lamb += PI * 2;
+
+		if (params.lamb >= 0) params.seihan = 0;
+		else if (params.lamb < 0)
+		{
+			params.seihan = 1;
+			params.lamb = Math.abs(params.lamb);
+		}
+		
+		// Ellipsoid GRS80
+		var daen = 2;
+		var a = 6378137;
+		var rf = 298.257222101;
+		params.f = 1. / rf;
+		
+		params.a = a;
+		params.lambd = PI - params.lamb;
+		if (params.seihan == 0)
+		{
+			params.delta = params.phi2 - params.phi1;
+			params.sigma = params.phi1 + params.phi2;
+			params.u1 = Math.atan((1 - params.f) * Math.tan(params.phi1));
+			params.u2 = Math.atan((1 - params.f) * Math.tan(params.phi2));
+		}
+		else if (params.seihan == 1)
+		{
+			params.delta = params.phi1 - params.phi2;
+			params.sigma = params.phi1 + params.phi2;
+			params.u1 = Math.atan((1 - params.f) * Math.tan(params.phi2));
+			params.u2 = Math.atan((1 - params.f) * Math.tan(params.phi1));
+		}
+
+		params.sigmad = params.u1 + params.u2;
+		params.deltad = params.u2 - params.u1;
+		params.xi = Math.cos(params.sigmad / 2.);
+		params.xid = Math.sin(params.sigmad / 2.);
+		params.eta = Math.sin(params.deltad / 2.);
+		params.etad = Math.cos(params.deltad / 2.);
+		params.x = Math.sin(params.u1) * Math.sin(params.u2);
+		params.y = Math.cos(params.u1) * Math.cos(params.u2);
+		params.c__ = params.y * Math.cos(params.lamb) + params.x;
+		params.d__1 = 1 - params.f;
+		params.ep = params.f * (2 - params.f) / (params.d__1 * params.d__1);
+		var zoneInfo = {
+			zone : 0,
+			theta : null
+		};
+		
+		var dms2r = GSI.Utils.DistanceCalculator._dms2r;
+		
+		// Judgment of Zone
+		if (params.c__ >= 0)
+		{
+			zoneInfo.zone = 1;
+			zoneInfo.theta = params.lamb * (params.f * params.y + 1);
+		}
+		else if (params.c__ < 0 && params.c__ >= -Math.cos(dms2r(PI,30000) * Math.cos(params.u1))) 
+		{
+			zoneInfo.zone = 2;
+			zoneInfo.theta = params.lambd;
+		}
+		else if (params.c__ < -Math.cos(dms2r(PI,30000) * Math.cos(params.u1))) 
+		{
+			zoneInfo.zone = 3;
+			GSI.Utils.DistanceCalculator._zone3(PI, params, zoneInfo);
+		}
+		
+		params.theta = zoneInfo.theta;
+		
+		
+		var distance = 0;
+		if (zoneInfo.zone >= 1 && zoneInfo.zone <= 321) 
+		{
+			distance = GSI.Utils.DistanceCalculator._zone1(PI, params, zoneInfo);
+		}
+		else if (zoneInfo.zone == 322)
+		{
+			distance = GSI.Utils.DistanceCalculator._zone322(PI, params, zoneInfo);
+		}
+		else if (zoneInfo.zone == 323)
+		{
+			distance = GSI.Utils.DistanceCalculator._zone323(PI, params, zoneInfo);
+		}
+	}
+	catch(ex)
+	{
+		console.log(ex);
+	}
+	
+	return distance;
+};
+
+GSI.Utils.DistanceCalculator._dms2r = function(PI,dms)
+{
+	var dd, mm, ss, deg, hugou;
+
+	if (dms > 0) {
+		hugou = 1.;
+	} else if (dms < 0) {
+		hugou = -1;
+	}
+	dd = parseFloat(parseInt(Math.abs(dms) / 10000));
+	mm = parseFloat(parseInt((Math.abs(dms) - dd * 10000) / 100));
+	ss = Math.abs(dms) - dd * 10000 - mm * 100;
+	deg = hugou * (dd + mm / 60 + ss / 3600);
+	return deg * PI / 180.;
+};
+
+
+GSI.Utils.DistanceCalculator._zone1 = function(PI,params, zoneInfo)
+{
+	var d__1, d__2, d__3, d__4, d__5;
+	
+	var zero_ = function(a){
+		if (Math.abs(a) < 1e-14) return 1e-14;
+		else return a;
+	};
+	/* Local variables */
+	var g, h__;
+	var i__;
+	var n0, aa, bb, dd, ee, ff, gg, jj, kk, zeta;
+	//extern doublereal zero_(doublereal *);
+	var dalp2, alpha, zetad, alpha2, sgamma, rgamma;
+	//extern /* Subroutine */ int hanten_(void);
+	var ssigma;
+	//extern /* Subroutine */ int handan1_(void), handan2_(void);
+
+/*     Calculation of θ */
+	for (i__ = 1; i__ <= 100; ++i__)
+	{
+		if (zoneInfo.zone == 1)
+		{
+			d__1 = params.eta;
+			d__2 = Math.cos(params.theta / 2.);
+			d__3 = params.xi;
+			d__4 = Math.sin(params.theta / 2.);
+			g = Math.sqrt(d__1 * d__1 * (d__2 * d__2) + d__3 * d__3 * (d__4 * d__4));
+			d__1 = params.etad;
+			d__2 = Math.cos(params.theta / 2.);
+			d__3 = params.xid;
+			d__4 = Math.sin(params.theta / 2.);
+			h__ = Math.sqrt(d__1 * d__1 * (d__2 * d__2) + d__3 * d__3 * (d__4 * d__4));
+		}
+		else
+		{
+			d__1 = params.eta;
+			d__2 = Math.sin(params.theta / 2.);
+			d__3 = params.xi;
+			d__4 = Math.cos(params.theta / 2.);
+			g = Math.sqrt(d__1 * d__1 * (d__2 * d__2) + d__3 * d__3 * (d__4 * d__4));
+			d__1 = params.etad;
+			d__2 = Math.sin(params.theta / 2.);
+			d__3 = params.xid;
+			d__4 = Math.cos(params.theta / 2.);
+			h__ = Math.sqrt(d__1 * d__1 * (d__2 * d__2) + d__3 * d__3 * (d__4 * d__4));
+		}
+		ssigma = Math.atan(g / zero_(h__)) * 2;
+		jj = g * 2 * h__;
+		d__1 = h__;
+		d__2 = g;
+		kk = d__1 * d__1 - d__2 * d__2;
+		sgamma = params.y * Math.sin(params.theta) / zero_(jj);
+		d__1 = sgamma;
+		rgamma = 1 - d__1 * d__1;
+		zeta = rgamma * kk - params.x * 2;
+		zetad = zeta + params.x;
+		d__1 = params.f;
+		dd = params.f * 0.25 * (params.f + 1) - d__1 * d__1 * 0.1875 * rgamma;
+		d__1 = zeta;
+		d__2 = rgamma;
+		ee = (1 - dd * rgamma) * params.f * sgamma * (ssigma + dd * jj * (
+			zeta + dd * kk * (d__1 * d__1 * 2 - d__2 * d__2)));
+		if (zoneInfo.zone == 1)
+		{
+		    ff = params.theta - params.lamb - ee;
+		}
+		else
+		{
+		    ff = params.theta - params.lambd + ee;
+		}
+		if (Math.abs(ff) < 1e-14)
+		{
+		    break;
+		}
+		d__1 = sgamma;
+		d__2 = sgamma;
+		d__3 = params.f;
+		gg = params.f * (d__1 * d__1) * (1 - dd * 2 * rgamma) + params.f * 
+			zetad * (ssigma / zero_(jj)) * (1 - dd * rgamma + params.f *
+			 0.5 * (d__2 * d__2)) + d__3 * d__3 * 0.25 * zeta * zetad;
+		d__1 = 1 - gg;
+		params.theta -= ff / zero_(d__1);
+	}
+		
+/*     Azimuth calculation(zone=[1],[2,31,321]) */
+
+	if (zoneInfo.zone == 1) 
+	{
+		alpha = Math.atan(params.xi * Math.tan(params.theta / 2.) / zero_(params.eta));
+		dalp2 = Math.atan(params.xid * Math.tan(params.theta / 2.) / zero_(params.etad));
+	}
+	else
+	{
+		alpha = Math.atan(params.etad * Math.tan(params.theta / 2.) / zero_(params.xid));
+		dalp2 = Math.atan(params.eta * Math.tan(params.theta / 2.) / zero_(params.xi));
+	}
+	if (alpha <= -1e-14 && params.lamb > 0.)
+	{
+		alpha += PI;
+	}
+	else if (alpha >= 1e-14 && params.lamb < 0.)
+	{
+		alpha += PI;
+	}
+	else if (alpha <= -1e-14 && params.lamb < 0.)
+	{
+		alpha += PI * 2;
+	}
+
+	var result = {};
+	
+    result.alpha1 = alpha - dalp2;
+	if (zoneInfo.zone == 1)
+	{
+		alpha2 = alpha + dalp2;
+	} else {
+		alpha2 = PI - alpha - dalp2;
+	}
+	result.alp21 = PI + alpha2;
+	if (result.alp21 < 0)
+	{
+		result.alp21 += PI * 2;
+	} else if (result.alp21 >= PI * 2)
+	{
+		result.alp21 -= PI * 2;
+	}
+
+	if (Math.abs(params.lamb) < 1e-14)
+	{
+		GSI.Utils.DistanceCalculator._handan1(PI,params,zoneInfo,result);
+	}
+	if ((d__1 = Math.abs(params.lamb) - PI, Math.abs(d__1)) < 1e-14)
+	{
+		GSI.Utils.DistanceCalculator._handan2(PI,params,zoneInfo,result);
+	}
+
+	GSI.Utils.DistanceCalculator._hanten(PI,params,zoneInfo,result);
+	
+	
+/*     Calculation of geodesic length(zone=[1],[2,31,321]) */
+    d__1 = Math.sqrt(params.ep * rgamma + 1) + 1;
+    n0 = params.ep * rgamma / (d__1 * d__1);
+    d__1 = n0;
+    aa = (n0 + 1) * (d__1 * d__1 * 1.25 + 1);
+    d__1 = n0;
+    d__2 = Math.sqrt(params.ep * rgamma + 1) + 1;
+    bb = params.ep * (1 - d__1 * d__1 * .375) / (d__2 * d__2);
+    d__1 = rgamma;
+    d__2 = zeta;
+    d__3 = kk;
+    d__4 = rgamma;
+    d__5 = zeta;
+    result.s = (1 - params.f) * params.a * aa * (ssigma - bb * jj * (zeta - 
+	    bb * .25 * (kk * (d__1 * d__1 - d__2 * d__2 * 2) - bb * 
+	    0.16666666666666666 * zeta * (1 - d__3 * d__3 * 4) * (d__4 * d__4 *
+	     3 - d__5 * d__5 * 4))));
+    return result.s;
+};
+
+
+
+GSI.Utils.DistanceCalculator._zone3 = function(PI, params, zoneInfo)
+{
+	var d__1, d__2, d__3, d__4;
+
+	d__1 = Math.cos(params.u1);
+	d__2 = Math.sin(params.u1);
+	d__3 = params.f;
+	d__4 = Math.sin(params.u1), d__4 *= d__4;
+	zoneInfo.rr = params.f * PI * (d__1 * d__1) * (1 - params.f * 0.25 
+		* (params.f + 1) * (d__2 * d__2) + d__3 * d__3 * 0.1875 * (d__4 * 
+		d__4));
+	zoneInfo.d1 = params.lambd * Math.cos(params.u1) - zoneInfo.rr;
+	zoneInfo.d2 = Math.abs(params.sigmad) + zoneInfo.rr;
+	zoneInfo.q = params.lambd / (params.f * PI);
+	zoneInfo.f1 = params.f * .25 * (params.f * .5 + 1);
+	
+	d__1 = zoneInfo.q;
+	zoneInfo.gamma0 = zoneInfo.q + zoneInfo.f1 * zoneInfo.q - zoneInfo.f1 * (d__1 * (d__1 * d__1));
+	if (Math.abs(params.sigma) >= 1e-14)
+	{
+		zoneInfo.zone = 31;
+		GSI.Utils.DistanceCalculator._zone31(PI, params, zoneInfo);
+	}
+	else if (Math.abs(params.sigma) < 1e-14)
+	{
+		zoneInfo.zone = 32;
+		GSI.Utils.DistanceCalculator._zone32(PI, params, zoneInfo);
+	}
+	return 0;
+}
+
+
+GSI.Utils.DistanceCalculator._zone31 = function(PI, params, zoneInfo)
+{
+	var d__1, d__2, d__3;
+
+	var j, k, j1, aa0, bb0, psi, psid;
+	var psidd;
+	
+	
+	var zero_ = function(a){
+		if (Math.abs(a) < 1e-14) return 1e-14;
+		else return a;
+	};
+	
+	aa0 = Math.atan(zoneInfo.d1 / zero_(zoneInfo.d2));
+	d__2 = zoneInfo.d1;
+	d__3 = zoneInfo.d2;
+	d__1 = Math.sqrt(d__2 * d__2 + d__3 * d__3);
+	bb0 = Math.asin(zoneInfo.rr / zero_(d__1));
+	psi = aa0 + bb0;
+	d__1 = Math.cos(params.u1);
+	j = zoneInfo.gamma0 / zero_(d__1);
+	k = (zoneInfo.f1 + 1) * Math.abs(params.sigmad) * (1 - params.f * params.y) / (params.f * PI * zero_(params.y));
+	d__1 = cos(psi);
+	j1 = j / (k / zero_(d__1) + 1);
+	psid = Math.asin(j1);
+	d__1 = Math.cos(params.u2);
+	psidd = Math.asin(Math.cos(params.u1) / zero_(d__1) * j1);
+	d__1 = Math.cos(params.deltad / 2.0);
+	params.theta = Math.atan(Math.tan((psid + psidd) / 2.0) * Math.sin(Math.abs(params.sigmad) / 2.0) / zero_(d__1)) * 2;
+	return 0;
+};
+
+
+GSI.Utils.DistanceCalculator._zone32 = function(PI, params, zoneInfo)
+{
+	if (zoneInfo.d1 >= 1e-14) {
+		zoneInfo.zone = 321;
+		GSI.Utils.DistanceCalculator._zone321(PI, params, zoneInfo);
+	} else if (abs(zoneInfo.d1) < 1e-14) {
+		zoneInfo.zone = 322;
+	} else if (zoneInfo.d1 <= -1e-14) {
+		zoneInfo.zone = 323;
+	}
+	return 0;
+};
+
+
+GSI.Utils.DistanceCalculator._zone321 = function(PI, params, zoneInfo)
+{
+	params.theta = params.lambd;
+	return 0;
+};
+
+
+/*************************************************
+ Calculation of azimuth angle and distance in Zone3(b2)
+*************************************************/
+GSI.Utils.DistanceCalculator._zone322 = function(PI,params, zoneInfo)
+{
+	var d__1;
+	var n0, aa, alpha2, rgamma;
+	var result = {};
+	
+	result.alpha1 = PI / 2.;
+	alpha2 = PI / 2.;
+	result.alp21 = PI * 1.5;
+	GSI.Utils.DistanceCalculator._hanten(PI,params,zoneInfo,result);
+	d__1 = Math.sin(params.u1);
+	rgamma = d__1 * d__1;
+	d__1 = Math.sqrt(params.ep * rgamma + 1) + 1;
+	n0 = params.ep * rgamma / (d__1 * d__1);
+	d__1 = n0;
+	aa = (n0 + 1) * (d__1 * d__1 * 1.25 + 1);
+	result.s = (1 - params.f) * params.a * aa * PI;
+	return result.s;
+};
+
+
+/*************************************************
+ Calculation of azimuth angle and distance in Zone3(b3)
+*************************************************/
+GSI.Utils.DistanceCalculator._zone323 = function(PI,params, zoneInfo)
+{
+    var d__1;
+    var i__;
+    var m, n, w, n0, aa, dd, alpha2, rgamma, sgamma;
+    for (i__ = 1; i__ <= 100; ++i__) {
+		d__1 = zoneInfo.gamma0;
+		rgamma = 1 - d__1 * d__1;
+		d__1 = params.f;
+		dd = params.f * .25 * (params.f + 1) - d__1 * d__1 * 0.1875 * rgamma;
+		sgamma = zoneInfo.q / (1 - dd * rgamma);
+		if ((d__1 = zoneInfo.gamma0 - sgamma, Math.abs(d__1)) < 1e-14) {
+			break;
+		}
+		zoneInfo.gamma0 = sgamma;
+	}
+	m = 1 - zoneInfo.q / cos(params.u1);
+	n = dd * rgamma / (1 - dd * rgamma);
+	w = m - n + m * n;
+	var result = {};
+	
+	if (w <= 0.) {
+		result.alpha1 = PI / 2.0;
+	} else {
+		result.alpha1 = PI / 2.0 - Math.asin(Math.sqrt(w / 2.0)) * 2;
+	}
+	alpha2 = PI - result.alpha1;
+	result.alp21 = PI + alpha2;
+	GSI.Utils.DistanceCalculator._hanten(PI,params,zoneInfo,result);
+	d__1 = Math.sqrt(params.ep * rgamma + 1) + 1;
+	n0 = params.ep * rgamma / (d__1 * d__1);
+	d__1 = n0;
+	aa = (n0 + 1) * (d__1 * d__1 * 1.25 + 1);
+	result.s = (1 - params.f) * params.a * aa * PI;
+	return result.s;
+};
+
+
+/*************************************************
+ Judgment of azimuth angle of longitude difference 0 degree
+*************************************************/
+GSI.Utils.DistanceCalculator._handan1 = function(PI,params,zoneInfo,result)
+{
+	if (params.delta >= 0.) {
+		result.alpha1 = 0.;
+		result.alp21 = PI;
+	} else if (params.delta < 0.) {
+		result.alpha1 = PI;
+		result.alp21 = 0.;
+	}
+	return 0;
+};
+
+
+/*************************************************
+ Judgment of azimuth angle of longitude difference 180 degrees
+*************************************************/
+GSI.Utils.DistanceCalculator._handan2 = function(PI,params,zoneInfo,result)
+{
+	if (params.sigma >= 0) {
+		result.alpha1 = 0;
+		result.alp21 = 0;
+	} else if (params.sigma < 0) {
+		result.alpha1 = PI;
+		result.alp21 = PI;
+	}
+	return 0;
+};
+
+
+
+
+/*************************************************
+ Flip azimuth
+*************************************************/
+GSI.Utils.DistanceCalculator._hanten = function(PI,params,zoneInfo,result)
+{
+	if (params.seihan == 1) {
+		var alphax = result.alpha1;
+		result.alpha1 = result.alp21;
+		result.alp21 = alphax;
+	}
+	return 0;
+} /* hanten_ */
+
+
+
+
+
+
 
 $(document).ready( initialize );

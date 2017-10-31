@@ -1,0 +1,18 @@
+{
+  "layers": [
+    {
+      "type": "Layer",
+      "id": "relief",
+      "title": "Relief Map",
+      "iconUrl": "",
+      "url": "https://maps.gsi.go.jp/xyz/relief/{z}/{x}/{y}.png",
+      "subdomains": "",
+      "attribution": "",
+      "cocotile": true,
+      "maxZoom": 18,
+      "maxNativeZoom": 15,
+      "legendUrl": "https://maps.gsi.go.jp/legend/attension_relief.html",
+      "html": "<div class=\"gsi_layerinfo_title\">Relief Map</div><div class=\"gsi_layerinfo_copy\">(c)GSI</div>"
+    }
+  ]
+}
