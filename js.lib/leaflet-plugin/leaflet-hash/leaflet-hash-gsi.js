@@ -43,7 +43,6 @@
             /////		20140109		F.MARUNO
             precision = 6;
         /////		20140109		F.MARUNO
-
         return "#" + [zoom,
         center.lat.toFixed(precision),
         center.lng.toFixed(precision)].join("/");
@@ -96,9 +95,9 @@
             if (this.movingMap || !this.map._loaded) {
                 return false;
             }
-
             var f    = false;
             var hash = this.formatHash(this.map);
+            
             if(this.callback != null){                
                 try{
                     hash = this.callback("moveend", this.callback_o, hash);
@@ -139,9 +138,10 @@
                 var parsed = this.parseHash(hash);
                 if (parsed) {
                     this.movingMap = true;
-                    this.map.setView(parsed.center, parsed.zoom);
+                    this.map.setView(parsed.center, parsed.zoom,{animate:false});
 
                     this.movingMap = false;
+                    this.onMapMove(this.map);
                 } else {
                     this.onMapMove(this.map);
                 }

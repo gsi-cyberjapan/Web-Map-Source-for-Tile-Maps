@@ -18,7 +18,7 @@
           "minZoom": 2,
           "maxZoom": 18,
           "legendUrl": "",
-          "html": "<div class=\"gsi_layerinfo_title\">Seamless Orthophoto</div><a target=\"_blank\" href=\"http://maps.gsi.go.jp/development/ichiran.html#seamlessphoto\">explanation</a><div class=\"gsi_layerinfo_copy\">(c)GSI</div>"
+          "html": "<div class=\"gsi_layerinfo_title\">Seamless Orthophoto</div><a target=\"_blank\" href=\"https://maps.gsi.go.jp/development/ichiran.html#seamlessphoto\">explanation</a><div class=\"gsi_layerinfo_copy\">(c)GSI</div>"
         },
         {
           "type": "Layer",
@@ -46,7 +46,7 @@
           "minZoom": 2,
           "maxZoom": 18,
           "legendUrl": "",
-          "html": "<div class=\"gsi_layerinfo_title\">Orthophotos</div><div class=\"gsi_layerinfo_subtitle\">(Latest（since 2007）)</div><a target=\"_blank\" href=\"http://maps.gsi.go.jp/development/ichiran.html#ort\">explanation</a><div class=\"gsi_layerinfo_copy\">(c)GSI</div>"
+          "html": "<div class=\"gsi_layerinfo_title\">Orthophotos</div><div class=\"gsi_layerinfo_subtitle\">(Latest（since 2007）)</div><a target=\"_blank\" href=\"https://maps.gsi.go.jp/development/ichiran.html#ort\">explanation</a><div class=\"gsi_layerinfo_copy\">(c)GSI</div>"
         },
         {
           "type": "Layer",

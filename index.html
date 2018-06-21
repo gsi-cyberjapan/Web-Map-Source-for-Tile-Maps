@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 
-<html lang="en">
+<html lang="ja">
 
 <head>
     <link rel="shortcut icon" href="./favicon.ico" />
@@ -13,8 +13,8 @@
 
     <title>GSI Maps (en)</title>
 
-    <link rel="stylesheet" href="js.lib/leaflet-0.7.3/leaflet.css" />
-    <script type="text/javascript" src="js.lib/leaflet-0.7.3/leaflet-src.js"></script>
+    <link rel="stylesheet" href="js.lib/leaflet-1.2.0/leaflet.css" />
+    <script type="text/javascript" src="js.lib/leaflet-1.2.0/leaflet.js"></script>
 
     <link rel="stylesheet" type="text/css" href="./js.lib/jquery/jquery-ui.min.css"/>
     <script type="text/javascript" src="./js.lib/jquery/jquery-1.11.1.min.js"></script>
@@ -23,23 +23,33 @@
     <script type="text/javascript" src="./js.lib/jquery/jquery.xdomainrequest.min.js"></script>
     <script type="text/javascript" src="./js.lib/jquery/jquery-ui.min.js"></script>
     <script type="text/javascript" src="./js.lib/jquery/jquery.ui.touch-punch.js"></script>
+    <script type="text/javascript" src="./js.lib/jquery/jquery.qrcode/jquery.qrcode.min.js"></script>
 
     <link rel="stylesheet" href="./js.lib/jquery/jquery.alerts.css" type="text/css" media="all" />
     <script type="text/javascript" src="./js.lib/jquery/jquery.alerts.js"></script>
 
     <link rel="stylesheet" type="text/css" href="./js.lib/jquery/colorpicker/jquery.simple-color-picker.css"/>
     <script type="text/javascript" src="./js.lib/jquery/colorpicker/jquery.simple-color-picker.js"></script>
+	<script type="text/javascript" src="./js.lib/jquery/colorpicker/js/colorpicker.js"></script>
+	<link rel="stylesheet" type="text/css" href="./js.lib/jquery/colorpicker/css/colorpicker.css" />
     <script type="text/javascript" src="./js.lib/jquery/ah-placeholder/jquery.ah-placeholder.js"></script>
     <script type="text/javascript" src="js.lib/OSGeo/proj4js-combined.js"></script>
-
+	
+	
+    <script type="text/javascript" src="js.lib/geotiff.browserify.min.js"></script>
     <link rel="stylesheet" type="text/css" href="js.lib/leaflet-plugin/leaflet.label/leaflet.label-gsi.css"/>
     <script type="text/javascript" src="js.lib/leaflet-plugin/leaflet.label/leaflet.label.js"></script>
     <link rel="stylesheet" type="text/css" href="js.lib/leaflet-plugin/Control.MiniMap/Control.MiniMap-gsi.css"/>
     <script type="text/javascript" src="js.lib/leaflet-plugin/Control.MiniMap/Control.MiniMap-gsi.js"></script>
     <script type="text/javascript" src="js.lib/leaflet-plugin/TileLayer.GeoJSON/TileLayer.GeoJSON-gsi.js"></script>
     <script type="text/javascript" src="js.lib/leaflet-plugin/leaflet-omnivore/leaflet-omnivore.min.js"></script>
+    
+    
     <link rel="stylesheet" type="text/css" href="js.lib/leaflet-plugin/leaflet.draw/leaflet.draw-gsi.css"/>
     <script type="text/javascript" src="js.lib/leaflet-plugin/leaflet.draw/leaflet.draw-gsi.js"></script>
+    <script type="text/javascript" src="js.lib/leaflet-plugin/Leaflet.Sync/L.Map.Sync.js"></script>
+    <script type="text/javascript" src="js.lib/leaflet-plugin/Leaflet.Geodesic/Leaflet.Geodesic.js"></script>
+    
     <script type="text/javascript" src="js.lib/leaflet-plugin/leaflet-hash/leaflet-hash-gsi.js"></script>
     <script type="text/javascript" src="js.lib/html2canvas.js"></script>
 
@@ -59,8 +69,8 @@
     <div id="header" class="logo_s">
         <div class="logoarea">
             <a style="text-decoration:none;" href="">
-	        		<div id="title_logo_upper">GSI Maps</div>
-	        		<div id="title_logo_lower">(sample)</div>
+                <div id="title_logo_upper">GSI Maps</div>
+                <div id="title_logo_lower">(sample)</div>
             </a>
         </div>
 
@@ -68,10 +78,13 @@
                <img name = "magnifyimage" id="magnifyimage" src="./image/system/search.png"/>
         </div>
         <form name="search_f" id="search_f" autocomplete="off">
-            <input name="query" id="query" value="" type="search" placeholder="Search bar [in Japanese] : e.g.：剱岳 / 金沢市木ノ新保町 / 35°0′0″ 135°0′0″ / 35.00 135.00 / 54SUE83694920" />
+            <input name="query" id="query" value="" type="search" placeholder="Search bar [in Japanese] : e.g.：剱岳 / 金沢市木ノ新保町 / 35度0分0秒 135度0分0秒 / 35.00 135.00 / 54SUE83694920" />
         </form>
 
         <div class="help">
+            <a id="title_twitter" href="javascript:void(0);"></a>
+            <a id="title_facebook" href="javascript:void(0);"></a>
+            <a id="title_bookmark" href="javascript:void(0);"></a>
             <a id="title_help" onclick="HelpButton()">?</a>
         </div>
     </div>
@@ -79,15 +92,16 @@
     <div id="topmessage"></div>
     <div id="map"></div>
 
-    <a id="footerbtn" href="javascript:void(0);"><img src="image/system/footer_up.png" style="width:96px;height:12px;"></a>
-
-    <div id="footer">
-        <div class="item_frame item_start"><span class="heading">Address:</span><span id="address">----</span><span class="mini_comment">（Not entirely accurate.）</span></div>
-        <div class="item_frame"><span id="latlng_60">----</span></div>
-        <div class="item_frame"><span id="latlng_10">----</span>&nbsp;&nbsp;<span class="heading">Zoom:</span><span id="current_zoom"></span></div>
-        <div class="item_frame"><span class="heading">MGRS：</span><span id="utm_point">----</span></div>
-        <div class="item_frame"><span class="heading">Elevation：</span><span id="elevation">----</span><span id="elevationSrc" class="mini_comment_elev"></span></div>
-        <a href="http://maps.gsi.go.jp/help/howtouse.html#h2-3" class="normalbutton footer_description_btn" target="_blank">details</a>
+    <div class="gsi_footer gsi_footer_template">
+    	<a class="btn" href="javascript:void(0);"></a>
+        <div class="item_frame item_start"><span class="heading">Address:</span><span class="address">----</span><span class="mini_comment">（Not entirely accurate.）</span></div>
+        <div class="item_frame"><span class="latlng_60">----</span></div>
+        <div class="item_frame"><span class="latlng_10">----</span>&nbsp;&nbsp;<span class="heading">Zoom:</span><span class="current_zoom"></span></div>
+        <div class="item_frame"><span class="heading">MGRS:</span><span class="utm_point">----</span></div>
+        <div class="item_frame"><span class="heading">Elevation:</span><span class="elevation">----</span><span class="elevationSrc mini_comment_elev"></span></div>
+        <div class="item_frame" style="display:none;"><span class="heading">全国最新写真(シームレス)撮影期間：</span><span class="seamlessinfo">----</span></div>
+        
+        <a href="https://maps.gsi.go.jp/help/howtouse.html#h2-3" class="normalbutton footer_description_btn" target="_blank">details</a>
     </div>
 
 
@@ -100,10 +114,10 @@
             <div style="text-align:left;">
                 <p>Link</p>
                 <div title="Help" style="display:inline-block;border:2px solid #fff;padding:3px;margin:3px">
-                    <a href="http://maps.gsi.go.jp/help/" target="_blank" style="font-size:110%;text-decoration:none;color:#000"><img src="./image/help/help_icon.png" style="width:20px;vertical-align:middle;margin:3px">Help</a>
+                    <a href="https://maps.gsi.go.jp/help/" target="_blank" style="font-size:110%;text-decoration:none;color:#000"><img src="./image/help/help_icon.png" style="width:20px;vertical-align:middle;margin:3px">Help</a>
                 </div>
                 <div title="Use GSI Tiles" style="display:inline-block;border:2px solid #fff;padding:3px;margin:3px">
-                    <a href="http://maps.gsi.go.jp/help/use.html" target="_blank" style="font-size:110%;text-decoration:none;color:#000"><img src="./image/help/use_icon.png" style="width:20px;vertical-align:middle;margin:3px">Terms of Use</a>
+                    <a href="https://maps.gsi.go.jp/help/use.html" target="_blank" style="font-size:110%;text-decoration:none;color:#000"><img src="./image/help/use_icon.png" style="width:20px;vertical-align:middle;margin:3px">Terms of Use</a>
                 </div>
                 <div title="Twitter" style="display:inline-block;border:2px solid #fff;padding:3px;margin:3px">
                     <a href="https://twitter.com/gsi_cyberjapan" target="_blank" style="font-size:110%;text-decoration:none;color:#000"><img src="./image/help/twitter.png" style="width:20px;vertical-align:middle;margin:3px">Twitter</a>
@@ -112,7 +126,7 @@
                     <a href="https://github.com/gsi-cyberjapan" target="_blank" style="font-size:110%;text-decoration:none;color:#000"><img src="./image/help/github.png" style="width:20px;vertical-align:middle;margin:3px">GitHub</a>
                 </div>
                 <div title="Partner Network" style="display:inline-block;border:2px solid #fff;padding:3px;margin:3px">
-                    <a href="http://maps.gsi.go.jp/pn/" target="_blank" style="font-size:110%;text-decoration:none;color:#000"><img src="./image/help/partner_icon.png" style="width:20px;vertical-align:middle;margin:3px">Partner Network</a>
+                    <a href="https://maps.gsi.go.jp/pn/" target="_blank" style="font-size:110%;text-decoration:none;color:#000"><img src="./image/help/partner_icon.png" style="width:20px;vertical-align:middle;margin:3px">Partner Network</a>
                 </div>
                 <div title="GSI HOME" style="display:inline-block;border:2px solid #fff;padding:3px;margin:3px">
                     <a href="http://www.gsi.go.jp/" target="_blank" style="font-size:110%;text-decoration:none;color:#000"><img src="./image/help/gsi_top.png" style="width:20px;vertical-align:middle;margin:3px">GSI HOME</a>
@@ -159,6 +173,8 @@
         </div>
 
     </div>
+    
+    
 
 </body>
 
